@@ -1,0 +1,217 @@
+.mainDiv {
+    margin: 20px;
+    /* background-color: rgb(0, 255, 170); */
+    margin-left: 30px;
+}
+
+.mainHeading {
+    font-size: 20px;
+    border-bottom: 2px solid white;
+    padding-bottom: 0;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    /* background-color: rgba(255, 255, 255, 0.158); */
+    padding: 5px;
+    /* text-align: center; */
+    padding-left: 26px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-top: -12px;
+}
+
+.ReimbursementSection {
+    background-color: rgba(255, 255, 255, 0.068);
+    border-radius: 10px;
+    margin-top: 10px;
+    color: white;
+}
+
+.SectionHeading {
+    padding-left: 10px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.24);
+    cursor: pointer;
+}
+
+.SectionHeading:hover {
+    padding-left: 10px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.301);
+}
+
+.SectionHeadingText {
+    font-size: 19px;
+    font-weight: 500;
+    padding: 5px;
+    display: inline-block;
+    color: rgb(255, 255, 255);
+    margin-left: 6px;
+}
+
+.faISectionExpColl {
+    color: rgb(255, 255, 255);
+    /* border-radius: 60%;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 5px; */
+    /* border: 1px solid white; */
+}
+
+.inputField {
+    display: inline-block;
+    margin-left: 10px;
+    width: 48%;
+    /* background-color: green; */
+    margin-bottom: 10px;
+}
+
+.biginputField {
+    width: 99%;
+}
+
+.inputFieldbox {
+    width: 96%;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 4px;
+    padding: 4px;
+    padding-left: 10px;
+}
+
+.inputFieldbox:focus {
+    outline: none;
+}
+
+.inputFieldbox input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.BoxColor {
+    color: #5bffb0 !important;
+}
+
+.checkBoxSide-1,
+.checkBoxSide-2 {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 40px;
+}
+
+.tableinputField {
+    width: 95%;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 4px;
+    /* padding: 2px; */
+    padding-left: 10px;
+}
+
+.tableinputField:focus {
+    outline: none;
+}
+
+.headingText {
+    padding: 0 !important;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.tableHeading {
+    margin-bottom: 5px;
+}
+
+.tableSNO {
+    width: 70px;
+    text-align: center;
+    display: inline-block !important;
+}
+
+.tableBillNo,
+.tableICDCode {
+    width: 130px;
+    text-align: center;
+    display: inline-block !important;
+}
+
+.tableDate {
+    width: 170px;
+    text-align: center;
+    display: inline-block !important;
+}
+
+.tableIssuedBy {
+    width: 200px;
+    text-align: center;
+    display: inline-block !important;
+}
+
+.tableToward {
+    width: 200px;
+    text-align: center;
+    display: inline-block !important;
+}
+
+.tableAmount {
+    width: 170px;
+    text-align: center;
+    display: inline-block !important;
+}
+
+.tableLabel {
+    width: 190px;
+    text-align: left;
+    display: inline-block !important;
+    font-weight: 400;
+}
+
+.tableDescription {
+    width: 160px;
+    text-align: center;
+    display: inline-block !important;
+}
+
+.tableMain {
+    padding-left: 10px;
+}
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.side1,
+.side2 {
+    display: inline-block;
+}
+
+.side1 {
+    border-right: 1px solid white;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+.CRemailInput {
+    width: 500px;
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 4px;
+    border-radius: 5px;
+    padding-left: 10px;
+}
+
+.CRemailInput:focus {
+    outline: none;
+}
+
+@media (max-width: 775px) {
+    .mainDiv {
+        margin-left: 20px;
+    }
+    .inputField {
+        width: 90%;
+    }
+}

@@ -1,0 +1,20 @@
+.boldIcon {
+  width: 8px;
+  height: 8px;
+  transform: matrix(0.71, -0.71, 0.71, 0.71, 0, 0);
+  background: transparent linear-gradient(180deg, #ffffff 0%, #808080 100%) 0%
+    0% no-repeat padding-box;
+  border-radius: 2px;
+  opacity: 1;
+}
+.container {
+  max-width: 280px;
+  min-height: 500px;
+}
+.contentBox {
+  min-height: 230px;
+}
+
+.svg {
+  filter: brightness(0) invert(1);
+}

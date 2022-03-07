@@ -1,0 +1,18 @@
+.plansContainer::-webkit-scrollbar-track {
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+}
+.plansContainer::-webkit-scrollbar {
+  width: 4px;
+  background-color: #5a5a5a;
+  margin-left: 4px;
+  border-radius: 10px;
+}
+
+.plansContainer::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #c8c8c8;
+}

@@ -1,0 +1,11 @@
+.button {
+  width: 80px;
+  height: 30px;
+  background: transparent linear-gradient(126deg, #414141 0%, #333232 100%) 0%
+    0% no-repeat padding-box;
+  border-radius: 3px;
+  font-size: 10px;
+  color: #ffffff;
+  border: none;
+  outline: none;
+}

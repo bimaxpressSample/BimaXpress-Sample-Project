@@ -1,0 +1,12 @@
+.progessbarDiv {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    font-size: 15px;
+}
+
+.headingText {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    padding-top: 15px;
+    display: block;
+}

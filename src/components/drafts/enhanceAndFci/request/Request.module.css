@@ -1,0 +1,61 @@
+/* .approveModalContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    background: #ffffff;
+    border-radius: 10px;
+    outline: none;
+    margin: 0 16px;
+    border: none;
+    outline: none;
+  }
+  
+  .overlayContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  } */
+
+.requetModalContainer {
+  background: #ffffff;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  outline: none;
+}
+
+.composeModalHeader {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-top: -1px;
+}
+
+.inputDate {
+  width: 100%;
+  max-width: 180px;
+  height: 40px;
+  background: #ffffff17;
+  border: none;
+  outline: none;
+  color: #919191;
+  border-radius: 5px;
+  padding: 8px;
+
+  border: 1px solid #2b2b2b;
+  outline: none;
+
+  min-width: 100%;
+  border-radius: "5px";
+  margin-top: "4px";
+  color: "#2B2B2B";
+}

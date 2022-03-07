@@ -1,0 +1,17 @@
+.imageContainer {
+  background-image: url("../../../assets/images/doctor.png");
+  width: 100%;
+  height: 250px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.inputContainer {
+  max-width: 980px;
+  min-height: 445px;
+  margin-top: -130px;
+}
+.inputContainer.adjustMargin {
+  margin-top: -73px;
+}

@@ -1,0 +1,44 @@
+.mailSearchBox {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    background: transparent linear-gradient(93deg, #ffffff4d 0%, #ffffff00 100%) 0% 0% no-repeat padding-box;
+    box-shadow: inset 10px 10px 10px #ffffff1a;
+    border: 0.800000011920929px solid #ffffff;
+    border-radius: 5px;
+}
+
+.compareButContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 750px;
+}
+
+.compostBtn {
+    letter-spacing: 0.8px;
+    color: #000000;
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 156px;
+    height: 50px;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.mailDiscriptationContainer {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}

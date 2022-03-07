@@ -1,0 +1,42 @@
+.approveModalContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 581px;
+  min-height: 260px;
+  outline: none;
+  margin: 0 16px;
+}
+
+.overlayContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.newActionModalContainer {
+  width: 100%;
+  max-width: 581px;
+  min-height: 260px;
+  background: transparent linear-gradient(299deg, #090909 0%, #5a5a5a 100%) 0%
+    0% no-repeat padding-box;
+  border-radius: 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.selectContainer {
+  width: 100%;
+  max-width: 500px;
+}

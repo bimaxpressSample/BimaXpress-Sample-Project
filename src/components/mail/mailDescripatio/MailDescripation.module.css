@@ -1,0 +1,17 @@
+.approvebtn {
+  width: 100%;
+  max-width: 200px;
+  height: 40px;
+  background: #ffffff17 0% 0% no-repeat padding-box;
+  box-shadow: inset 0px 3px 6px #00000029;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.approvebtnArrow {
+  width: 16px;
+  filter: brightness(0) invert(1);
+}

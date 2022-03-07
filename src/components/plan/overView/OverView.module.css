@@ -1,0 +1,17 @@
+.overviewContainer {
+  width: 100%;
+  min-height: 214px;
+  background: transparent linear-gradient(99deg, #ffffff4d 0%, #ffffff00 100%)
+    0% 0% no-repeat padding-box;
+  box-shadow: inset 0px 0px 10px #ffffff1a;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.rupee {
+  width: 48px;
+  height: 70px;
+  font-size: 50px;
+  background: transparent linear-gradient(152deg, #ffffff 0%, #80808038 100%) 0%
+    0% no-repeat padding-box;
+}

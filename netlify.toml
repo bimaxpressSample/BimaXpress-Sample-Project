@@ -1,0 +1,5 @@
+# api redirect
+[[redirects]]
+  from = "/*"
+  to = "https://www.api.bimaxpress.com/:splat"
+  status = 200

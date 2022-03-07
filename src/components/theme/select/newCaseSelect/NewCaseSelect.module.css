@@ -1,0 +1,34 @@
+.select {
+  width: 100%;
+  height: 40px;
+  background: #ffffff17;
+  border: none;
+  outline: none;
+  color: #919191;
+  border-radius: 5px;
+  padding: 8px;
+
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("../../../../assets/images/downArrow.png");
+  background-repeat: no-repeat;
+  background-position: 96%;
+  background-size: 10px;
+  box-shadow: none;
+  text-indent: 1px;
+  text-overflow: "";
+
+  /* filter: brightness(0) invert(1);
+  opacity: 1 !important; */
+}
+
+.option {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
+  outline: none;
+  color: #919191;
+}

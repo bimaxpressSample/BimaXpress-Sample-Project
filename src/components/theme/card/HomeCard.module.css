@@ -1,0 +1,15 @@
+.card {
+  width: 180px;
+  height: 120px;
+  background: transparent linear-gradient(111deg, #ffffff4d 0%, #ffffff00 100%)
+    0% 0% no-repeat padding-box;
+  box-shadow: inset 10px 10px 10px #ffffff1a;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  opacity: 1;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+}
