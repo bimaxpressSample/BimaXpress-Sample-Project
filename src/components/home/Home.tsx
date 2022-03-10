@@ -32,18 +32,18 @@ const Home = () => {
     setOpenWarningModal((pre) => !pre);
   };
   // const [toggleCounter , settoggleCounter] = useState(true) ;
-  if (userPlanData) {
-    if (
-      // @ts-ignore
-      userPlanData.claimsleft <= 0.15 * userPlanData.total_claims &&
-      showWarning
-    ) {
-      // settoggleCounter(false);
-      dispatch(setshowWarning(false));
-      // toggleWarningModal();
-      setTimeout(toggleWarningModal, 3000);
-    }
-  }
+  // if (userPlanData) {
+  //   if (
+  //     // @ts-ignore
+  //     userPlanData.claimsleft <= 0.15 * userPlanData.total_claims &&
+  //     showWarning
+  //   ) {
+  //     // settoggleCounter(false);
+  //     dispatch(setshowWarning(false));
+  //     // toggleWarningModal();
+  //     setTimeout(toggleWarningModal, 3000);
+  //   }
+  // }
 
   console.log('user plan', userPlanData);
 

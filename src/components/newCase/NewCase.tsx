@@ -15,6 +15,7 @@ import WarningModal from './WarningModal';
 import { useNavigate } from 'react-router-dom';
 import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
+import { setUserPlanData } from '../../redux/slices/userSlice';
 
 const months = [
   { label: 'January', value: '01' },
@@ -91,6 +92,23 @@ const NewCase = () => {
       //@ts-ignore
       notification('error', error.message);
     }
+  };
+
+  const getPreauthForm = async () => {
+    dispatch(setLoading(true));
+
+    const planDetailsURL = `/plandetails?email=${user}`;
+    try {
+      const { data } = await axiosConfig.get(planDetailsURL);
+      console.log('plan data ', data.data);
+      dispatch(setUserPlanData(data?.data));
+    } catch (error) {
+      dispatch(setLoading(false));
+      //@ts-ignore
+      notification('error', error?.message);
+      console.log(error);
+    }
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {
@@ -489,6 +507,12 @@ const NewCase = () => {
       return;
     }
 
+    getPreauthForm();
+    console.log(
+      'userPlanData.claimsleft at new Case',
+      //@ts-ignore
+      userPlanData
+    );
     //@ts-ignore
     if (userPlanData.claimsleft === 0) {
       toggleWarningModal();
@@ -498,8 +522,6 @@ const NewCase = () => {
         '_blank',
         'noopener,noreferrer'
       );
-      //   navigate('/preauthform');
-      // alert("else");
     }
     return;
   };
