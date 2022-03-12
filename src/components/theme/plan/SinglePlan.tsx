@@ -47,24 +47,64 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
             Regards,
             Team Bimaxpress`);
 
-
     const amtFormData = new FormData() ;
     const updateTodbFormData = new FormData() ;
 
     amtFormData?.append("amount", price);
     updateTodbFormData?.append("addonn", name);
 
+    const orderformData = new FormData();
+    orderformData?.append("amount",`${Number(price) * 100}`);
+    orderformData?.append("currency","INR");
+
+    const transferData = new FormData();
+    transferData.append("method",'wallet');
+    transferData.append("wallet",'openwallet');
+    transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
+    // transferData.append("order_id",'');
+    transferData.append("amount",`${Number(price) * 100}`);
+    transferData.append("currency",'INR');
+    transferData.append("contact",'9198765432');
+    transferData.append("email",user);
+    transferData.append("description",`Add On(${name})`);
+
     dispatch(setLoading(true));
     try{
+
+        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+        let currentBalance = wallet_balance.data.data.balance / 100 ;
+        console.log(currentBalance);
+        if(currentBalance < price){
+          notification('error',"Insufficient Wallet Balance");
+          dispatch(setLoading(false));
+          return ;
+        }
+
         await axiosConfig.post(AmtURL,amtFormData);
         const { data } = await axiosConfig.get(PlanDetailURL);
         dispatch(setCurrentPlan(data?.data));
         
         // console.log(" post Amount tracker ",Amtdata);                                   //---------------------------------------------------
-        await axiosConfig.post(UpdateTodbURL,updateTodbFormData);
+        
         // console.log(" post Amount tracker ",data);                                   //---------------------------------------------------
+        
+
+        const createOrder = await axiosConfig.post('/createOrder',orderformData);
+        const orderId = createOrder.data.data.id ;
+
+        transferData.append("order_id",orderId);
+        
+        const response = await axiosConfig.post('/createPaymentCapture',transferData);
+        
+        await axiosConfig.post(UpdateTodbURL,updateTodbFormData);
+
+        const planDetails = await axiosConfig.get(`/plandetails?email=${user}`);
+      
+        dispatch(setCurrentPlan(planDetails?.data.data));
+
         dispatch(setLoading(false));
         notification("info", `${claims} Claims Has Been Added To Your Plan`);
+        toggleBuyModal();
         navigate("/plan");
         await axiosConfig.post(MAILURL, mailForm);
     }catch (error) {
