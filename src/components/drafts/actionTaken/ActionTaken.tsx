@@ -71,15 +71,14 @@ const ActionTaken = ({
     }
 
     const res = array?.map((item, index) => {
-      console.log('Date Time', item[1]);
       console.log(
-        'New Date Time ',
-        format(new Date(item[1]), "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        'Testing Date',
+        format(new Date(item[1]), "dd-MM-yyyy' 'HH:mm"),
+        item[1]
       );
-
       let toReturn = {
         actionTaken: item[0],
-        last_action_date: format(new Date(item[1]), 'do MMMM Y, HH:MM'), // format(new Date(item[1]), "do MMMM Y"),
+        last_action_date: format(new Date(item[1]), "dd-MM-yyyy' 'HH:mm"), // format(new Date(item[1]), "do MMMM Y"),
         summery: item[2],
         amount: item[3],
         index: index,
