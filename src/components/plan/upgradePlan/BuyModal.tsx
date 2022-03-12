@@ -67,6 +67,14 @@ const BuyModal = ({
 
         const PlanDetailURL = `/plandetails?email=${user}`;
 
+        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+        let currentBalance = wallet_balance.data.data.balance / 100 ;
+        if(currentBalance < planAmount){
+          notification('error',"Insufficient Wallet Balance");
+          dispatch(setLoading(false));
+          return ;
+        }
+
          if( planAmount > currentPlanPrice * 12){
             const URL = `/chargesubscription` ;
             // const URL = `/if` ;
@@ -100,11 +108,10 @@ const BuyModal = ({
                 //@ts-ignore
                 notification("error", error?.message);
             }
-
          }
          else{
             const URL = `/updateplandetails?email=${user}`;
-           
+            
             const MAILURL = `/sendmail`;
             const mailForm = new FormData();
             mailForm.append("receiver_email",user);
@@ -121,13 +128,41 @@ const BuyModal = ({
             updatePlan.append("planId", planId);
             updatePlan.append("planName", planName);
             updatePlan.append("total_claims", totalClaims);
+
+            const orderformData = new FormData();
+            orderformData?.append("amount",`${Number(planAmount) * 100}`);
+            orderformData?.append("currency","INR");
+
+            const transferData = new FormData();
+            transferData.append("method",'wallet');
+            transferData.append("wallet",'openwallet');
+            transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
+            // transferData.append("order_id",'');
+            transferData.append("amount",`${Number(planAmount) * 100}`);
+            transferData.append("currency",'INR');
+            transferData.append("contact",'9198765432');
+            transferData.append("email",user);
+            transferData.append("description",`New Plan(${planName})`);
+
             // console.log(typeof totalClaims);
             try {
+
+                const createOrder = await axiosConfig.post('/createOrder',orderformData);
+                const orderId = createOrder.data.data.id ;
+
+                transferData.append("order_id",orderId);
+                
+                const response = await axiosConfig.post('/createPaymentCapture',transferData);
+                
+                
                 // @ts-ignore
                 const { respone } = await axiosConfig.post(URL, updatePlan);
                 console.log(respone);
                 const { data } = await axiosConfig.get(PlanDetailURL);
                 dispatch(setCurrentPlan(data?.data));
+
+
+
                 dispatch(setLoading(false));
                 closeModal();
                 notification("info", "New plan will be active after the expiry of the current plan")

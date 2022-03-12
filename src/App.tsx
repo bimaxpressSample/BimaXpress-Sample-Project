@@ -42,6 +42,8 @@ import ReimbursementTableData from './components/reimbursement/ReimbursementTabl
 import BnplHome from './components/buyNowPayLater/bnplHome';
 import BnplTable from './components/buyNowPayLater/bnplTable';
 import BnplForm from './components/buyNowPayLater/bnplForm';
+import newModalsSlice from './redux/slices/newModalsSlice';
+import Wallet from './components/Wallet/Wallet';
 
 // Non Cashless
 import NonCashlessAddCase from './components/nonCashless/newCase/NonCashlessAddCase';
@@ -151,6 +153,8 @@ function App() {
               path='/ReimbursementTableData/:case'
               element={Wrapper(<ReimbursementTableData />)}
             />
+
+            <Route path='/wallet' element={Wrapper(<Wallet />)} />
 
             {/* BNPL Routes Start Here Need to be seprate out to roles*/}
             <Route path='/bnplHome' element={Wrapper(<BnplHome />)} />
