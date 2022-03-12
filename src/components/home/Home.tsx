@@ -91,7 +91,8 @@ const Home = () => {
               value: 'draft',
               icon: draft,
               //@ts-ignore
-              amount: counter?.draft,
+              // amount: counter?.draft,
+              amount: '',
               pageLink: '/caseData/draftcases',
             },
             {
