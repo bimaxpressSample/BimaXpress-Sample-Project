@@ -88,8 +88,12 @@ const SentMail = ({
 
     let name: string | Blob | any[] = [];
     let imageArray: string | Blob | any[] = [];
+    let imageArrayALL: string | Blob | any[] = [];
     if (mail?.Urlidproof?.length) {
+      name = [];
+      imageArray = [];
       const imageFormData = new FormData();
+
       mail?.Urlidproof.forEach((img) => {
         //@ts-ignore
         name.push(img?.name);
@@ -101,10 +105,12 @@ const SentMail = ({
       imageFormData?.append('arrayname', 'Urlidproof');
 
       const { data } = await axiosConfig.post(IMAGEUPLOAD, imageFormData);
-      imageArray = [...imageArray, ...data?.data];
+      imageArrayALL = [...imageArray, ...data?.data];
     }
 
     if (mail?.UrlotherDocuments?.length) {
+      name = [];
+      imageArray = [];
       const imageFormData = new FormData();
       mail?.UrlotherDocuments.forEach((img) => {
         //@ts-ignore
@@ -117,10 +123,12 @@ const SentMail = ({
       imageFormData?.append('arrayname', 'UrlotherDocuments');
 
       const { data } = await axiosConfig.post(IMAGEUPLOAD, imageFormData);
-      imageArray = [...imageArray, ...data?.data];
+      imageArrayALL = [...imageArray, ...data?.data];
     }
 
     if (mail?.UrluploadConsultation?.length) {
+      name = [];
+      imageArray = [];
       const imageFormData = new FormData();
       mail?.UrluploadConsultation.forEach((img) => {
         //@ts-ignore
@@ -133,9 +141,12 @@ const SentMail = ({
       imageFormData?.append('arrayname', 'UrluploadConsultation');
 
       const { data } = await axiosConfig.post(IMAGEUPLOAD, imageFormData);
-      imageArray = [...imageArray, ...data?.data];
+      imageArrayALL = [...imageArray, ...data?.data];
     }
+
     if (mail?.UrluploadPatientsHealthIDCard?.length) {
+      name = [];
+      imageArray = [];
       const imageFormData = new FormData();
       mail?.UrluploadPatientsHealthIDCard.forEach((img) => {
         //@ts-ignore
@@ -148,9 +159,12 @@ const SentMail = ({
       imageFormData?.append('arrayname', 'UrluploadPatientsHealthIDCard');
 
       const { data } = await axiosConfig.post(IMAGEUPLOAD, imageFormData);
-      imageArray = [...imageArray, ...data?.data];
+      imageArrayALL = [...imageArray, ...data?.data];
     }
+
     if (mail?.UrluploadSignedPreAuth?.length) {
+      name = [];
+      imageArray = [];
       const imageFormData = new FormData();
       mail?.UrluploadSignedPreAuth.forEach((img) => {
         //@ts-ignore
@@ -163,7 +177,7 @@ const SentMail = ({
       imageFormData?.append('arrayname', 'UrluploadSignedPreAuth');
 
       const { data } = await axiosConfig.post(IMAGEUPLOAD, imageFormData);
-      imageArray = [...imageArray, ...data?.data];
+      imageArrayALL = [...imageArray, ...data?.data];
     }
 
     return imageArray;
@@ -232,14 +246,15 @@ const SentMail = ({
         mail?.UrluploadPatientsHealthIDCard?.length ||
         mail?.UrluploadSignedPreAuth?.length
       ) {
-        const images = await imageUpload();
+        const images: any = await imageUpload();
         console.log(images);
 
         //@ts-ignore
         images?.forEach((img) => {
           formData.append('imgurl', img);
         });
-        // formCreationAuditForm?.append("imgurl", images);
+
+        formCreationAuditForm?.append('imgurl', images);
         let imageArray = [
           ...mail?.Urlidproof,
           ...mail?.UrlotherDocuments,
