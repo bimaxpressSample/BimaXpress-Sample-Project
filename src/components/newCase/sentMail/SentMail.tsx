@@ -180,7 +180,7 @@ const SentMail = ({
       imageArrayALL = [...imageArray, ...data?.data];
     }
 
-    return imageArray;
+    return imageArrayALL;
   };
 
   const removeImage = (name: string, listName: string) => {
