@@ -396,7 +396,6 @@ const StepFour = ({
   };
 
   useEffect(() => {
-    console.log('I am at sum', chargeKeys);
     const totalSum =
       Number(
         (chargeKeys.includes('Per_Day_Room_Rent') &&

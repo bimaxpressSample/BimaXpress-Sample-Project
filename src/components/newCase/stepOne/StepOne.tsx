@@ -124,7 +124,10 @@ const StepOne = ({
   }, [empanelledCompaniesList]);
 
   useEffect(() => {
-    if (!newCaseNum) {
+    if (
+      !Object.entries(allCompaniesList)?.length ||
+      !Object.entries(empanelledCompaniesList)?.length
+    ) {
       if (!Object.entries(empanelledCompaniesList)?.length) {
         dispatch(setLoading(true));
       } else {
