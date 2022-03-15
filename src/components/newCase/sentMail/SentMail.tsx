@@ -17,6 +17,11 @@ import ReactHtmlParser from 'react-html-parser';
 import { useNavigate } from 'react-router-dom';
 // import paperclip from "../../../assets/icon/paperclip.svg";
 import { FiPaperclip } from 'react-icons/fi';
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import { easeQuadInOut } from "d3-ease";
+import AnimatedProgressProvider from "../../theme/utility/L/Loaderformail";
+
 const emailRegex = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
 
 type ComposeModalProps = {
@@ -169,6 +174,10 @@ const SentMail = ({
     return imageArray;
   };
 
+
+  const [mailLoader,setmailLoader] = useState(false);
+  
+
   const removeImage = (name: string, listName: string) => {
     console.log(name, listName);
 
@@ -187,13 +196,15 @@ const SentMail = ({
 
     console.log(email);
 
-    dispatch(setLoading(true));
+    // dispatch(setLoading(true));
+    setmailLoader(true);
+    console.log("trueeee")
 
     const URL = `/sendEmail?email=${user}`;
+
     const URLINCEMENT = `/incrementcounter?email=${user}`;
     const URLCHANGESTATUS = `/changeformstatus?email=${user}&casenumber=${newCaseNum}`;
     const URLFORMCREATIONAUDITTRIAL = `/formcreationaudittrail?email=${user}&casenumber=${newCaseNum}`;
-
     const formCreationAuditForm = new FormData();
     //@ts-ignore
     formCreationAuditForm?.append('amount', total);
@@ -268,8 +279,9 @@ const SentMail = ({
           formCreationAuditForm
         );
       }
-
-      dispatch(setLoading(false));
+      setmailLoader(false);
+      console.log("false")
+      // dispatch(setLoading(false));
       notification('info', `Email sent successfully`);
       closeModal();
       setMail({
@@ -369,7 +381,10 @@ const SentMail = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newCaseData]);
 
+
   return (
+    <>
+    
     <Modal
       isOpen={isOpen}
       className={`${styles.approveModalContainer} y-scroll`}
@@ -377,6 +392,28 @@ const SentMail = ({
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick={true}
     >
+      {
+      mailLoader &&
+      <AnimatedProgressProvider
+          valueStart={0}
+          //@ts-ignore
+          valueEnd={100}
+          duration={7.4}
+          easingFunction={easeQuadInOut}
+        
+        >
+          {(value:any) => {
+            const roundedValue = Math.round(value);
+            return (
+              <CircularProgressbar
+                value={value}
+                text={`${roundedValue}%`}
+                styles={buildStyles({ pathTransition: "none" })}
+              />
+            );
+          }}
+        </AnimatedProgressProvider>
+    }
       <div
         className={`flex items-center justify-between h-10 w-full bg-primary px-4 border-none outline-none ${styles.composeModalHeader}`}
       >
@@ -804,6 +841,7 @@ const SentMail = ({
         </div>
       </div>
     </Modal>
+    </>
   );
 };
 

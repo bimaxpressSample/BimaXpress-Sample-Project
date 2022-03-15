@@ -42,6 +42,7 @@ import ReimbursementTableData from './components/reimbursement/ReimbursementTabl
 import BnplHome from './components/buyNowPayLater/bnplHome';
 import BnplTable from './components/buyNowPayLater/bnplTable';
 import BnplForm from './components/buyNowPayLater/bnplForm';
+import DetailsUnderWriter from './components/UnderWriter/Details'
 
 // Non Cashless
 import NonCashlessAddCase from './components/nonCashless/newCase/NonCashlessAddCase';
@@ -192,6 +193,10 @@ function App() {
             <Route
               path='/patientAvailedCase/:case/:id'
               element={UndWrapper(<CaseSummary />)}
+            />
+             <Route
+              path='/undhospitaldetails'
+              element={UndWrapper(<DetailsUnderWriter />)}
             />
           </>
         );

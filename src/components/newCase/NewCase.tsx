@@ -494,7 +494,7 @@ const NewCase = () => {
       toggleWarningModal();
     } else {
       window.open(
-        `https://www.api.bimaxpress.com/preauthform?email=${user}&casenumber=${newCaseNum}`,
+        `https://api.main.bimaxpress.com/preauthform?email=${user}&casenumber=${newCaseNum}`,
         '_blank',
         'noopener,noreferrer'
       );

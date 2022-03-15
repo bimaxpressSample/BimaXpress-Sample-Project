@@ -318,11 +318,19 @@ const UndDrafts = () => {
             accessor: 'claimNumber',
           },
           {
-            Header: 'ES Offered Amount',
+            Header: 'Processing Fees',
+            accessor: '',
+          },
+          {
+            Header: 'ES Amount',
             accessor: 'esoffered',
           },
           {
-            Header: 'Expected Date of Return',
+            Header: 'Offer Date',
+            accessor: '',
+          },
+          {
+            Header: 'Maturity Date',
             accessor: 'expectedDateOfReturn',
           },
         ];
@@ -343,19 +351,23 @@ const UndDrafts = () => {
             accessor: 'claimNumber',
           },
           {
-            Header: 'ES Offered Amount',
+            Header: 'ES Amount',
             accessor: 'esoffered',
           },
           {
-            Header: 'Date of Offer Availed',
+            Header: 'ES Date',
             accessor: 'date_of_availed',
           },
           {
-            Header: 'Expected Date of Return',
+            Header: 'Processing fees',
+           
+          },
+          {
+            Header: 'Maturity Date',
             accessor: 'expectedDateOfReturn',
           },
           {
-            Header: 'Days Since ES Offer Availed',
+            Header: 'Offer Type',
             accessor: 'days_since_availed',
           },
         ];
@@ -433,19 +445,27 @@ const UndDrafts = () => {
             accessor: 'claimNumber',
           },
           {
-            Header: 'ES Offered Amount',
+            Header: 'ES Amount',
             accessor: 'claimAmount',
           },
           {
-            Header: 'Date of Settlement',
+            Header: 'ES Date',
             accessor: 'date',
           },
           {
-            Header: 'TAT',
+            Header: 'Offer Type',
+            accessor: '',
+          },
+          {
+            Header: 'Processing Fee',
+            accessor: '',
+          },
+          {
+            Header: 'Settlement Date',
             accessor: 'phone',
           },
           {
-            Header: 'Interest Charged',
+            Header: 'Actual Interest',
             accessor: 'phone2',
           },
         ];
@@ -509,14 +529,14 @@ const UndDrafts = () => {
           // @ts-ignore
           Header: ({ getToggleAllRowsSelectedProps }) => (
             <div>
-              <TableCheckbox {...getToggleAllRowsSelectedProps()} />
+             
             </div>
           ),
 
           Cell: ({ row }) => (
             <div>
               {/* @ts-ignore */}
-              <TableCheckbox {...row.getToggleRowSelectedProps()} />
+             
             </div>
           ),
         },
