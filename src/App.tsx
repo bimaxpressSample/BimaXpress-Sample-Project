@@ -104,10 +104,11 @@ function App() {
               element={Wrapper(<DischargeApproved />)}
             />
 
-            <Route
+            {/* <Route
               path='/earlySettlement'
               element={Wrapper(<EarlySettlement />)}
-            />
+            /> */}
+            
             <Route
               path='/earlySettlementDash'
               element={Wrapper(<EarlySettlementDash />)}

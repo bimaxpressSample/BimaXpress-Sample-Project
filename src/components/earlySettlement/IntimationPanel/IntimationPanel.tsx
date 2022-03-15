@@ -14,10 +14,17 @@ import axiosConfig from '../../../config/axiosConfig';
 import { setCaseData } from '../../../redux/slices/homeSlice';
 import notification from '../../theme/utility/notification';
 import SentMail from './SentMail';
+import NewCaseSelect from '../../theme/select/newCaseSelect/NewCaseSelect';
 
 interface ColumnDetails {
   [key: string]: any;
 }
+
+const confirmationStatus = [
+  { label: 'Confirmation Pending', value: 'Confirmation Pending' },
+  { label: 'Confirmed', value: 'Confirmed' },
+  { label: 'Denied', value: 'Denied' },
+];
 
 export default function IntimationPanel() {
   const navigate = useNavigate();
@@ -96,16 +103,16 @@ export default function IntimationPanel() {
         accessor: 'mail',
       },
       {
-        Header: 'Status',
-        accessor: 'status1',
+        Header: 'Mail Status',
+        accessor: 'mailStatus',
       },
+      // {
+      //   Header: 'Status',
+      //   accessor: 'status2',
+      // },
       {
-        Header: 'Status',
-        accessor: 'status2',
-      },
-      {
-        Header: 'Status',
-        accessor: 'status3',
+        Header: 'Confirmation Status',
+        accessor: 'confirmationStatus',
       },
     ],
     []
@@ -162,13 +169,28 @@ export default function IntimationPanel() {
   );
 
   // ----------------- used to send data t react table ----------------------------
+  const [status , setStatus] = useState({});
+
+  const handleChange = (e:any) =>{
+    const {name , value} = e.target ;
+    setStatus((pre : any) =>({
+      ...pre,
+      [name]:value
+    }));
+  }
+  console.log(status);
 
   useEffect(() => {
+
     const res = Object.entries(caseData)?.map(
+      
       (
         //@ts-ignore
         [companyname, value]
-      ) => ({
+      ) => (
+        
+        {
+
         name: companyname,
 
         mail: (
@@ -184,33 +206,37 @@ export default function IntimationPanel() {
             <path d='M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z' />
           </svg>
         ),
-        status1: (
+        mailStatus: (
           <div>
             <div className='dropdown inline-block relative'>
               {/* <span className="w-2 bg-gray-300 text-gray-700 font-semibold py-2 px-2 text-center rounded inline-flex items-center"> */}
               <span className='px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-gray-300 text-gray-700'>
-                {value === ''
-                  ? 'Send Mail'
-                  : value === 'Sent'
-                  ? 'Mail Sent'
-                  : 'Resend Mail'}
+                {value === 'Sent' ? 'Mail Sent' : 'Mail Not Sent' }
               </span>
             </div>
           </div>
         ),
-        status2: (
-          <span className='px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-400 text-green-900'>
-            {value === ''
-              ? 'Mail Not Sent'
-              : value === 'Sent'
-              ? 'Yet to Confirm'
-              : 'No Response'}
-          </span>
-        ),
-        status3: (
-          <span className='px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-400 text-yellow-900'>
-            Pending
-          </span>
+        // status2: (
+        //   <span className='px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-400 text-green-900'>
+        //     {value === ''
+        //       ? 'Mail Not Sent'
+        //       : value === 'Sent'
+        //       ? 'Yet to Confirm'
+        //       : 'No Response'}
+        //   </span>
+        // ),
+        confirmationStatus: (
+          // <span className='px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-400 text-yellow-900'>
+          //   Pending
+          // </span>
+          <NewCaseSelect
+            options={confirmationStatus}
+            name={companyname}
+            handleChange={handleChange}
+            defaultOption='Select Status'
+            // label='Third Party Administrator (TPA)'
+            value={''}
+          />
         ),
       })
     );
@@ -240,6 +266,7 @@ export default function IntimationPanel() {
         isOpen={openModal}
         AccountDetails={AccountDetails}
         companyDetail={selectedModal}
+        fetchEmpanelCompany={fetchEmpanelCompany}
       />
     </div>
   );

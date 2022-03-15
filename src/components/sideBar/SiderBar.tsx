@@ -141,11 +141,11 @@ const sideBarMenu = [
     pageLink: '/earlysettlementDash',
   },
   {
-    name: 'Early Settlement',
+    name: 'Early Settlement Onboarding',
     icon: (
       <AiOutlineClockCircle className='text-fontColor mr-4 ml-2 md:ml-5 text-xl' />
     ),
-    pageLink: '/earlysettlement',
+    pageLink: '/UploadDocument',
   },
   {
     name: 'Wallet',

@@ -18,7 +18,7 @@ export default function UploadDocument() {
         AadharCard: [],
         BankStatement: [],
         AuditedBalanceSheet: [],
-        PanCard: [],
+        InsurerData: [],
     });
 
     const imageUpload = async (files: any) => {
@@ -28,11 +28,11 @@ export default function UploadDocument() {
         const aadharFormData = new FormData();
         const bankFormData = new FormData();
         const balancesheetFormData = new FormData();
-        const panFormData = new FormData();
+        const insurerDataFormData = new FormData();
         let aadharname: string | Blob | any[] = [];
         let bankname: string | Blob | any[] = [];
         let balancesheetname: string | Blob | any[] = [];
-        let panname: string | Blob | any[] = [];
+        let insurerDataName: string | Blob | any[] = [];
 
         console.log("files" ,files);
 
@@ -82,18 +82,18 @@ export default function UploadDocument() {
             console.log("balance" , data.data);
             imageArray = [...imageArray, ...data?.data];
         }
-        if (files?.PanCard?.length) {
+        if (files?.InsurerData?.length) {
             
-            files?.PanCard.forEach((img: any) => {
+            files?.InsurerData.forEach((img: any) => {
                 //@ts-ignore
-                panname.push(img?.name);
+                insurerDataName.push(img?.name);
 
-                panFormData.append("image", img);
+                insurerDataFormData.append("image", img);
             });
             //@ts-ignore
-            panFormData?.append("imagename", panname);
-            panFormData?.append("arrayname", "pan");
-            const { data } = await axiosConfig.post(IMAGEUPLOAD, panFormData);
+            insurerDataFormData?.append("imagename", insurerDataName);
+            insurerDataFormData?.append("arrayname", "InsurerData");
+            const { data } = await axiosConfig.post(IMAGEUPLOAD, insurerDataFormData);
             console.log("pan" , data.data);
             imageArray = [...imageArray, ...data?.data];
         }
@@ -103,16 +103,32 @@ export default function UploadDocument() {
 
 
     const uploadFile = async () => {
-        if(!data?.AadharCard?.length || !data?.BankStatement?.length || !data?.AuditedBalanceSheet?.length || !data?.PanCard?.length){
-            notification("error","Please Attach All Required Documents");
-            return ;
-        }
+        
+        // todo Uncomment this loop before push  
+
+        // if(!data?.AadharCard?.length || !data?.BankStatement?.length || !data?.AuditedBalanceSheet?.length || !data?.InsurerData?.length){
+        //     notification("error","Please Attach All Required Documents");
+        //     return ;
+        // }
+
+        const AccountDetailURL = `/AccountDeta?email=${user}`;
+
         dispatch(setLoading(true));
         try {
             const image = await imageUpload(data);
+             
+            const AccData = await axiosConfig.get(AccountDetailURL);
             dispatch(setLoading(false));
+            console.log("account Data", AccData?.data?.data);
+            console.log("length", Object.keys(AccData?.data?.data).length);
+
+            if(!Object.keys(AccData?.data?.data).length){
+                navigate('/AccountDetails');
+            }
+            else{
+                navigate('/IntimationPanel')
+            }
             notification("info", `Document Uploaded successfully`);
-            navigate('/InsurerData');
 
         } catch (error) {
             dispatch(setLoading(false));
@@ -172,7 +188,7 @@ export default function UploadDocument() {
             <div className="grid grid-cols-2 gap-10 p-10">
                 <div className="w-full h-auto border-2 border-fontColor rounded-lg text-center">
                     <p className="text-sm text-fontColor-gray pt-4">
-                        Upload Aadhar Card here
+                        Upload KYC Documents here
                     </p>
                     <div className="flex items-center justify-center mt-4">
                         {data?.AadharCard?.length
@@ -274,7 +290,7 @@ export default function UploadDocument() {
                 </div>
                 <div className="w-full h-auto border-2 border-fontColor rounded-lg text-center">
                     <p className="text-sm text-fontColor-gray pt-4">
-                        Upload Audited Balancesheet here
+                        Upload Last 2 Year Audited Financial Statments here
                     </p>
                     <div className="flex items-center justify-center mt-4">
                         {data?.AuditedBalanceSheet?.length
@@ -325,11 +341,11 @@ export default function UploadDocument() {
                 </div>
                 <div className="w-full h-auto border-2 border-fontColor rounded-lg text-center">
                     <p className="text-sm text-fontColor-gray pt-4">
-                        Upload Pan Card here
+                        Upload Insurer Data here
                     </p>
                     <div className="flex items-center justify-center mt-4">
-                        {data?.PanCard?.length
-                            ? data?.PanCard?.map(
+                        {data?.InsurerData?.length
+                            ? data?.InsurerData?.map(
                                 (
                                     file: { name: {} | null | undefined },
                                     index: React.Key | null | undefined
@@ -353,7 +369,7 @@ export default function UploadDocument() {
                                                 {file?.name}
                                             </p>
                                             {/* @ts-ignore */}
-                                            <IoClose onClick={() => removeImage(file?.name, 'PanCard')} />
+                                            <IoClose onClick={() => removeImage(file?.name, 'InsurerData')} />
                                         </div>
                                     );
                                 }
@@ -367,7 +383,7 @@ export default function UploadDocument() {
                             <input
                                 type="file"
                                 className="absolute border-none outline-none cursor-pointer opacity-0 w-44 h-10 top-0 left-0 z-10"
-                                name="PanCard"
+                                name="InsurerData"
                                 onChange={handleChange}
                                 multiple
                             />
@@ -377,8 +393,8 @@ export default function UploadDocument() {
             </div>
 
             <div className="flex justify-end mt-10 px-20">
-                <button onClick={uploadFile} type="submit" className="mr-4 mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-xs">
-                    Proceed For Insurer Data
+                <button onClick={uploadFile} type="submit" className="mr-4 mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-xl font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-base">
+                    Next
                 </button>
             </div>
 

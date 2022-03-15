@@ -16,7 +16,7 @@ const NavBar = () => {
   const params = useParams();
 
   // @ts-ignore
-  const [showWarningNotification,setshowWarningNotification] = useState(userPlanData.claimsleft <= 0.15 * userPlanData.total_claims);
+  const [showWarningNotification,setshowWarningNotification] = useState(userPlanData?.claimsleft <= 0.15 * userPlanData?.total_claims);
 
   
 
