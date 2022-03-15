@@ -205,7 +205,7 @@ const DischargeApproved = () => {
               disabled={bucketStatus === 'Enabled' ? false : true}
             >
               {bucketStatus === 'Enabled' || bucketStatus === ''
-                ? 'Check'
+                ? 'Settle'
                 : 'Availed'}
             </Button>
           </>
