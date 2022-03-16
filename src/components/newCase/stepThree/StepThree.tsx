@@ -460,8 +460,9 @@ const StepThree = ({
               handleChange={handleChange}
               name='durationOfPresentAilment'
               value={diagnosisDetails?.durationOfPresentAilment || ''}
-              label='Duration of present ailment'
+              label='Duration of present ailment (days)'
               style={{ maxWidth: '80px' }}
+        
             />
           </div>
           <div className='mt-6'>

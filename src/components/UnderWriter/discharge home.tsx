@@ -261,7 +261,7 @@ console.log('selected',selectedOptions)
           ) => {
             return (
               <div
-                key={index + 'home'}
+                key={index + 'homse'}
                 className='grid justify-center'
                 onClick={() => GoDraftPage(menu?.pageLink, menu?.value)}
               >

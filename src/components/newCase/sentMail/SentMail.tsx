@@ -17,6 +17,11 @@ import ReactHtmlParser from 'react-html-parser';
 import { useNavigate } from 'react-router-dom';
 // import paperclip from "../../../assets/icon/paperclip.svg";
 import { FiPaperclip } from 'react-icons/fi';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { easeQuadInOut } from 'd3-ease';
+import AnimatedProgressProvider from '../../theme/utility/NewLoader/Loaderformail';
+
 const emailRegex = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
 
 type ComposeModalProps = {
@@ -183,6 +188,8 @@ const SentMail = ({
     return imageArrayALL;
   };
 
+  const [mailLoader, setmailLoader] = useState(false);
+
   const removeImage = (name: string, listName: string) => {
     console.log(name, listName);
 
@@ -201,13 +208,15 @@ const SentMail = ({
 
     console.log(email);
 
-    dispatch(setLoading(true));
+    // dispatch(setLoading(true));
+    setmailLoader(true);
+    console.log('trueeee');
 
     const URL = `/sendEmail?email=${user}`;
+
     const URLINCEMENT = `/incrementcounter?email=${user}`;
     const URLCHANGESTATUS = `/changeformstatus?email=${user}&casenumber=${newCaseNum}`;
     const URLFORMCREATIONAUDITTRIAL = `/formcreationaudittrail?email=${user}&casenumber=${newCaseNum}`;
-
     const formCreationAuditForm = new FormData();
     //@ts-ignore
     formCreationAuditForm?.append('amount', total);
@@ -283,8 +292,9 @@ const SentMail = ({
           formCreationAuditForm
         );
       }
-
-      dispatch(setLoading(false));
+      setmailLoader(false);
+      console.log('false');
+      // dispatch(setLoading(false));
       notification('info', `Email sent successfully`);
       closeModal();
       setMail({
@@ -385,81 +395,121 @@ const SentMail = ({
   }, [newCaseData]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      className={`${styles.approveModalContainer} y-scroll`}
-      overlayClassName={styles.overlayContainer}
-      onRequestClose={closeModal}
-      shouldCloseOnOverlayClick={true}
-    >
-      <div
-        className={`flex items-center justify-between h-10 w-full bg-primary px-4 border-none outline-none ${styles.composeModalHeader}`}
+    <>
+      <Modal
+        isOpen={isOpen}
+        className={`${styles.approveModalContainer} y-scroll`}
+        overlayClassName={styles.overlayContainer}
+        onRequestClose={closeModal}
+        shouldCloseOnOverlayClick={true}
       >
-        <div></div>
-        <p className='text-base text-fontColor tracking-wide capitalize'>
-          Sent Mail
-        </p>
-        <IoClose
-          className=' text-2xl text-fontColor cursor-pointer'
-          onClick={closeModal}
-        />
-      </div>
-      {/* <p className="px-4 py-2 text-sm text-primary font-medium">
+        {mailLoader && (
+          <div
+            id='LoaderDiv'
+            style={{
+              zIndex: '1050',
+
+              width: '100%',
+              minHeight: '120%',
+              backgroundColor: 'rgb(206 206 206 / 84%)',
+              position: 'absolute',
+              top: '0',
+              left: '0',
+            }}
+          >
+            <AnimatedProgressProvider
+              valueStart={0}
+              //@ts-ignore
+              valueEnd={100}
+              duration={7.4}
+              easingFunction={easeQuadInOut}
+            >
+              {(value: any) => {
+                const roundedValue = Math.round(value);
+                return (
+                  <CircularProgressbar
+                    value={value}
+                    text={`${roundedValue}%`}
+                    styles={buildStyles({
+                      pathTransition: 'none',
+                      textColor: 'orange',
+                      pathColor: 'orange',
+                      backgroundColor: 'white',
+                    })}
+                  />
+                );
+              }}
+            </AnimatedProgressProvider>
+          </div>
+        )}
+        <div
+          className={`flex items-center justify-between h-10 w-full bg-primary px-4 border-none outline-none ${styles.composeModalHeader}`}
+        >
+          <div></div>
+          <p className='text-base text-fontColor tracking-wide capitalize'>
+            Sent Mail
+          </p>
+          <IoClose
+            className=' text-2xl text-fontColor cursor-pointer'
+            onClick={closeModal}
+          />
+        </div>
+        {/* <p className="px-4 py-2 text-sm text-primary font-medium">
         bhimxpress2000@outlook.in
       </p> */}
 
-      <div className='px-4 py-2 text-sm text-fontColor-darkGray border-t border-fontColor-gray tracking-wide flex items-center flex-wrap'>
-        <p className='mr-2 mb-1'>Cc</p>
-        {mail?.ccList?.map((item, index) => {
-          return (
-            <div
-              className={`flex items-center border border-fontColor-darkGray rounded-3xl mr-2 px-2 mb-1  ${
-                checkValidEmail(item)
-                  ? 'font-medium text-primary'
-                  : 'border-none bg-red-600 text-fontColor'
-              }`}
-              key={index}
-            >
-              <p>{item}</p>
-              <MdOutlineClose
-                className={`text-fontColor-darkGray ml-2 cursor-pointer ${
-                  checkValidEmail(item) ? '' : 'text-fontColor'
+        <div className='px-4 py-2 text-sm text-fontColor-darkGray border-t border-fontColor-gray tracking-wide flex items-center flex-wrap'>
+          <p className='mr-2 mb-1'>Cc</p>
+          {mail?.ccList?.map((item, index) => {
+            return (
+              <div
+                className={`flex items-center border border-fontColor-darkGray rounded-3xl mr-2 px-2 mb-1  ${
+                  checkValidEmail(item)
+                    ? 'font-medium text-primary'
+                    : 'border-none bg-red-600 text-fontColor'
                 }`}
-                onClick={() => removeEmail(item, 'ccList')}
-              />
-            </div>
-          );
-        })}
+                key={index}
+              >
+                <p>{item}</p>
+                <MdOutlineClose
+                  className={`text-fontColor-darkGray ml-2 cursor-pointer ${
+                    checkValidEmail(item) ? '' : 'text-fontColor'
+                  }`}
+                  onClick={() => removeEmail(item, 'ccList')}
+                />
+              </div>
+            );
+          })}
 
-        <input
-          className='border-none outline-none flex-auto'
-          value={mail?.cc}
-          name='cc'
-          onChange={(e) => handleChange(e)}
-          onKeyPress={(e) => handleKeypress(e, 'cc', 'ccList')}
-        />
-      </div>
-      <div className='px-4 py-2 text-sm text-fontColor-darkGray border-t border-fontColor-gray tracking-wide flex'>
-        <input
-          className='border-none outline-none text-primary font-medium flex-auto'
-          value={mail?.sub}
-          name='sub'
-          onChange={(e) => handleChange(e)}
-          placeholder='Subject'
-        />
-      </div>
+          <input
+            className='border-none outline-none flex-auto'
+            value={mail?.cc}
+            name='cc'
+            onChange={(e) => handleChange(e)}
+            onKeyPress={(e) => handleKeypress(e, 'cc', 'ccList')}
+          />
+        </div>
+        <div className='px-4 py-2 text-sm text-fontColor-darkGray border-t border-fontColor-gray tracking-wide flex'>
+          <input
+            className='border-none outline-none text-primary font-medium flex-auto'
+            value={mail?.sub}
+            name='sub'
+            onChange={(e) => handleChange(e)}
+            placeholder='Subject'
+          />
+        </div>
 
-      <div
-        className='px-4 py-2 pb-4 text-sm text-fontColor-darkGray border-t border-b border-fontColor-gray tracking-wide outline-none'
-        style={{ minHeight: '250px' }}
-        contentEditable={true}
-        ref={bodyRef}
-        suppressContentEditableWarning={true}
-      >
-        {ReactHtmlParser(mail?.body)}
-      </div>
+        <div
+          className='px-4 py-2 pb-4 text-sm text-fontColor-darkGray border-t border-b border-fontColor-gray tracking-wide outline-none'
+          style={{ minHeight: '250px' }}
+          contentEditable={true}
+          ref={bodyRef}
+          suppressContentEditableWarning={true}
+        >
+          {ReactHtmlParser(mail?.body)}
+        </div>
 
-      {/* <div className="flex items-center flex-wrap">
+        {/* <div className="flex items-center flex-wrap">
         {mail?.file?.length
           ? mail?.file?.map((file, index) => {
               return (
@@ -488,272 +538,272 @@ const SentMail = ({
           : null}
       </div> */}
 
-      <div className='grid grid-cols-2 gap-x-4 gap-y-6 m-4'>
-        <div className='col-span-1 flex justify-center flex-col'>
-          <div className='flex items-center flex-wrap'>
-            {mail?.UrluploadSignedPreAuth?.length
-              ? mail?.UrluploadSignedPreAuth?.map((file, index) => {
-                  return (
-                    <div
-                      className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
-                      style={{ width: '100%', maxWidth: '145px' }}
-                      key={index}
-                    >
-                      <p
-                        style={{
-                          width: '100%',
-                          maxWidth: '125px',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                        }}
+        <div className='grid grid-cols-2 gap-x-4 gap-y-6 m-4'>
+          <div className='col-span-1 flex justify-center flex-col'>
+            <div className='flex items-center flex-wrap'>
+              {mail?.UrluploadSignedPreAuth?.length
+                ? mail?.UrluploadSignedPreAuth?.map((file, index) => {
+                    return (
+                      <div
+                        className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
+                        style={{ width: '100%', maxWidth: '145px' }}
+                        key={index}
                       >
-                        {/* @ts-ignore */}
-                        {file?.name}
-                      </p>
+                        <p
+                          style={{
+                            width: '100%',
+                            maxWidth: '125px',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {/* @ts-ignore */}
+                          {file?.name}
+                        </p>
 
-                      <IoClose
-                        onClick={() =>
-                          //@ts-ignore
-                          removeImage(file?.name, 'UrluploadSignedPreAuth')
-                        }
-                      />
-                    </div>
-                  );
-                })
-              : null}
-          </div>
-          <div
-            className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
-            style={{ minWidth: '150px' }}
-          >
-            <FiPaperclip className='mr-2' />
-            <p className='text-fborder-fontColor-darkGray-gray font-normal '>
-              Auth Form
-            </p>
-            <input
-              type='file'
-              className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
-              name='UrluploadSignedPreAuth'
-              onChange={handleChange}
-              multiple
-            />
-          </div>
-        </div>
-        <div className='col-span-1 flex justify-center flex-col'>
-          <div className='flex items-center flex-wrap'>
-            {mail?.UrluploadConsultation?.length
-              ? mail?.UrluploadConsultation?.map((file, index) => {
-                  return (
-                    <div
-                      className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
-                      style={{ width: '100%', maxWidth: '145px' }}
-                      key={index}
-                    >
-                      <p
-                        style={{
-                          width: '100%',
-                          maxWidth: '125px',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                        }}
-                      >
-                        {/* @ts-ignore */}
-                        {file?.name}
-                      </p>
-                      {/* @ts-ignore */}
-                      <IoClose
-                        onClick={() =>
-                          //@ts-ignore
-                          removeImage(file?.name, 'UrluploadConsultation')
-                        }
-                      />
-                    </div>
-                  );
-                })
-              : null}
-          </div>
-          <div
-            className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
-            style={{ minWidth: '150px' }}
-          >
-            <FiPaperclip className='mr-2' />
-            <p className='text-fborder-fontColor-darkGray-gray font-normal '>
-              Consultation Papers
-            </p>
-            <input
-              type='file'
-              className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
-              name='UrluploadConsultation'
-              onChange={handleChange}
-              multiple
-            />
-          </div>
-        </div>
-        <div className='col-span-1 flex justify-center flex-col'>
-          <div className='flex items-center flex-wrap'>
-            {mail?.UrluploadPatientsHealthIDCard?.length
-              ? mail?.UrluploadPatientsHealthIDCard?.map((file, index) => {
-                  return (
-                    <div
-                      className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
-                      style={{ width: '100%', maxWidth: '145px' }}
-                      key={index}
-                    >
-                      <p
-                        style={{
-                          width: '100%',
-                          maxWidth: '125px',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                        }}
-                      >
-                        {/* @ts-ignore */}
-                        {file?.name}
-                      </p>
-                      {/* @ts-ignore */}
-                      <IoClose
-                        onClick={() =>
-                          removeImage(
+                        <IoClose
+                          onClick={() =>
                             //@ts-ignore
-                            file?.name,
-                            'UrluploadPatientsHealthIDCard'
-                          )
-                        }
-                      />
-                    </div>
-                  );
-                })
-              : null}
+                            removeImage(file?.name, 'UrluploadSignedPreAuth')
+                          }
+                        />
+                      </div>
+                    );
+                  })
+                : null}
+            </div>
+            <div
+              className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
+              style={{ minWidth: '150px' }}
+            >
+              <FiPaperclip className='mr-2' />
+              <p className='text-fborder-fontColor-darkGray-gray font-normal '>
+                Auth Form
+              </p>
+              <input
+                type='file'
+                className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
+                name='UrluploadSignedPreAuth'
+                onChange={handleChange}
+                multiple
+              />
+            </div>
           </div>
-          <div
-            className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
-            style={{ minWidth: '150px' }}
-          >
-            <FiPaperclip className='mr-2' />
-            <p className='text-fborder-fontColor-darkGray-gray font-normal '>
-              Health Id Card
-            </p>
-            <input
-              type='file'
-              className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
-              name='UrluploadPatientsHealthIDCard'
-              onChange={handleChange}
-              multiple
-            />
-          </div>
-        </div>
-        <div className='col-span-1 flex justify-center flex-col'>
-          <div className='flex items-center flex-wrap'>
-            {mail?.Urlidproof?.length
-              ? mail?.Urlidproof?.map((file, index) => {
-                  return (
-                    <div
-                      className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
-                      style={{ width: '100%', maxWidth: '145px' }}
-                      key={index}
-                    >
-                      <p
-                        style={{
-                          width: '100%',
-                          maxWidth: '125px',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                        }}
+          <div className='col-span-1 flex justify-center flex-col'>
+            <div className='flex items-center flex-wrap'>
+              {mail?.UrluploadConsultation?.length
+                ? mail?.UrluploadConsultation?.map((file, index) => {
+                    return (
+                      <div
+                        className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
+                        style={{ width: '100%', maxWidth: '145px' }}
+                        key={index}
                       >
+                        <p
+                          style={{
+                            width: '100%',
+                            maxWidth: '125px',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {/* @ts-ignore */}
+                          {file?.name}
+                        </p>
                         {/* @ts-ignore */}
-                        {file?.name}
-                      </p>
-
-                      <IoClose
-                        //@ts-ignore
-                        onClick={() => removeImage(file?.name, 'Urlidproof')}
-                      />
-                    </div>
-                  );
-                })
-              : null}
+                        <IoClose
+                          onClick={() =>
+                            //@ts-ignore
+                            removeImage(file?.name, 'UrluploadConsultation')
+                          }
+                        />
+                      </div>
+                    );
+                  })
+                : null}
+            </div>
+            <div
+              className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
+              style={{ minWidth: '150px' }}
+            >
+              <FiPaperclip className='mr-2' />
+              <p className='text-fborder-fontColor-darkGray-gray font-normal '>
+                Consultation Papers
+              </p>
+              <input
+                type='file'
+                className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
+                name='UrluploadConsultation'
+                onChange={handleChange}
+                multiple
+              />
+            </div>
           </div>
-          <div
-            className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
-            style={{ minWidth: '150px' }}
-          >
-            <FiPaperclip className='mr-2' />
-            <p className='text-fborder-fontColor-darkGray-gray font-normal '>
-              ID Proof
-            </p>
-            <input
-              type='file'
-              className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
-              name='Urlidproof'
-              onChange={handleChange}
-              multiple
-            />
-          </div>
-        </div>
-        <div className='col-span-1 flex justify-center flex-col'>
-          <div className='flex items-center flex-wrap'>
-            {mail?.UrlotherDocuments?.length
-              ? mail?.UrlotherDocuments?.map((file, index) => {
-                  return (
-                    <div
-                      className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
-                      style={{ width: '100%', maxWidth: '145px' }}
-                      key={index}
-                    >
-                      <p
-                        style={{
-                          width: '100%',
-                          maxWidth: '125px',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                        }}
+          <div className='col-span-1 flex justify-center flex-col'>
+            <div className='flex items-center flex-wrap'>
+              {mail?.UrluploadPatientsHealthIDCard?.length
+                ? mail?.UrluploadPatientsHealthIDCard?.map((file, index) => {
+                    return (
+                      <div
+                        className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
+                        style={{ width: '100%', maxWidth: '145px' }}
+                        key={index}
                       >
+                        <p
+                          style={{
+                            width: '100%',
+                            maxWidth: '125px',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {/* @ts-ignore */}
+                          {file?.name}
+                        </p>
                         {/* @ts-ignore */}
-                        {file?.name}
-                      </p>
+                        <IoClose
+                          onClick={() =>
+                            removeImage(
+                              //@ts-ignore
+                              file?.name,
+                              'UrluploadPatientsHealthIDCard'
+                            )
+                          }
+                        />
+                      </div>
+                    );
+                  })
+                : null}
+            </div>
+            <div
+              className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
+              style={{ minWidth: '150px' }}
+            >
+              <FiPaperclip className='mr-2' />
+              <p className='text-fborder-fontColor-darkGray-gray font-normal '>
+                Health Id Card
+              </p>
+              <input
+                type='file'
+                className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
+                name='UrluploadPatientsHealthIDCard'
+                onChange={handleChange}
+                multiple
+              />
+            </div>
+          </div>
+          <div className='col-span-1 flex justify-center flex-col'>
+            <div className='flex items-center flex-wrap'>
+              {mail?.Urlidproof?.length
+                ? mail?.Urlidproof?.map((file, index) => {
+                    return (
+                      <div
+                        className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
+                        style={{ width: '100%', maxWidth: '145px' }}
+                        key={index}
+                      >
+                        <p
+                          style={{
+                            width: '100%',
+                            maxWidth: '125px',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {/* @ts-ignore */}
+                          {file?.name}
+                        </p>
 
-                      <IoClose
-                        onClick={() =>
+                        <IoClose
                           //@ts-ignore
-                          removeImage(file?.name, 'UrlotherDocuments')
-                        }
-                      />
-                    </div>
-                  );
-                })
-              : null}
+                          onClick={() => removeImage(file?.name, 'Urlidproof')}
+                        />
+                      </div>
+                    );
+                  })
+                : null}
+            </div>
+            <div
+              className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
+              style={{ minWidth: '150px' }}
+            >
+              <FiPaperclip className='mr-2' />
+              <p className='text-fborder-fontColor-darkGray-gray font-normal '>
+                ID Proof
+              </p>
+              <input
+                type='file'
+                className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
+                name='Urlidproof'
+                onChange={handleChange}
+                multiple
+              />
+            </div>
           </div>
-          <div
-            className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
-            style={{ minWidth: '150px' }}
-          >
-            <FiPaperclip className='mr-2' />
-            <p className='text-fborder-fontColor-darkGray-gray font-normal '>
-              Other Documents
-            </p>
-            <input
-              type='file'
-              className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
-              name='UrlotherDocuments'
-              onChange={handleChange}
-              multiple
-            />
+          <div className='col-span-1 flex justify-center flex-col'>
+            <div className='flex items-center flex-wrap'>
+              {mail?.UrlotherDocuments?.length
+                ? mail?.UrlotherDocuments?.map((file, index) => {
+                    return (
+                      <div
+                        className='bg-fontColor-gray text-sm flex items-center justify-between  h-8 px-2 mr-2 rounded-sm m-4 overflow-hidden '
+                        style={{ width: '100%', maxWidth: '145px' }}
+                        key={index}
+                      >
+                        <p
+                          style={{
+                            width: '100%',
+                            maxWidth: '125px',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {/* @ts-ignore */}
+                          {file?.name}
+                        </p>
+
+                        <IoClose
+                          onClick={() =>
+                            //@ts-ignore
+                            removeImage(file?.name, 'UrlotherDocuments')
+                          }
+                        />
+                      </div>
+                    );
+                  })
+                : null}
+            </div>
+            <div
+              className='relative flex items-center justify-center border-2 border-fontColor-darkGray rounded-lg  h-10 px-2'
+              style={{ minWidth: '150px' }}
+            >
+              <FiPaperclip className='mr-2' />
+              <p className='text-fborder-fontColor-darkGray-gray font-normal '>
+                Other Documents
+              </p>
+              <input
+                type='file'
+                className='absolute border-none outline-none cursor-pointer opacity-0 w-full h-10 top-0 left-0 z-10'
+                name='UrlotherDocuments'
+                onChange={handleChange}
+                multiple
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className=' flex items-center py-8 p px-4'>
-        <button
-          className='w-28 h-10 bg-primary-dark text-sm text-fontColor border-none outline-none rounded mr-3'
-          onClick={uploadFile}
-        >
-          Send
-        </button>
-        {/* <div className="relative w-8 h-8 cursor-pointer">
+        <div className=' flex items-center py-8 p px-4'>
+          <button
+            className='w-28 h-10 bg-primary-dark text-sm text-fontColor border-none outline-none rounded mr-3'
+            onClick={uploadFile}
+          >
+            Send
+          </button>
+          {/* <div className="relative w-8 h-8 cursor-pointer">
           <img
             src={paperclip_black}
             alt="icon"
@@ -767,58 +817,59 @@ const SentMail = ({
             multiple
           />
         </div> */}
-        <div
-          className='flex items-center p-3 rounded'
-          style={{ backgroundColor: '#EEEEEE' }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <img
-            src={bold}
-            alt='icon'
-            className='mr-3 cursor-pointer'
-            onClick={() => runCommand('bold')}
-            onMouseDown={(e) => e.preventDefault()}
-          />
+          <div
+            className='flex items-center p-3 rounded'
+            style={{ backgroundColor: '#EEEEEE' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={bold}
+              alt='icon'
+              className='mr-3 cursor-pointer'
+              onClick={() => runCommand('bold')}
+              onMouseDown={(e) => e.preventDefault()}
+            />
 
-          <img
-            src={italic}
-            alt='icon'
-            className='mr-3 cursor-pointer'
-            onClick={() => runCommand('italic')}
-            onMouseDown={(e) => e.preventDefault()}
-          />
-          <img
-            src={underline}
-            alt='icon'
-            className='mr-3 cursor-pointer'
-            onClick={() => runCommand('underline')}
-            onMouseDown={(e) => e.preventDefault()}
-          />
+            <img
+              src={italic}
+              alt='icon'
+              className='mr-3 cursor-pointer'
+              onClick={() => runCommand('italic')}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            <img
+              src={underline}
+              alt='icon'
+              className='mr-3 cursor-pointer'
+              onClick={() => runCommand('underline')}
+              onMouseDown={(e) => e.preventDefault()}
+            />
 
-          <img
-            src={align_right}
-            alt='icon'
-            className='mr-3 cursor-pointer'
-            onClick={() => runCommand('justifyLeft')}
-            onMouseDown={(e) => e.preventDefault()}
-          />
-          <img
-            src={align_center_alt}
-            alt='icon'
-            className='mr-3 cursor-pointer'
-            onClick={() => runCommand('justifyCenter')}
-            onMouseDown={(e) => e.preventDefault()}
-          />
-          <img
-            src={align_left}
-            alt='icon'
-            className='mr-3 cursor-pointer'
-            onClick={() => runCommand('justifyRight')}
-            onMouseDown={(e) => e.preventDefault()}
-          />
+            <img
+              src={align_right}
+              alt='icon'
+              className='mr-3 cursor-pointer'
+              onClick={() => runCommand('justifyLeft')}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            <img
+              src={align_center_alt}
+              alt='icon'
+              className='mr-3 cursor-pointer'
+              onClick={() => runCommand('justifyCenter')}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            <img
+              src={align_left}
+              alt='icon'
+              className='mr-3 cursor-pointer'
+              onClick={() => runCommand('justifyRight')}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </>
   );
 };
 

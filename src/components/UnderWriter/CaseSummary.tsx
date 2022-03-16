@@ -8,6 +8,8 @@ import axiosConfig from '../../config/axiosConfig';
 import { setCaseData } from '../../redux/slices/homeSlice';
 import notification from '../theme/utility/notification';
 import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
+import { color, fontSize } from '@mui/system';
+import { red } from '@mui/material/colors';
 
 const CaseSummary = () => {
   const [showModal, setShowModal] = useState(false);
@@ -21,6 +23,7 @@ const CaseSummary = () => {
 
   const [inputOfferAmount, setinputOfferAmount] = useState<any>({
     Amount: '',
+    Amount1: '',
   });
 
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
@@ -119,10 +122,16 @@ const CaseSummary = () => {
     setinputOfferAmount((pre: any) => ({ ...pre, [name]: value }));
   };
 
+
+
   return (
     <>
       {
+       
         <div className='grid grid-cols-3 gap-x-8 m-10  mb-4 bg-primary-lighter px-8 py-4 rounded-xl opacity-95'>
+          <h1 style={{color: 'orange', fontSize: '22px'}}>General Details</h1>
+          <p></p>
+          <p></p>
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Claim No.
@@ -157,7 +166,7 @@ const CaseSummary = () => {
 
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
-              Approved Amount
+              Discharge Approve Amount
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {fetchedData && fetchedData.data
@@ -174,6 +183,13 @@ const CaseSummary = () => {
               {fetchedData && fetchedData.data ? fetchedData.data.HealthId : ''}
             </p>
           </div>
+          <br></br>
+<br></br>
+          <h1 style={{color: 'orange', fontSize: '22px'}}>Interest Gurantee Offer </h1>
+          <p></p>
+          <p></p>
+       
+
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Average Settlement TAT
@@ -216,7 +232,7 @@ const CaseSummary = () => {
           </div>
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
-              Current Intrest Rate
+              Intrest Rate
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
@@ -248,16 +264,6 @@ const CaseSummary = () => {
             </p>
           </div>
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-            <button
-              onClick={viewDocument}
-              style={{ color: 'white' }}
-              className='h-8 w-auto border rounded outline-none text-sm flex items-center px-6'
-            >
-              View Document
-            </button>
-          </div>
-
-          <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <input
               name='Amount'
               onChange={handleChange}
@@ -268,17 +274,84 @@ const CaseSummary = () => {
             />
           </div>
 
+          <br></br>
+          <h1 style={{color: 'orange', fontSize: '22px'}}>Interest Not Gurantee</h1>
+          <p></p>
+          <p></p>
+          <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
+            <p className='pb-4 text-sm text-fontColor-light font-thin'>
+              Processing_fee
+            </p>
+            <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
+              {/* @ts-ignore */}
+              {fetchedData && fetchedData.data
+                ? fetchedData.data.processing_fee
+                : ''}
+            </p>
+          </div>
+
+          <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
+            <p className='pb-4 text-sm text-fontColor-light font-thin'>
+              Offer Amount
+            </p>
+            <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
+              {/* @ts-ignore */}
+              {fetchedData && fetchedData.data
+                ? fetchedData.data.offer_Amount
+                : ''}
+            </p>
+          </div>
+
+          
+          <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
+            <input
+              name='Amount1'
+              onChange={handleChange}
+              style={{ color: 'white' }}
+              placeholder='Enter Offer Amount'
+              className='outline-none rounded-md border-2 px-2 py-1 w-full text-base bg-transparent font-thin placeholder-primary-lightest Input_input__1flKu'
+              type='text'
+            />
+          </div>
+
+          <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
+            <button
+              onClick={viewDocument}
+              style={{ color: 'white' }}
+              className='h-8 w-auto border rounded outline-none text-sm flex items-center px-6'
+            >
+              View Document
+            </button>
+          </div>
+
           {/* <div className="col-span-2 lg:col-span-1 pb-6 mt-8">
             </div> */}
           <div className='col-span-2 lg:col-span-2 pb-6 mt-8'>
             <div className='flex justify-end'>
-              <button
-                onClick={toggleConfirmModal}
-                className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
-                style={{ color: 'white' }}
-              >
-                Submit
-              </button>
+              {
+                (!inputOfferAmount.Amount.length || !inputOfferAmount.Amount1.length) && !(!inputOfferAmount.Amount.length && !inputOfferAmount.Amount1.length)  ? (
+                  <button
+                    onClick={toggleConfirmModal}
+                    className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
+                    style={{ color: 'white' }}
+                  >
+                    Submit
+                  </button>
+                ):(
+                  <button
+                    disabled
+            
+                    // onClick={toggleConfirmModal}
+                    className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
+                    style={{ color: 'white' }}
+                    
+                  
+                  >
+                    Submit
+                  </button>
+                )
+              }
+              
               <button
                 onClick={toggleConfirmModal1}
                 className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
