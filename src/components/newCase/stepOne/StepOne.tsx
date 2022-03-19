@@ -244,7 +244,7 @@ const StepOne = ({
               style={{ marginRight: '16px', marginBottom: '16px' }}
               handleClick={toggleViewDocumentsModal}
             />
-            <NextButton
+            {/* <NextButton
               text='Send Mail'
               style={{ marginRight: '16px', marginBottom: '16px' }}
               handleClick={() => {
@@ -252,7 +252,7 @@ const StepOne = ({
                 //@ts-ignore
                 toggleModal();
               }}
-            />
+            /> */}
           </div>
         ) : (
           <div></div>

@@ -112,12 +112,11 @@ const NewCase = () => {
   const preauthCount = async () => {
     dispatch(setLoading(true));
     const generatedcount = `/generatedcount?email=${user}&casenumber=${
-      newCaseNum || param?.case
+      param?.case || newCaseNum
     }`;
     try {
       const { data } = await axiosConfig.get(generatedcount);
       if (data?.data !== '') {
-        console.log('----- preauthCount -----', data?.data);
         setFreezeFields(true);
       }
     } catch (error) {
