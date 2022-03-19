@@ -694,7 +694,7 @@ const StepTwo = ({
             handleClick={preAuth}
           /> */}
 
-          <NextButton
+          {/* <NextButton
             text='Send Mail'
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={() => {
@@ -702,7 +702,7 @@ const StepTwo = ({
               //@ts-ignore
               toggleModal();
             }}
-          />
+          /> */}
         </div>
         <div className='flex'>
           <NextButton
@@ -737,7 +737,7 @@ const StepTwo = ({
 						handleClick={preAuth}
 					/> */}
 
-          <NextButton
+          {/* <NextButton
             text='Send Mail'
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={() => {
@@ -745,7 +745,7 @@ const StepTwo = ({
               //@ts-ignore
               toggleModal();
             }}
-          />
+          /> */}
         </div>
       </div>
     </div>

@@ -462,7 +462,6 @@ const StepThree = ({
               value={diagnosisDetails?.durationOfPresentAilment || ''}
               label='Duration of present ailment (days)'
               style={{ maxWidth: '80px' }}
-        
             />
           </div>
           <div className='mt-6'>
@@ -1000,7 +999,7 @@ const StepThree = ({
             handleClick={preAuth}
           /> */}
 
-          <NextButton
+          {/* <NextButton
             text='Send Mail'
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={() => {
@@ -1008,7 +1007,7 @@ const StepThree = ({
               //@ts-ignore
               toggleModal();
             }}
-          />
+          /> */}
         </div>
         <div className='flex'>
           <NextButton
@@ -1043,7 +1042,7 @@ const StepThree = ({
 						handleClick={preAuth}
 					/> */}
 
-          <NextButton
+          {/* <NextButton
             text='Send Mail'
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={() => {
@@ -1051,7 +1050,7 @@ const StepThree = ({
               //@ts-ignore
               toggleModal();
             }}
-          />
+          /> */}
         </div>
       </div>
     </div>
