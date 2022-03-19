@@ -111,7 +111,9 @@ const NewCase = () => {
 
   const preauthCount = async () => {
     dispatch(setLoading(true));
-    const generatedcount = `/generatedcount?email=${user}&casenumber=${newCaseNum}`;
+    const generatedcount = `/generatedcount?email=${user}&casenumber=${
+      newCaseNum || param?.case
+    }`;
     try {
       const { data } = await axiosConfig.get(generatedcount);
       if (data?.data !== '') {
@@ -158,12 +160,10 @@ const NewCase = () => {
         setDocumentsList((pre) => [...pre, newCaseData?.Health_card]);
       }
     } else {
-      preauthCount();
-
       dispatch(setNewCaseNum(param?.case));
       //@ts-ignore
       const obj = caseData[param?.case] || {};
-
+      preauthCount();
       const {
         Aadhar_card_Front,
         Aadhar_Card_Back,

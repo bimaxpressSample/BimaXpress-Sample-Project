@@ -498,7 +498,7 @@ const SentMail = ({
 
         <div
           className='px-4 py-2 pb-4 text-sm text-fontColor-darkGray border-t border-b border-fontColor-gray tracking-wide outline-none'
-          style={{ minHeight: '250px' }}
+          style={{ height: '250px', overflowY: 'scroll' }}
           contentEditable={true}
           ref={bodyRef}
           suppressContentEditableWarning={true}
@@ -535,7 +535,10 @@ const SentMail = ({
           : null}
       </div> */}
 
-        <div className='grid grid-cols-2 gap-x-4 gap-y-6 m-4'>
+        <div
+          className='grid grid-cols-2 gap-x-4 gap-y-6 p-4'
+          style={{ maxHeight: '150px', overflowY: 'scroll' }}
+        >
           <div className='col-span-1 flex justify-center flex-col'>
             <div className='flex items-center flex-wrap'>
               {mail?.UrluploadSignedPreAuth?.length
