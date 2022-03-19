@@ -17,10 +17,10 @@ import ReactHtmlParser from 'react-html-parser';
 import { useNavigate } from 'react-router-dom';
 // import paperclip from "../../../assets/icon/paperclip.svg";
 import { FiPaperclip } from 'react-icons/fi';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import { easeQuadInOut } from 'd3-ease';
-import AnimatedProgressProvider from '../../theme/utility/NewLoader/Loaderformail';
+// import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+// import 'react-circular-progressbar/dist/styles.css';
+// import { easeQuadInOut } from 'd3-ease';
+// import AnimatedProgressProvider from '../../theme/utility/NewLoader/Loaderformail';
 
 const emailRegex = /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/;
 
@@ -206,11 +206,8 @@ const SentMail = ({
     //@ts-ignore
     const email = JSON.parse(companyInfo?.replace(/'/g, '"'))?.email;
 
-    console.log(email);
-
-    // dispatch(setLoading(true));
-    setmailLoader(true);
-    console.log('trueeee');
+    dispatch(setLoading(true));
+    // setmailLoader(true);
 
     const URL = `/sendEmail?email=${user}`;
 
@@ -292,9 +289,9 @@ const SentMail = ({
           formCreationAuditForm
         );
       }
-      setmailLoader(false);
-      console.log('false');
-      // dispatch(setLoading(false));
+      // setmailLoader(false);
+
+      dispatch(setLoading(false));
       notification('info', `Email sent successfully`);
       closeModal();
       setMail({
@@ -403,7 +400,7 @@ const SentMail = ({
         onRequestClose={closeModal}
         shouldCloseOnOverlayClick={true}
       >
-        {mailLoader && (
+        {/* {mailLoader && (
           <div
             id='LoaderDiv'
             style={{
@@ -441,7 +438,7 @@ const SentMail = ({
               }}
             </AnimatedProgressProvider>
           </div>
-        )}
+        )} */}
         <div
           className={`flex items-center justify-between h-10 w-full bg-primary px-4 border-none outline-none ${styles.composeModalHeader}`}
         >

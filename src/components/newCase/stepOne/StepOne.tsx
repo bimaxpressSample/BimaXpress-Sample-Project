@@ -23,6 +23,7 @@ type StepOneProps = {
   toggleDocumentsModal?: () => void;
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
+  freezeFields: boolean;
 };
 
 const TPA = [
@@ -62,6 +63,7 @@ const StepOne = ({
   toggleDocumentsModal,
   toggleViewDocumentsModal,
   preAuth,
+  freezeFields,
 }: StepOneProps) => {
   const [insuranceCompany, setInsuranceCompany] = useState<any>([]);
   const { detailsOfTPA } = newCaseData;
@@ -194,6 +196,7 @@ const StepOne = ({
             defaultOption='Select Insurance Company'
             label='Insurance Company'
             value={detailsOfTPA?.insuranceCompany || ''}
+            disable={freezeFields}
           />
         </div>
         <div className='col-span-1 mb-8'>
@@ -207,6 +210,7 @@ const StepOne = ({
             defaultOption='Select TPA'
             label='Third Party Administrator (TPA)'
             value={detailsOfTPA?.TPA || ''}
+            disable={freezeFields}
           />
         </div>
       </div>

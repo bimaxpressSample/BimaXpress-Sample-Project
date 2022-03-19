@@ -26,6 +26,7 @@ type StepTwoProps = {
   toggleDocumentsModal?: () => void;
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
+  freezeFields?: boolean;
 };
 
 const StepTwo = ({
@@ -43,6 +44,7 @@ const StepTwo = ({
   toggleDocumentsModal,
   toggleViewDocumentsModal,
   preAuth,
+  freezeFields,
 }: StepTwoProps) => {
   const { patientDetails, step } = newCaseData;
   console.log('patient', patientDetails);
@@ -311,6 +313,7 @@ const StepTwo = ({
               label='Patient name *'
               labelStyle={{ paddingBottom: '12px' }}
               style={{ height: '40px' }}
+              isEdit={!freezeFields}
             />
           </div>
 
@@ -324,6 +327,7 @@ const StepTwo = ({
                   value='male'
                   radioLabel='Male'
                   fieldName={patientDetails?.gender || ''}
+                  disabled={freezeFields}
                 />
               </div>
               <div className='mr-8 my-3 lg:my-0'>
@@ -333,6 +337,7 @@ const StepTwo = ({
                   value='female'
                   radioLabel='Female'
                   fieldName={patientDetails?.gender || ''}
+                  disabled={freezeFields}
                 />
               </div>
               <div className='mr-8 '>
@@ -342,6 +347,7 @@ const StepTwo = ({
                   value='transgender'
                   radioLabel='Transgender'
                   fieldName={patientDetails?.gender || ''}
+                  disabled={freezeFields}
                 />
               </div>
             </div>
@@ -354,6 +360,7 @@ const StepTwo = ({
               value={patientDetails?.DOB || ''}
               label='Date of birth *'
               style={{ maxWidth: '220px' }}
+              disable={freezeFields}
             />
 
             <div className='mt-6'>
@@ -361,9 +368,10 @@ const StepTwo = ({
                 handleChange={handleChange}
                 name='patient_details_ageYear'
                 value={patientDetails?.AgeYear || ''}
-                label='Age : Year *'
+                label='Age : (Year) *'
                 labelStyle={{ paddingBottom: '12px' }}
                 style={{ height: '40px' }}
+                isEdit={!freezeFields}
               />
             </div>
 
@@ -376,9 +384,10 @@ const StepTwo = ({
                     ? patientDetails.AgeMonth
                     : ''
                 }
-                label='Age : Month'
+                label='Age : (Month)'
                 labelStyle={{ paddingBottom: '12px' }}
                 style={{ height: '40px' }}
+                isEdit={!freezeFields}
               />
             </div>
 
@@ -482,6 +491,7 @@ const StepTwo = ({
               label='Policy Number / Corporate Name *'
               labelStyle={{ paddingBottom: '12px' }}
               style={{ height: '40px' }}
+              isEdit={!freezeFields}
             />
           </div>
 

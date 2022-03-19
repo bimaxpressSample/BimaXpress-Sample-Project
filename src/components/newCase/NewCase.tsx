@@ -52,8 +52,6 @@ const NewCase = () => {
   const { userPlanData } = useAppSelector((state) => state?.user);
   const param = useParams();
   const navigate = useNavigate();
-  console.log(param);
-
   const { allCompaniesList } = useAppSelector(
     (state) => state?.empanelledCompanies
   );
@@ -64,6 +62,7 @@ const NewCase = () => {
   const [showRateList, setShowRateList] = useState(true);
   const [openReteList, setReteList] = useState(false);
   const [openWarningModal, setOpenWarningModal] = useState<boolean>(false);
+  const [freezeFields, setFreezeFields] = useState<boolean>(false);
   const toggleWarningModal = () => {
     setOpenWarningModal((pre) => !pre);
   };
@@ -100,10 +99,26 @@ const NewCase = () => {
     const planDetailsURL = `/plandetails?email=${user}`;
     try {
       const { data } = await axiosConfig.get(planDetailsURL);
-      console.log('plan data ', data.data);
       dispatch(setUserPlanData(data?.data));
     } catch (error) {
       dispatch(setLoading(false));
+      //@ts-ignore
+      notification('error', error?.message);
+      console.log(error);
+    }
+    dispatch(setLoading(false));
+  };
+
+  const preauthCount = async () => {
+    dispatch(setLoading(true));
+    const generatedcount = `/generatedcount?email=${user}&casenumber=${param?.case}`;
+    try {
+      const { data } = await axiosConfig.get(generatedcount);
+      if (data?.data !== '') {
+        console.log('----- preauthCount -----', data?.data);
+        setFreezeFields(true);
+      }
+    } catch (error) {
       //@ts-ignore
       notification('error', error?.message);
       console.log(error);
@@ -143,6 +158,8 @@ const NewCase = () => {
         setDocumentsList((pre) => [...pre, newCaseData?.Health_card]);
       }
     } else {
+      preauthCount();
+
       dispatch(setNewCaseNum(param?.case));
       //@ts-ignore
       const obj = caseData[param?.case] || {};
@@ -508,11 +525,6 @@ const NewCase = () => {
     }
 
     getPreauthForm();
-    console.log(
-      'userPlanData.claimsleft at new Case',
-      //@ts-ignore
-      userPlanData
-    );
     //@ts-ignore
     if (userPlanData.claimsleft === 0) {
       toggleWarningModal();
@@ -523,6 +535,10 @@ const NewCase = () => {
         '_blank',
         'noopener,noreferrer'
       );
+
+      setTimeout(() => {
+        preauthCount();
+      }, 2000);
     }
     return;
   };
@@ -539,6 +555,7 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
           />
         );
       case 2:
@@ -557,6 +574,7 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
           />
         );
       case 3:
@@ -603,6 +621,7 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
           />
         );
     }
