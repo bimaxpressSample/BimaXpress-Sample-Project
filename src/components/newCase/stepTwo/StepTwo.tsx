@@ -27,6 +27,7 @@ type StepTwoProps = {
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
   freezeFields?: boolean;
+  toggleUnfreezeModal?: () => void;
 };
 
 const StepTwo = ({
@@ -45,6 +46,7 @@ const StepTwo = ({
   toggleViewDocumentsModal,
   preAuth,
   freezeFields,
+  toggleUnfreezeModal,
 }: StepTwoProps) => {
   const { patientDetails, step } = newCaseData;
   console.log('patient', patientDetails);
@@ -687,6 +689,14 @@ const StepTwo = ({
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={toggleViewDocumentsModal}
           />
+
+          {freezeFields ? (
+            <NextButton
+              text='Unfreeze'
+              style={{ marginRight: '16px', marginBottom: '16px' }}
+              handleClick={toggleUnfreezeModal}
+            />
+          ) : null}
 
           {/* <NextButton
             text='Generate Pre Auth Form'

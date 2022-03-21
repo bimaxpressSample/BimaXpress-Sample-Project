@@ -33,6 +33,8 @@ const EsOfferDetailsModal = ({
   const [openOfferSummery, setOpenOfferSummery] = useState<boolean>(false);
   const [bookShipment, setBookShipment] = useState({});
   const [offerSummaryData, setofferSummaryData] = useState({});
+  const [offerSelectionType, setofferSelectionType] =
+    useState('Interest Guarantee');
   function openPDOption() {
     closeModal();
     setPdOpenPddocument(true);
@@ -182,34 +184,9 @@ const EsOfferDetailsModal = ({
             </div>
           </div>
 
-          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
-            <div
-              style={{
-                width: '40%',
-                display: 'inline-block',
-              }}
-            >
-              <span>Offer Amount</span>
-            </div>
-            <div className={styles.inputMainDiv}>
-              {caseData[0]?.offer_Amount}
-            </div>
-          </div>
-
-          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
-            <div
-              style={{
-                width: '40%',
-                display: 'inline-block',
-              }}
-            >
-              <span>Processing Fees</span>
-            </div>
-            <div className={styles.inputMainDiv}>'Processing Fees Here'</div>
-          </div>
-
           <hr style={{ marginTop: '20px' }} />
 
+          {/* Interest Guarantee */}
           <div style={{ width: '100%', color: 'white', marginTop: '15px' }}>
             <div
               style={{
@@ -220,22 +197,103 @@ const EsOfferDetailsModal = ({
               }}
             >
               <InputRadio
-                name='test'
-                value='test'
-                handleChange={() => {}}
-                fieldName='test'
+                name='Interest Guarantee'
+                value='Interest Guarantee'
+                handleChange={(e) =>
+                  setofferSelectionType(e.currentTarget.value)
+                }
+                fieldName={offerSelectionType}
                 radioLabel='Interest Guarantee'
               />
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Offer Amount</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Guarantee Offer Amount
+                </div>
+              </div>
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Processing Fees</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Guarantee Processing Fees
+                </div>
+              </div>
             </div>
 
+            {/* Interest Not Guarantee */}
             <div style={{ display: 'inline-block', width: '48%' }}>
               <InputRadio
-                name='test'
-                value='test'
-                handleChange={() => {}}
-                fieldName='test'
-                radioLabel='Interest Guarantee'
+                name='Interest Not Guarantee'
+                value='Interest Not Guarantee'
+                handleChange={(e) =>
+                  setofferSelectionType(e.currentTarget.value)
+                }
+                fieldName={offerSelectionType}
+                radioLabel='Interest Not Guarantee'
               />
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Offer Amount</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Not Guarantee Offer Amount
+                </div>
+              </div>
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Processing Fees</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Not Guarantee Processing Fees
+                </div>
+              </div>
             </div>
           </div>
 

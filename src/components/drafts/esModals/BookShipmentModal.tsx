@@ -161,7 +161,7 @@ const BookShipmentModal = ({
               text='Book Your Slot'
               style={{ maxWidth: '180px', marginRight: '10px' }}
               handleClick={() => {
-                navigate('/LogisticsBookSlot');
+                navigate('/order');
               }}
             />
             <PlanSelectButton

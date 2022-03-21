@@ -201,7 +201,7 @@ const OfferSummary = ({
             // style={{ position: 'relative', left: '60%' }}
           >
             <PlanSelectButton
-              text='Confirm Order'
+              text='Confirm'
               style={{ maxWidth: '180px' }}
               handleClick={() => {
                 navigate('/earlysettlementDash');

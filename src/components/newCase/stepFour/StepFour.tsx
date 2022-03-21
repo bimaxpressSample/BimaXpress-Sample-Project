@@ -37,6 +37,8 @@ type StepFourProps = {
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
   prevStep?: () => void;
+  freezeFields: boolean;
+  toggleUnfreezeModal?: () => void;
 };
 
 const StepFour = ({
@@ -54,6 +56,8 @@ const StepFour = ({
   toggleViewDocumentsModal,
   preAuth,
   prevStep,
+  freezeFields,
+  toggleUnfreezeModal,
 }: StepFourProps) => {
   const { admissionDetails, detailsOfTPA } = newCaseData;
   // const [totalCost, setTotalCost] = useState(0);
@@ -971,6 +975,13 @@ const StepFour = ({
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={toggleViewDocumentsModal}
           />
+          {freezeFields ? (
+            <NextButton
+              text='Unfreeze'
+              style={{ marginRight: '16px', marginBottom: '16px' }}
+              handleClick={toggleUnfreezeModal}
+            />
+          ) : null}
           <NextButton
             text='Generate Pre Auth Form'
             style={{ marginRight: '16px', marginBottom: '16px' }}

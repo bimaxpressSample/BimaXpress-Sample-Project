@@ -23,6 +23,8 @@ type StepThreeProps = {
   toggleDocumentsModal?: () => void;
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
+  freezeFields: boolean;
+  toggleUnfreezeModal?: () => void;
 };
 
 const StepThree = ({
@@ -36,6 +38,8 @@ const StepThree = ({
   toggleDocumentsModal,
   toggleViewDocumentsModal,
   preAuth,
+  freezeFields,
+  toggleUnfreezeModal,
 }: StepThreeProps) => {
   const { diagnosisDetails } = newCaseData;
   const [doctorList, setDoctorList] = useState<any>([]);
@@ -993,6 +997,14 @@ const StepThree = ({
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={toggleViewDocumentsModal}
           />
+
+          {freezeFields ? (
+            <NextButton
+              text='Unfreeze'
+              style={{ marginRight: '16px', marginBottom: '16px' }}
+              handleClick={toggleUnfreezeModal}
+            />
+          ) : null}
           {/* <NextButton
             text='Generate Pre Auth Form'
             style={{ marginRight: '16px', marginBottom: '16px' }}

@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
 import { setUserPlanData } from '../../redux/slices/userSlice';
+import UnfreezeModal from './unfreezeModal';
 
 const months = [
   { label: 'January', value: '01' },
@@ -63,6 +64,8 @@ const NewCase = () => {
   const [openReteList, setReteList] = useState(false);
   const [openWarningModal, setOpenWarningModal] = useState<boolean>(false);
   const [freezeFields, setFreezeFields] = useState<boolean>(false);
+  const [openUnfreezeModal, setopenUnfreezeModal] = useState<boolean>(false);
+
   const toggleWarningModal = () => {
     setOpenWarningModal((pre) => !pre);
   };
@@ -76,6 +79,10 @@ const NewCase = () => {
   };
   const toggleViewDocumentsModal = () => {
     setopenDocumentsModal((pre) => !pre);
+  };
+
+  const toggleUnfreezeModal = () => {
+    setopenUnfreezeModal((pre) => !pre);
   };
 
   const getNewCaseNumber = async () => {
@@ -119,6 +126,30 @@ const NewCase = () => {
       if (data?.data !== '') {
         setFreezeFields(true);
       }
+
+      if (data?.data === '') {
+        setFreezeFields(false);
+      }
+    } catch (error) {
+      //@ts-ignore
+      notification('error', error?.message);
+      console.log(error);
+    }
+    dispatch(setLoading(false));
+  };
+
+  const unfreezeCase = async () => {
+    dispatch(setLoading(true));
+    const unfreezeCase = `/clonecase?email=${user}&casenumber=${
+      param?.case || newCaseNum
+    }`;
+
+    try {
+      const { data } = await axiosConfig.get(unfreezeCase);
+      console.log("Unfreeze API's DATA", data);
+      preauthCount();
+      setopenUnfreezeModal(false);
+      notification('info', 'Case has been unfreezed');
     } catch (error) {
       //@ts-ignore
       notification('error', error?.message);
@@ -541,6 +572,7 @@ const NewCase = () => {
     }
     return;
   };
+
   const renderUI = () => {
     switch (Number(steps)) {
       case 1:
@@ -555,6 +587,7 @@ const NewCase = () => {
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
             freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
       case 2:
@@ -574,6 +607,7 @@ const NewCase = () => {
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
             freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
       case 3:
@@ -588,6 +622,8 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
       case 4:
@@ -606,6 +642,8 @@ const NewCase = () => {
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
             prevStep={prevStep}
+            freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
 
@@ -621,6 +659,7 @@ const NewCase = () => {
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
             freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
     }
@@ -650,6 +689,7 @@ const NewCase = () => {
           isOpen={openDocumentsModal}
           documents={documentsList}
         />
+
         <ReteListModal
           closeModal={toggleDocumentsModal}
           isOpen={openReteList}
@@ -663,6 +703,12 @@ const NewCase = () => {
               : //@ts-ignore
                 newCaseData?.detailsOfTPA.insuranceCompany
           }
+        />
+
+        <UnfreezeModal
+          isOpen={openUnfreezeModal}
+          closeModal={toggleUnfreezeModal}
+          unfreezeCase={unfreezeCase}
         />
       </div>
       <WarningModal

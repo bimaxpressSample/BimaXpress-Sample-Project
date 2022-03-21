@@ -24,6 +24,7 @@ type StepOneProps = {
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
   freezeFields: boolean;
+  toggleUnfreezeModal?: () => void;
 };
 
 const TPA = [
@@ -64,6 +65,7 @@ const StepOne = ({
   toggleViewDocumentsModal,
   preAuth,
   freezeFields,
+  toggleUnfreezeModal,
 }: StepOneProps) => {
   const [insuranceCompany, setInsuranceCompany] = useState<any>([]);
   const { detailsOfTPA } = newCaseData;
@@ -254,10 +256,16 @@ const StepOne = ({
               }}
             /> */}
           </div>
-        ) : (
-          <div></div>
-        )}
-        <div>
+        ) : null}
+
+        <div className='flex items-end'>
+          {freezeFields ? (
+            <NextButton
+              text='Unfreeze'
+              style={{ marginRight: '16px', marginBottom: '16px' }}
+              handleClick={toggleUnfreezeModal}
+            />
+          ) : null}
           <NextButton
             iconRight={true}
             handleClick={saveDataToDb}
