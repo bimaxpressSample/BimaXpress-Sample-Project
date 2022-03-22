@@ -94,13 +94,13 @@ const Drafts = () => {
     const URL = `/${param?.case}?email=${user}`;
     try {
       const listOfTPA = await axiosConfig.get(
-        `/empanelledinsurancecompany?email=${user}`
+        `/empanelcompany?email=${user}`
       );
 
       Object.entries(listOfTPA.data.data).map(([key, value]) => {
         TPAList.push({
-          label: value,
-          value: value,
+          label: key,
+          value: key,
         });
       });
       setTPAList(TPAList);
