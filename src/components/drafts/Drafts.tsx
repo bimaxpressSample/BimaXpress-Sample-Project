@@ -190,6 +190,7 @@ const Drafts = () => {
           audit_trail,
         },
       ]) => ({
+        case: key,
         name: Name,
         phone: Phone,
         claimNumber: claimno,
@@ -296,7 +297,10 @@ const Drafts = () => {
     // @ts-ignore
     setPageSize,
     // @ts-ignore
-    // selectedFlatRows,
+    // @ts-ignore
+    selectedFlatRows,
+    // @ts-ignore
+    state: { selectedRowIds },
   } = useTable(
     { columns, data },
     useGlobalFilter,
@@ -330,6 +334,11 @@ const Drafts = () => {
     insuranceTPA: '',
     dateRange: '',
   });
+
+  console.log(
+    'Cases Selected',
+    selectedFlatRows.map((d: any) => d.original.case)
+  );
 
   const fetchSelectedTPA = async () => {
     dispatch(setLoading(true));
@@ -476,7 +485,12 @@ const Drafts = () => {
               />
             </div>
           </div>
-          <div className='flex items-center text-xs text-fontColor'>
+          <div
+            className='flex items-center text-xs text-fontColor cursor-pointer'
+            onClick={() => {
+              notification('info', 'delete will be soon implemented');
+            }}
+          >
             <RiDeleteBin6Line className='text-fontColor text-lg mr-2 ' />
             Delete
           </div>
@@ -492,6 +506,8 @@ const Drafts = () => {
         previousPage={previousPage}
         canNextPage={canNextPage}
         canPreviousPage={canPreviousPage}
+        selectedFlatRows={selectedFlatRows}
+        selectedRowIds={selectedRowIds}
       />
 
       <SummeryModal
