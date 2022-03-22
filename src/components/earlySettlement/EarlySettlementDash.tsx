@@ -30,12 +30,26 @@ const EarlySettlementDash = () => {
     setESDashSummary((pre) => !pre);
   }
 
-  function showSummary(key: string) {
+  const showSummary = async (key: string) => {
     //@ts-ignore
-    const summaryData = esData[key];
+    // const summaryData = esData[key];
+
+    dispatch(setLoading(true));
+    try {
+      let {
+        data: { data },
+      } = await axiosConfig.get(`/Es_case_summary/${key}?email=${user}`);
+
+      data.casenumber = key;
+      setSummaryData(data);
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      //@ts-ignore
+      notification('error', error?.message);
+    }
     toggleESDashSummary();
-    setSummaryData(summaryData);
-  }
+  };
 
   const fetchESDashboardData = async () => {
     dispatch(setLoading(true));
@@ -70,28 +84,25 @@ const EarlySettlementDash = () => {
             key,
             {
               Patient_name,
-              claim_number,
-              es_status,
               Insurance_Company,
-              Offer_date,
-              offer_Amount,
-              repayment_date,
               Discharge_Approvedamount,
-              settled,
-              processing_fee,
+              Offer_Type,
+              es_date,
+              Selected_offer_Amount,
+              Settlement_date,
+              es_status,
             },
           ]
         ) => ({
           name: Patient_name,
-          claimNo: claim_number,
           tpa: Insurance_Company,
           disAmount: Discharge_Approvedamount,
-          offerAmt: offer_Amount,
+          offerType: Offer_Type,
+          esDate: es_date,
+          offerAmt: Selected_offer_Amount,
+          dateOfSettle: Settlement_date,
           es_status: es_status,
-          offerAvailDate: Offer_date,
-          settleAmt: settled,
-          dateOfSettle: repayment_date,
-          processingFees: processing_fee,
+
           action: (
             <img
               src={eyeIcon}
@@ -114,7 +125,7 @@ const EarlySettlementDash = () => {
     () => [
       {
         Header: 'Patient Name',
-        accessor: 'name', // accessor is the "key" in the data
+        accessor: 'name',
       },
       {
         Header: 'TPA/ Insurance Company',
@@ -132,8 +143,8 @@ const EarlySettlementDash = () => {
       },
 
       {
-        Header: 'Offer Availed Date',
-        accessor: 'offerAvailDate',
+        Header: 'ES Date',
+        accessor: 'esDate',
       },
 
       {
@@ -147,7 +158,7 @@ const EarlySettlementDash = () => {
       },
 
       {
-        Header: 'Status',
+        Header: 'Offer Status',
         accessor: 'es_status',
       },
 

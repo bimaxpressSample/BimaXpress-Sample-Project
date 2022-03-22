@@ -23,7 +23,6 @@ const EsOfferDetailsModal = ({
   closeModal = () => {},
   caseData,
 }: ApproveModalProps) => {
-  console.log('caseData AT ES offer Details', caseData);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state?.user);
   const [OpenPddocument, setPdOpenPddocument] = useState<boolean>(false);
@@ -33,8 +32,9 @@ const EsOfferDetailsModal = ({
   const [openOfferSummery, setOpenOfferSummery] = useState<boolean>(false);
   const [bookShipment, setBookShipment] = useState({});
   const [offerSummaryData, setofferSummaryData] = useState({});
-  const [offerSelectionType, setofferSelectionType] =
-    useState('Interest Guarantee');
+  const [offerSelectionType, setofferSelectionType] = useState(
+    'Interest_Guaranteed'
+  );
   function openPDOption() {
     closeModal();
     setPdOpenPddocument(true);
@@ -92,10 +92,12 @@ const EsOfferDetailsModal = ({
   }, []);
 
   const pushAPIavailOffer = async () => {
+    const formData = new FormData();
+    formData.append('Offer_Type', offerSelectionType);
     dispatch(setLoading(true));
     const URL = `/es_offer_details/${caseData[1].caseNumber}?email=${user}`;
     try {
-      await axiosConfig.post(URL);
+      await axiosConfig.post(URL, formData);
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -142,6 +144,7 @@ const EsOfferDetailsModal = ({
             </div>
             <div className={styles.inputMainDiv}>{caseData[0]?.claimno}</div>
           </div>
+
           <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
             <div
               style={{
@@ -197,8 +200,8 @@ const EsOfferDetailsModal = ({
               }}
             >
               <InputRadio
-                name='Interest Guarantee'
-                value='Interest Guarantee'
+                name='Interest_Guaranteed'
+                value='Interest_Guaranteed'
                 handleChange={(e) =>
                   setofferSelectionType(e.currentTarget.value)
                 }
@@ -221,7 +224,7 @@ const EsOfferDetailsModal = ({
                     width: '100%',
                   }}
                 >
-                  Interest Guarantee Offer Amount
+                  {caseData[0]?.offer_Amount_IG}
                 </div>
               </div>
 
@@ -240,7 +243,7 @@ const EsOfferDetailsModal = ({
                     width: '100%',
                   }}
                 >
-                  Interest Guarantee Processing Fees
+                  {caseData[0]?.processing_fees_IG}
                 </div>
               </div>
             </div>
@@ -248,8 +251,8 @@ const EsOfferDetailsModal = ({
             {/* Interest Not Guarantee */}
             <div style={{ display: 'inline-block', width: '48%' }}>
               <InputRadio
-                name='Interest Not Guarantee'
-                value='Interest Not Guarantee'
+                name='Interest_Not_Guaranteed'
+                value='Interest_Not_Guaranteed'
                 handleChange={(e) =>
                   setofferSelectionType(e.currentTarget.value)
                 }
@@ -272,7 +275,7 @@ const EsOfferDetailsModal = ({
                     width: '100%',
                   }}
                 >
-                  Interest Not Guarantee Offer Amount
+                  {caseData[0]?.offer_Amount_ING}
                 </div>
               </div>
 
@@ -291,7 +294,7 @@ const EsOfferDetailsModal = ({
                     width: '100%',
                   }}
                 >
-                  Interest Not Guarantee Processing Fees
+                  {caseData[0]?.processing_fees_ING}
                 </div>
               </div>
             </div>

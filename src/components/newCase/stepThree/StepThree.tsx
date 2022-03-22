@@ -443,7 +443,7 @@ const StepThree = ({
                 handleChange(e);
               }}
               defaultOption='Select Treating Doctor'
-              label='Name of The Treating Doctor *'
+              label='Name Of The Treating Doctor *'
               value={diagnosisDetails?.doctorsName || ''}
             />
           </div>

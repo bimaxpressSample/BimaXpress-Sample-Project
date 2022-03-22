@@ -32,12 +32,24 @@ const SummaryModal = ({
           <p
             className={`text-lg text-fontColor-deepGray mr-3 pr-3 tracking-wide text-fontColor`}
           >
-            Early Settlement Case Summary | Case {'numHere'}
+            Early Settlement Case Summary | {summaryData?.casenumber}
           </p>
         </div>
 
         {/* Main Summary Starts */}
         <div className='grid grid-cols-2 gap-x-8 gap-y-4 mt-6 pb-4'>
+          <div className='sm:col-span-1 col-span-2 '>
+            <p className='pb-3 text-sm text-fontColor font-thin py-2'>
+              Patient Name
+            </p>
+
+            <p
+              className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
+            >
+              {summaryData?.Patient_name}
+            </p>
+          </div>
+
           <div className='sm:col-span-1 col-span-2 '>
             <p className='pb-3 text-sm text-fontColor font-thin py-2'>
               Claim Number
@@ -68,7 +80,19 @@ const SummaryModal = ({
             <p
               className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
             >
-              'Phone Number Here'
+              {summaryData?.Phone}
+            </p>
+          </div>
+
+          <div className='sm:col-span-1 col-span-2 '>
+            <p className='pb-3 text-sm text-fontColor font-thin py-2'>
+              Discharge Approved Date
+            </p>
+
+            <p
+              className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
+            >
+              {summaryData?.discharge_approved_date}
             </p>
           </div>
 
@@ -86,13 +110,25 @@ const SummaryModal = ({
 
           <div className='sm:col-span-1 col-span-2 '>
             <p className='pb-3 text-sm text-fontColor font-thin py-2'>
-              Offer Availed Date
+              Offer Type
             </p>
 
             <p
               className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
             >
-              {summaryData?.Date_of_avail}
+              {summaryData?.Offer_Type}
+            </p>
+          </div>
+
+          <div className='sm:col-span-1 col-span-2 '>
+            <p className='pb-3 text-sm text-fontColor font-thin py-2'>
+              ES Date
+            </p>
+
+            <p
+              className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
+            >
+              {summaryData?.es_date}
             </p>
           </div>
 
@@ -104,7 +140,7 @@ const SummaryModal = ({
             <p
               className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
             >
-              {summaryData?.offer_Amount}
+              {summaryData?.Selected_offer_Amount}
             </p>
           </div>
 
@@ -116,7 +152,7 @@ const SummaryModal = ({
             <p
               className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
             >
-              {summaryData?.processing_fee}
+              {summaryData?.Selected_processing_fees}
             </p>
           </div>
 
@@ -128,7 +164,7 @@ const SummaryModal = ({
             <p
               className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
             >
-              {summaryData?.repayment_date || 'Not got yet'}
+              {summaryData?.Settleddate}
             </p>
           </div>
 
@@ -140,7 +176,7 @@ const SummaryModal = ({
             <p
               className={`border-b-2 border-fontColor-darkGray w-full text-base text-fontColor-deepGray `}
             >
-              {summaryData?.settled}
+              {summaryData?.Settledamount}
             </p>
           </div>
         </div>
