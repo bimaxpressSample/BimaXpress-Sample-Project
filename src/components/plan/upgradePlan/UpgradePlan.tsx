@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import BuyModal from './BuyModal' ;
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import PreAuthModal from './PreAuthModal';
+import NachWarning from './NachWarning';
 
 
 type UpgradePlanProps = {

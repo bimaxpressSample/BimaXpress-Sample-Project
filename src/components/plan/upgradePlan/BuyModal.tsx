@@ -9,7 +9,7 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import { useNavigate } from "react-router-dom";
 import axiosConfig from "../../../config/axiosConfig";
 import notification from "../../theme/utility/notification";
-import PreAuthModal from './PreAuthModal';
+import PreAuthModal from './NachWarning';
 import { setCurrentPlan } from "../../../redux/slices/planSlice";
 Modal.setAppElement("#root");
 
@@ -33,88 +33,181 @@ const BuyModal = ({
     const { currentPlan } = useAppSelector((state) => state?.plan);
     const { allPlans } = useAppSelector((state) => state?.plan);
 
-    console.log( "curent plan in buy modal" , currentPlan);
-    console.log( "all plan in buy modal" , allPlans);
+    console.log("curent plan in buy modal", currentPlan);
+    console.log("all plan in buy modal", allPlans);
 
-    const[responseLink , setResponseLink] = useState("");
+    const [responseLink, setResponseLink] = useState("");
 
-    const[currentTime , setCurrentTime] = useState("");
+    const [currentTime, setCurrentTime] = useState("");
 
     const [openPreAuthModal, setOpenPreAuthModal] = useState<boolean>(false);
-    const togglePreAuthModal = (data : any) => {
+    const togglePreAuthModal = (data: any) => {
         setResponseLink(data);
         setOpenPreAuthModal((pre) => !pre);
     };
 
-    const buyPlan = async (planName: any, planId: any , planAmount : any , totalClaims:any) => {
-        
+    const buyPlan = async (planName: any, planId: any, planAmount: any, totalClaims: any) => {
+
         // @ts-ignore
-        const currentPlanPrice = allPlans.filter((plan)=>{
+        const currentPlanPrice = allPlans.filter((plan) => {
             //@ts-ignore
-            return plan.planId === currentPlan.planId ;
+            return plan.planId === currentPlan.planId;
         })[0].price;
-        console.log("current price" ,currentPlanPrice);
-        let today = new Date() ;
-        console.log("date ",today);
+        console.log("current price", currentPlanPrice);
+        let today = new Date();
+        console.log("date ", today);
         // @ts-ignore
-        const subscriptionId = `${today.getDate()}${(today.getMonth()+1)}${today.getFullYear()}${today.getHours()}${today.getMinutes()}${today.getSeconds()}`
+        const subscriptionId = `${today.getDate()}${(today.getMonth() + 1)}${today.getFullYear()}${today.getHours()}${today.getMinutes()}${today.getSeconds()}`
         // const subscriptionId = `${today.toLocaleDateString({timeZone: 'UTC' }).replaceAll("/","").replaceAll(",","").replaceAll(":","").replaceAll(" ","")}`;
 
         console.log(subscriptionId)
         dispatch(setLoading(true));
-        console.log("plan amount" ,planAmount);
-        console.log("plan amount * 12" ,currentPlanPrice * 12);
+        console.log("plan amount", planAmount);
+        console.log("plan amount * 12", currentPlanPrice * 12);
 
         const PlanDetailURL = `/plandetails?email=${user}`;
 
-        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
-        let currentBalance = wallet_balance.data.data.balance / 100 ;
-        if(currentBalance < planAmount){
-          notification('error',"Insufficient Wallet Balance");
-          dispatch(setLoading(false));
-          return ;
-        }
+        //  if( planAmount > currentPlanPrice * 12){
+        if (user === 'early@gmail.com') {
 
-         if( planAmount > currentPlanPrice * 12){
-            const URL = `/chargesubscription` ;
-            // const URL = `/if` ;
+            if (planAmount > currentPlanPrice * 3) {
+                const URL = `/chargesubscription`;
+                // const URL = `/if` ;
+                const subFormData = new FormData();
+                // @ts-ignore
+                subFormData.append("subscriptionId", `Sub${subscriptionId}`);
+                // @ts-ignore
+                subFormData.append("customerEmail", currentPlan.customerEmail);
+                // @ts-ignore
+                subFormData.append("customerName", currentPlan.customerName);
+                // @ts-ignore
+                subFormData.append("customerPhone", currentPlan.customerPhone);
+                // @ts-ignore
+                // subFormData.append("planId",planId);
+                // @ts-ignore
+                subFormData.append("planId", "premiumyearly1");
+                // @ts-ignore
+                subFormData.append("returnUrl", "www.bimaxpress.com");
 
-            const subFormData = new FormData();
-            // @ts-ignore
-            subFormData.append("subscriptionId",subscriptionId);
-            // @ts-ignore
-            subFormData.append("customerEmail",currentPlan.customerEmail);
-            // @ts-ignore
-            subFormData.append("customerName",currentPlan.customerName);
-            // @ts-ignore
-            subFormData.append("customerPhone",currentPlan.customerPhone);
-            // @ts-ignore
-            subFormData.append("planId",planId);
-            // @ts-ignore
-            subFormData.append("returnUrl","www.bimaxpress.com");
+                const UPDATEURL = `/updateplandetails?email=${user}`;
 
-            try {
-                const { data } = await axiosConfig.post(URL,subFormData);
-                console.log(data);
-                
-                //@ts-ignore
-                const { plandata } = await axiosConfig.get(PlanDetailURL);
-                dispatch(setCurrentPlan(plandata?.data));
-                dispatch(setLoading(false));
-                togglePreAuthModal(data);
-                // notification("info", "New plan will be active after the expiry of the current plan")
-            } catch (error) {
-                dispatch(setLoading(false));
-                //@ts-ignore
-                notification("error", error?.message);
+                const MAILURL = `/sendmail`;
+                const mailForm = new FormData();
+                mailForm.append("receiver_email", user);
+                // @ts-ignore
+                mailForm.append("gotmessage", `Dear ${currentPlan.customerName} ,
+                As per your request, Your plan has been changed to ${planName}. It will be valid from (date) to (date).\n
+                Regards,
+                Team BimaXpress`);
+                // @ts-ignore
+
+                // const URL = "/else" ;
+                const updatePlan = new FormData();
+
+                updatePlan.append("planId", planId);
+                updatePlan.append("planName", planName);
+                updatePlan.append("total_claims", totalClaims);
+
+                try {
+                    const { data } = await axiosConfig.post(URL, subFormData);
+                    console.log(data);
+
+                    //@ts-ignore
+                    const { respone } = await axiosConfig.post(UPDATEURL, updatePlan);
+                    console.log(respone);
+
+                    //@ts-ignore
+                    const { plandata } = await axiosConfig.get(PlanDetailURL);
+                    dispatch(setCurrentPlan(plandata?.data));
+                    dispatch(setLoading(false));
+                    togglePreAuthModal(data);
+                    await axiosConfig.post(MAILURL, mailForm);
+                    // notification("info", "New plan will be active after the expiry of the current plan")
+                } catch (error) {
+                    dispatch(setLoading(false));
+                    //@ts-ignore
+                    notification("error", error?.message);
+                }
             }
-         }
-         else{
+            else {
+                const URL = `/updateplandetails?email=${user}`;
+
+                const MAILURL = `/sendmail`;
+                const mailForm = new FormData();
+                mailForm.append("receiver_email", user);
+                // @ts-ignore
+                mailForm.append("gotmessage", `Dear ${currentPlan.customerName} ,
+                As per your request, Your plan has been changed to ${planName}. It will be valid from (date) to (date).\n
+                Regards,
+                Team BimaXpress`);
+                // @ts-ignore
+
+                // const URL = "/else" ;
+                const updatePlan = new FormData();
+
+                updatePlan.append("planId", planId);
+                updatePlan.append("planName", planName);
+                updatePlan.append("total_claims", totalClaims);
+
+                const orderformData = new FormData();
+                orderformData?.append("amount", `${Number(planAmount) * 100}`);
+                orderformData?.append("currency", "INR");
+
+                const transferData = new FormData();
+                transferData.append("method", 'wallet');
+                transferData.append("wallet", 'openwallet');
+                transferData.append("customer_id", 'cust_J5HP8WMDYXO6D9');
+                // transferData.append("order_id",'');
+                transferData.append("amount", `${Number(planAmount) * 100}`);
+                transferData.append("currency", 'INR');
+                transferData.append("contact", '9198765432');
+                transferData.append("email", user);
+                transferData.append("description", `New Plan(${planName})`);
+
+                // console.log(typeof totalClaims);
+                try {
+
+                    const createOrder = await axiosConfig.post('/createOrder', orderformData);
+                    const orderId = createOrder.data.data.id;
+
+                    transferData.append("order_id", orderId);
+
+                    const response = await axiosConfig.post('/createPaymentCapture', transferData);
+
+                    // @ts-ignore
+                    const { respone } = await axiosConfig.post(URL, updatePlan);
+                    console.log(respone);
+                    const { data } = await axiosConfig.get(PlanDetailURL);
+                    dispatch(setCurrentPlan(data?.data));
+
+
+
+                    dispatch(setLoading(false));
+                    closeModal();
+                    notification("info", "New plan will be active after the expiry of the current plan")
+                    await axiosConfig.post(MAILURL, mailForm);
+                } catch (error) {
+                    dispatch(setLoading(false));
+                    //@ts-ignore
+                    notification("error", error?.message);
+                }
+
+            }
+        }
+        else{
+            const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+            let currentBalance = wallet_balance.data.data.balance / 100;
+            if (currentBalance < planAmount) {
+                notification('error', "Insufficient Wallet Balance");
+                dispatch(setLoading(false));
+                return;
+            }
+
             const URL = `/updateplandetails?email=${user}`;
-            
+
             const MAILURL = `/sendmail`;
             const mailForm = new FormData();
-            mailForm.append("receiver_email",user);
+            mailForm.append("receiver_email", user);
             // @ts-ignore
             mailForm.append("gotmessage", `Dear ${currentPlan.customerName} ,
             As per your request, Your plan has been changed to ${planName}. It will be valid from (date) to (date).\n
@@ -130,31 +223,31 @@ const BuyModal = ({
             updatePlan.append("total_claims", totalClaims);
 
             const orderformData = new FormData();
-            orderformData?.append("amount",`${Number(planAmount) * 100}`);
-            orderformData?.append("currency","INR");
+            orderformData?.append("amount", `${Number(planAmount) * 100}`);
+            orderformData?.append("currency", "INR");
 
             const transferData = new FormData();
-            transferData.append("method",'wallet');
-            transferData.append("wallet",'openwallet');
-            transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
+            transferData.append("method", 'wallet');
+            transferData.append("wallet", 'openwallet');
+            transferData.append("customer_id", 'cust_J5HP8WMDYXO6D9');
             // transferData.append("order_id",'');
-            transferData.append("amount",`${Number(planAmount) * 100}`);
-            transferData.append("currency",'INR');
-            transferData.append("contact",'9198765432');
-            transferData.append("email",user);
-            transferData.append("description",`New Plan(${planName})`);
+            transferData.append("amount", `${Number(planAmount) * 100}`);
+            transferData.append("currency", 'INR');
+            transferData.append("contact", '9198765432');
+            transferData.append("email", user);
+            transferData.append("description", `New Plan(${planName})`);
 
             // console.log(typeof totalClaims);
             try {
 
-                const createOrder = await axiosConfig.post('/createOrder',orderformData);
-                const orderId = createOrder.data.data.id ;
+                const createOrder = await axiosConfig.post('/createOrder', orderformData);
+                const orderId = createOrder.data.data.id;
 
-                transferData.append("order_id",orderId);
-                
-                const response = await axiosConfig.post('/createPaymentCapture',transferData);
-                
-                
+                transferData.append("order_id", orderId);
+
+                const response = await axiosConfig.post('/createPaymentCapture', transferData);
+
+
                 // @ts-ignore
                 const { respone } = await axiosConfig.post(URL, updatePlan);
                 console.log(respone);
@@ -172,8 +265,8 @@ const BuyModal = ({
                 //@ts-ignore
                 notification("error", error?.message);
             }
+        }
 
-         }
 
     }
 
@@ -216,7 +309,7 @@ const BuyModal = ({
                         <PlanSelectButton
                             text="Confirm"
                             style={{ maxWidth: "180px" }}
-                            handleClick={() => buyPlan(buyModalDetails.planType, buyModalDetails.planId, buyModalDetails.planAmount , buyModalDetails.totalClaims)}
+                            handleClick={() => buyPlan(buyModalDetails.planType, buyModalDetails.planId, buyModalDetails.planAmount, buyModalDetails.totalClaims)}
                         />
                         <PlanSelectButton
                             text="Cancel"

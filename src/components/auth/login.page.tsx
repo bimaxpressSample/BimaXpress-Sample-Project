@@ -14,6 +14,7 @@ import {
 import axiosConfig from '../../config/axiosConfig';
 import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
+import {setwalletBalance} from '../../redux/slices/walletSlice';
 
 // INFO: THIS COMPONENT CONTAINS LOGINPAGE LAYOUT
 
@@ -37,6 +38,7 @@ function LoginPage() {
   useEffect(() => {
     let user = sessionStorage.getItem('bimaUser');
     let subscription_details = sessionStorage.getItem('bimaUserPlanData');
+    let walletBalance = sessionStorage.getItem('bimaUserWalletBalance');
 
     if (user) {
       //@ts-ignore
@@ -49,7 +51,15 @@ function LoginPage() {
       //@ts-ignore
       dispatch(setRole(user?.role));
       //@ts-ignore
+      subscription_details = JSON.parse(subscription_details);
+      //@ts-ignore
       dispatch(setUserPlanData(subscription_details));
+      //@ts-ignore
+      walletBalance = JSON.parse(walletBalance);
+      //@ts-ignore
+      dispatch(setwalletBalance(walletBalance));
+
+
       if (role === 'admin') {
         navigate('/home');
       }
@@ -81,8 +91,17 @@ function LoginPage() {
         'bimaUserPlanData',
         JSON.stringify(subscription_details)
       );
+      
+      const walletBalance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+      console.log("wallet balance on login",walletBalance?.data?.data?.balance / 100);
+
+
+      await dispatch(setwalletBalance(walletBalance?.data?.data?.balance / 100));
+      window.sessionStorage.setItem('bimaUserWalletBalance', JSON.stringify(walletBalance?.data?.data?.balance / 100));
+
       await dispatch(setLoading(false));
       await dispatch(setUserPlanData(subscription_details));
+      console.log('sub details',subscription_details);
       await dispatch(setUserData(data));
       await dispatch(setUser(data?.email));
       await dispatch(setRole(data.role));

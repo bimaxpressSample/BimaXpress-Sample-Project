@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import paperclip from "../../../assets/icon/paperclip.svg";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,30 @@ export default function UploadDocument() {
         AuditedBalanceSheet: [],
         InsurerData: [],
     });
+
+    const fetchDocuments = async() =>{
+
+        dispatch(setLoading(true));
+        try{
+            const DocData = await axiosConfig.get(`/ViewDocuments?email=${user}`);
+            dispatch(setLoading(false));
+            console.log("Document Data", DocData?.data?.data);
+            console.log("length", !Object.keys(DocData?.data?.data).length);
+            if(Object.keys(DocData?.data?.data).length){
+                navigate('/AccountDetails');
+            }
+        }
+        catch(error){
+            dispatch(setLoading(false));
+            //@ts-ignore
+            notification("error", error?.message);
+        }
+    }
+
+    useEffect(() => {
+        fetchDocuments();
+    }, [])
+    
 
     const imageUpload = async (files: any) => {
 
@@ -104,12 +128,10 @@ export default function UploadDocument() {
 
     const uploadFile = async () => {
         
-        // todo Uncomment this loop before push  
-
-        // if(!data?.AadharCard?.length || !data?.BankStatement?.length || !data?.AuditedBalanceSheet?.length || !data?.InsurerData?.length){
-        //     notification("error","Please Attach All Required Documents");
-        //     return ;
-        // }
+        if(!data?.AadharCard?.length || !data?.BankStatement?.length || !data?.AuditedBalanceSheet?.length || !data?.InsurerData?.length){
+            notification("error","Please Attach All Required Documents");
+            return ;
+        }
 
         const AccountDetailURL = `/AccountDeta?email=${user}`;
 
@@ -396,6 +418,9 @@ export default function UploadDocument() {
                 <button onClick={uploadFile} type="submit" className="mr-4 mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-xl font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-base">
                     Next
                 </button>
+                {/* <button onClick={() => navigate('/AccountDetails')} type="submit" className="mr-4 mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-xl font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-base">
+                    Next Account
+                </button> */}
             </div>
 
         </>

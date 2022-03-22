@@ -42,10 +42,10 @@ const OverView = () => {
         const URL = `/plandetails?email=${user}`;
         try {
             const { data } = await axiosConfig.get(URL);
-            console.log("plain details ", data);
+            console.log("plain details ", data?.data[0]);
 
             dispatch(setLoading(false));
-            dispatch(setCurrentPlan(data?.data));
+            dispatch(setCurrentPlan(data?.data[0]));
         } catch (error) {
             dispatch(setLoading(false));
             //@ts-ignore
@@ -57,11 +57,12 @@ const OverView = () => {
 
     useEffect(() => {
         //@ts-ignore
-        if (!currentPlan?.planId) {
-            fetchCurrentPlan();
-        }
+        // if (!currentPlan?.planId) {
+        //     fetchCurrentPlan();
+        // }
+        fetchCurrentPlan();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPlan]);
+    }, []);
 
     useEffect(() => {
         //@ts-ignore
@@ -70,11 +71,13 @@ const OverView = () => {
                 //@ts-ignore
                 claimsleft,
                 //@ts-ignore
+                addonClaims,
+                //@ts-ignore
                 amount,
                 //@ts-ignore
-                planstartdate,
+                planStartDate,
                 //@ts-ignore
-                planenddate,
+                planEndDate,
                 //@ts-ignore
                 planId,
                 //@ts-ignore
@@ -85,9 +88,10 @@ const OverView = () => {
             setCurrentPlanDetails((pre: any) => ({
                 ...pre,
                 claimsleft,
+                addonClaims,
                 amount,
-                planstartdate,
-                planenddate,
+                planStartDate,
+                planEndDate,
                 planId,
                 total_claims,
                 planName,
@@ -95,9 +99,9 @@ const OverView = () => {
         }
         // @ts-ignore
             // @ts-ignore
-            console.log("Start date - ",currentPlan.planstartdate);
+            console.log("Start date - ",currentPlan?.planStartDate);
             // @ts-ignore
-            let date = new Date(currentPlan.planstartdate);
+            let date = new Date(currentPlan?.planStartDate);
             let local = new Date(date.toLocaleDateString('en-GB'));
             let lastDayOfMonth = new Date(local.getFullYear(), local.getMonth() + 1, 0);
             let requiredLastDayOfMonth = lastDayOfMonth.toLocaleDateString('en-GB').replaceAll("/", "-")
@@ -130,7 +134,7 @@ const OverView = () => {
                             Subscription Plan Started On
                         </p>
                         <p className="text-xs md:text-sm text-fontColor font-semibold mt-1 ">
-                            {currentPlanDetails?.planstartdate}
+                            {currentPlanDetails?.planStartDate}
                             {/* {format(new Date(currentPlanDetails?.planstartdate), "do MMMM Y")} */}
                         </p>
 
@@ -145,7 +149,7 @@ const OverView = () => {
                                         Claims left :
                                     </span>
                                     <span className="mr-1 text-base text-fontColor font-semibold">
-                                        {currentPlanDetails?.claimsleft || '00'}
+                                        {currentPlanDetails?.claimsleft + currentPlanDetails?.addonClaims  || '00'}
                                     </span>
                                     <span className="text-xs pt-1 text-fontColor">No's</span>
                                 </div>
@@ -158,7 +162,7 @@ const OverView = () => {
                     <div className="col-span-4 mt-8 ml-2">
                         <p className="text-xs text-fontColor-gray">Subscription Plan Ends On </p>
                         <p className="text-sm text-fontColor font-semibold mt-1">
-                            {currentPlanDetails?.planenddate || endDateOfPlan || 'N/A'}
+                            {currentPlanDetails?.planEndDate || endDateOfPlan || 'N/A'}
                             {/* {format(new Date(currentPlanDetails?.planenddate), "do MMMM Y")} */}
                         </p>
 
@@ -182,14 +186,53 @@ const OverView = () => {
                     </div>
 
                     {/* third-4-col */}
-                    <div className="col-span-4 hidden sm:flex items-center -mt-12 absolute right-4 top-4 sm:right-52 sm:top-32  md:right-20 md:top-20">
-                        <img src={rupi} alt="rupi icon" className="w-12" />
-                        {/* <p className="text-8xl text-fontColor-gray -mt-20">₹</p> */}
-                        <span className="text-5xl text-fontColor-gray font-thin">
-                            {" "}
-                            {currentPlanDetails?.amount}
-                        </span>
+                    <div className="col-span-4 flex" style={{alignItems:'flex-end'}}>
+                        {/* <div>
+                            <img src={rupi} alt="rupi icon" className="w-12" />
+                            //  <p className="text-8xl text-fontColor-gray -mt-20">₹</p>
+                            <span className="text-5xl text-fontColor-gray font-thin">
+                                {" "}
+                                {currentPlanDetails?.amount}
+                            </span>
+                        </div> */}
+                        <div
+                            className="mt-4 border border-fontColor rounded w-full h-12 flex items-center justify-center"
+                            style={{ maxWidth: "200px" }}
+                        >
+                            <div className="flex items-center">
+                                {/* <img src={clamsToken} alt="icon" className="mr-2" /> */}
+                                <div className="flex items-center">
+                                    <span className="mr-2 text-base text-fontColor ">
+                                        Add On :
+                                    </span>
+                                    {
+                                        currentPlanDetails?.addonClaims > 0 ? (
+                                            <>
+                                                <svg style={{color:'limegreen'}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-circle-fill mr-2" viewBox="0 0 16 16">
+                                                    <circle cx="8" cy="8" r="8"/>
+                                                </svg>
+                                                <span className="mr-1 text-base text-fontColor font-semibold">
+                                                    Active
+                                                </span>
+                                            </>
+                                        ):(
+                                            <>
+                                                <svg style={{color:'red'}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-circle-fill mr-2" viewBox="0 0 16 16">
+                                                    <circle cx="8" cy="8" r="8"/>
+                                                </svg>
+                                                <span className="mr-1 text-base text-fontColor font-semibold">
+                                                    InActive
+                                                </span>
+                                            </>
+                                        )
+                                    }
+                                    
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+                    
                 </div>
             </div>
         </div>

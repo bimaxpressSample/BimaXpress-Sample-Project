@@ -188,7 +188,6 @@ export default function IntimationPanel() {
         //@ts-ignore
         [companyname, value]
       ) => (
-        
         {
 
         name: companyname,
@@ -235,14 +234,15 @@ export default function IntimationPanel() {
             handleChange={handleChange}
             defaultOption='Select Status'
             // label='Third Party Administrator (TPA)'
-            value={''}
-          />
+            //@ts-ignore
+            value={status[`${companyname}`] || ''}
+            />
         ),
       })
     );
     setTableRow(res);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [caseData]);
+  }, [caseData,status]);
 
   useEffect(() => {
     setPageSize(5);

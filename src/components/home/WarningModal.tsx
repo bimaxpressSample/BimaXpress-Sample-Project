@@ -68,7 +68,7 @@ const WarningModal = ({
           <div>
             <p className="text-xl text-fontColor font-semibold mt-1">
               {/* @ts-ignore */}
-              YOU HAVE ONLY {userPlanData.claimsleft} CLAIMS LEFT</p>
+              YOU HAVE ONLY {userPlanData?.claimsleft} CLAIMS LEFT</p>
           </div>
         </div>
         
