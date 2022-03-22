@@ -61,7 +61,6 @@ import NonCashlessHome from './components/nonCashless/NonCashlessHome';
 import AllDetails from './components/order/AllDetails';
 import Hospitaldetails from './components/UnderWriter/Details';
 
-
 function App() {
   const { user, role } = useAppSelector((state) => state?.user);
 
