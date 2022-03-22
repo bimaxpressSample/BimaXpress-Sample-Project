@@ -22,13 +22,10 @@ import NewCaseSelect from '../theme/select/newCaseSelect/NewCaseSelect';
 import { setUndSelectedHospital } from '../../redux/slices/userSlice';
 import ConfirmModal from '../UnderWriter/ConfirmModal';
 import { margin } from '@mui/system';
-import DatePicker from 'react-date-picker';
 import styles from './Order/Optionsdrop.module.css';
 import InputDate from '../theme/inputDate/InputDate';
 import Input from '../theme/input/Input';
 import Select from '../theme/select/Select';
-
-
 
 const ordertype = [
   {
@@ -38,8 +35,8 @@ const ordertype = [
   {
     label: 'B',
     value: 'B',
-  }
-]
+  },
+];
 
 type OrderdetailsProps = {
   orderData: any;
@@ -52,7 +49,6 @@ const Orderdetails = ({
   setorderData,
   nextStep,
 }: OrderdetailsProps) => {
-
   const param = useParams();
   const [menuList, setMenuList] = useState<any>([]);
   const dispatch = useAppDispatch();
@@ -63,13 +59,14 @@ const Orderdetails = ({
 
   const [hospitalList, sethospitalList] = useState<any>([true]);
 
-
   const fetchAnalyst = async () => {
     dispatch(setLoading(true));
     // console.log(param?.case);                        // -------------------------------
     try {
-      const listOfHospital = await axiosConfig.get(`/listofhospitals?email=${user}`);
-      let tempList: any = []
+      const listOfHospital = await axiosConfig.get(
+        `/listofhospitals?email=${user}`
+      );
+      let tempList: any = [];
       Object.entries(listOfHospital.data.data).forEach(([key, value]) => {
         tempList.push({ label: value, value: key });
       });
@@ -84,13 +81,9 @@ const Orderdetails = ({
     }
   };
 
-
-
-
   // useEffect(() => {
 
   // }, [hospitalList]);
-
 
   //  const [options, setOptions] = useState({
   //     hospitalList: '',
@@ -101,8 +94,6 @@ const Orderdetails = ({
   const [selectedOptions, setselectedOptions] = useState({
     hospitalList: 'abc',
   });
-
-
 
   const handleHospitalChange = (
     e: React.ChangeEvent<
@@ -116,12 +107,9 @@ const Orderdetails = ({
       [name]: value,
     }));
     // debugger;
-    console.log("under select", UndSelectedHospital);
+    console.log('under select', UndSelectedHospital);
     // fetchSelectedHospital(value);
   };
-
-
-
 
   // const fetchSelectedHospital = async (selectedHospital: any) => {
   //     dispatch(setLoading(true));
@@ -172,8 +160,6 @@ const Orderdetails = ({
     }
   };
 
-
-
   useEffect(() => {
     fetchAnalyst();
     if (!user) {
@@ -185,7 +171,7 @@ const Orderdetails = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log('selected', selectedOptions)
+  console.log('selected', selectedOptions);
 
   const [TPAList, setTPAList] = useState<any>([]);
   const Fetchdetails = async () => {
@@ -204,9 +190,7 @@ const Orderdetails = ({
       });
       setTPAList(TPAList);
 
-
       dispatch(setLoading(false));
-
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore
@@ -223,8 +207,6 @@ const Orderdetails = ({
     insuranceTPA: '',
   });
 
-
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLDataElement | any
@@ -238,7 +220,6 @@ const Orderdetails = ({
     // fetchSelectedTPA();
   };
 
-
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
 
   const toggleConfirmModal = () => {
@@ -250,7 +231,7 @@ const Orderdetails = ({
   const routeChange = () => {
     let path = `newPath`;
     navigates('/Destination');
-  }
+  };
   const handleDate = (e: any) => {
     const { name, value } = e.target;
     // setNewCaseData((pre: any) => ({
@@ -296,21 +277,15 @@ const Orderdetails = ({
     // });
   };
 
-
   const [value, onChange] = useState(new Date());
   return (
-
     <>
-
-      <div className="grid grid-cols-6 gap-4 p-10">
-        <div className="col-start-1 col-end-3 ..."></div>
-        <div className="col-end-7 col-span-2 ..."></div>
-
+      <div className='grid grid-cols-6 gap-4 p-10'>
+        <div className='col-start-1 col-end-3 ...'></div>
+        <div className='col-end-7 col-span-2 ...'></div>
 
         <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-          <p className='pb-4 text-sm text-white font-semibold'>
-            Order ID
-          </p>
+          <p className='pb-4 text-sm text-white font-semibold'>Order ID</p>
           <span className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
             {/* @ts-ignore */}
             {/* {fetchedData && fetchedData.data
@@ -318,13 +293,10 @@ const Orderdetails = ({
                 : ''} */}
             harsh
           </span>
-
         </div>
         <br></br>
         <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-          <p className='pb-4 text-sm text-white font-semibold'>
-            Order Date
-          </p>
+          <p className='pb-4 text-sm text-white font-semibold'>Order Date</p>
           <InputDate
             handleChange={handleChange}
             name='dob'
@@ -337,9 +309,7 @@ const Orderdetails = ({
         <br></br>
 
         <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-          <p className='pb-4 text-sm text-white font-semibold'>
-            Order Type
-          </p>
+          <p className='pb-4 text-sm text-white font-semibold'>Order Type</p>
           <NewCaseSelect
             options={ordertype}
             name='orderType'
@@ -358,44 +328,35 @@ const Orderdetails = ({
             handleChange={handleChange}
             name='productDetails'
             value={orderData?.productDetails || ''}
-
             style={{ height: '40px' }}
             labelStyle={{ paddingBottom: '12px' }}
           />
         </div>
         <br></br>
         <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-          <p className='pb-4 text-sm text-white font-semibold'>
-            Product Name
-          </p>
+          <p className='pb-4 text-sm text-white font-semibold'>Product Name</p>
           <Input
             handleChange={handleChange}
             name='productName'
             value={orderData?.productName || ''}
-
             style={{ height: '40px' }}
             labelStyle={{ paddingBottom: '12px' }}
           />
         </div>
         <br></br>
         <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-          <p className='pb-4 text-sm text-white font-semibold'>
-            SKU (Units)
-          </p>
+          <p className='pb-4 text-sm text-white font-semibold'>SKU (Units)</p>
           <Input
             handleChange={handleChange}
             name='skuUnits'
             value={orderData?.skuUnits || ''}
-
             style={{ height: '40px' }}
             labelStyle={{ paddingBottom: '12px' }}
           />
         </div>
         <br></br>
         <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-          <p className='pb-4 text-sm text-white font-semibold'>
-            Quantity
-          </p>
+          <p className='pb-4 text-sm text-white font-semibold'>Quantity</p>
           <Input
             handleChange={handleChange}
             name='quantity'
@@ -407,10 +368,7 @@ const Orderdetails = ({
         <br></br>
 
         <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-          <p className='pb-4 text-sm text-white font-semibold'>
-            Unit Price
-
-          </p>
+          <p className='pb-4 text-sm text-white font-semibold'>Unit Price</p>
           <Input
             handleChange={handleChange}
             name='unitPrice'
@@ -419,8 +377,6 @@ const Orderdetails = ({
             labelStyle={{ paddingBottom: '12px' }}
           />
         </div>
-
-
       </div>
       <br></br>
       <br></br>
@@ -429,7 +385,6 @@ const Orderdetails = ({
       <br></br>
       <div className='flex items-center justify-center'>
         <button
-
           className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
           style={{ color: 'white' }}
           onClick={nextStep}
@@ -443,7 +398,6 @@ const Orderdetails = ({
         // fetchData={fetchedData.data}
         // inputOfferAmount={inputOfferAmount}
       /> */}
-
     </>
   );
 };
