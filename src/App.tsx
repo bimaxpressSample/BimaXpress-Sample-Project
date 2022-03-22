@@ -58,8 +58,9 @@ import NonCashlessEarlySettlementDash from './components/nonCashless/earlySettle
 import NonCashlessEarlySettlement from './components/nonCashless/EarlySettlement/NonCashlessEarlySettlement';
 import NonCashlessLayout from './components/nonCashless/Layout/NonCashlessLayout';
 import NonCashlessHome from './components/nonCashless/NonCashlessHome';
-import AllDetails from './components/order/AllDetails';
 import Hospitaldetails from './components/UnderWriter/Details';
+import AllDetails from './components/order/AllDetails';
+
 
 function App() {
   const { user, role } = useAppSelector((state) => state?.user);
