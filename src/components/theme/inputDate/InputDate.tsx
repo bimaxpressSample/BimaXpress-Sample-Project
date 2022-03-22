@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./InputDate.module.css";
+import React from 'react';
+import styles from './InputDate.module.css';
 
 type InputDateProps = {
   value?: string | number;
@@ -11,6 +11,7 @@ type InputDateProps = {
   style?: object;
   type?: string;
   labelStyle?: object;
+  disable?: boolean;
 };
 
 const InputDate = ({
@@ -20,12 +21,13 @@ const InputDate = ({
   value,
   style = {},
   labelStyle = {},
-  type = "date",
+  type = 'date',
+  disable = false,
 }: InputDateProps) => {
   return (
     <div>
       {label ? (
-        <p className="pb-3 text-sm text-fontColor " style={labelStyle}>
+        <p className='pb-3 text-sm text-fontColor ' style={labelStyle}>
           {label}
         </p>
       ) : null}
@@ -33,11 +35,12 @@ const InputDate = ({
       <input
         type={type}
         name={name}
-        placeholder="Select date"
+        placeholder='Select date'
         value={value}
         onChange={handleChange}
         className={styles.inputDate}
         style={style}
+        disabled={disable}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import { Row, useTable } from 'react-table';
 import styles from './ActionTaken.module.css';
 import scrollbar from '../../../scrollbar.module.css';
 import notification from '../../theme/utility/notification';
+import { useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 
 interface ColumnDetails {
@@ -23,6 +24,7 @@ const ActionTaken = ({
   toggleNewActionModal,
   toggleSummeryModal,
 }: ActionTakenProps) => {
+  const param = useParams();
   // const [aditTrailData, setAditTrailData] = useState<any>([]);
   const [tableRow, setTableRow] = useState<ColumnDetails[]>([]);
   const data = React.useMemo<ColumnDetails[]>(() => tableRow, [tableRow]);
@@ -71,9 +73,14 @@ const ActionTaken = ({
     }
 
     const res = array?.map((item, index) => {
+      console.log(
+        'Testing Date',
+        format(new Date(item[1]), "dd-MM-yyyy' 'HH:mm"),
+        item[1]
+      );
       let toReturn = {
         actionTaken: item[0],
-        last_action_date: format(new Date(item[1]), 'do MMMM Y, HH:MM'), // format(new Date(item[1]), "do MMMM Y"),
+        last_action_date: format(new Date(item[1]), "dd-MM-yyyy' 'HH:mm"), // format(new Date(item[1]), "do MMMM Y"),
         summery: item[2],
         amount: item[3],
         index: index,
@@ -110,17 +117,19 @@ const ActionTaken = ({
   return (
     <div className='mt-6'>
       <div className='flex justify-end'>
-        <FormButton
-          text='Add Action'
-          iconPlus={true}
-          handleClick={() => {
-            if (!summeryData?.claimno) {
-              notification('info', 'Please fill claim number');
-              return;
-            }
-            toggleNewActionModal();
-          }}
-        />
+        {param.case !== 'settledcases' && param.case !== 'rejectcases' ? (
+          <FormButton
+            text='Add Action'
+            iconPlus={true}
+            handleClick={() => {
+              if (!summeryData?.claimno) {
+                notification('info', 'Please fill claim number');
+                return;
+              }
+              toggleNewActionModal();
+            }}
+          />
+        ) : null}
       </div>
 
       <div>

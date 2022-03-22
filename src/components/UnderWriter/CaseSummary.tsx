@@ -150,7 +150,7 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
  
     dispatch(setLoading(true));
     try {
-      await axiosConfig.post(`https://www.api.bimaxpress.com/patientApprovedDetailsCaseSummary/case8?email=${param?.id}`,formDetails);
+      await axiosConfig.post(`/patientApprovedDetailsCaseSummary/${param?.case}?email=${param?.id}`,formDetails);
     
       dispatch(setLoading(false));
       notification("success", "Successfully Submited");

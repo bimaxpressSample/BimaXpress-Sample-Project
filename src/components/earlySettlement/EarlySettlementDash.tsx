@@ -10,6 +10,8 @@ import PaginationButton from '../theme/PaginationButton/PaginationButton';
 import notification from '../theme/utility/notification';
 import scrollbar from '../../scrollbar.module.css';
 import styles from './EarlySettlementDash.module.css';
+import eyeIcon from '../../assets/icon/eye.svg';
+import SummaryModal from './earlyDashModal/SummaryModal';
 
 interface ColumnDetails {
   [key: string]: any;
@@ -21,6 +23,33 @@ const EarlySettlementDash = () => {
   const { user } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [tableRow, setTableRow] = useState<ColumnDetails[]>([]);
+  const [showESDashSummary, setESDashSummary] = useState(false);
+  const [summaryData, setSummaryData] = useState({});
+
+  function toggleESDashSummary() {
+    setESDashSummary((pre) => !pre);
+  }
+
+  const showSummary = async (key: string) => {
+    //@ts-ignore
+    // const summaryData = esData[key];
+
+    dispatch(setLoading(true));
+    try {
+      let {
+        data: { data },
+      } = await axiosConfig.get(`/Es_case_summary/${key}?email=${user}`);
+
+      data.casenumber = key;
+      setSummaryData(data);
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      //@ts-ignore
+      notification('error', error?.message);
+    }
+    toggleESDashSummary();
+  };
 
   const fetchESDashboardData = async () => {
     dispatch(setLoading(true));
@@ -55,28 +84,35 @@ const EarlySettlementDash = () => {
             key,
             {
               Patient_name,
-              claim_number,
-              es_status,
               Insurance_Company,
-              Offer_date,
-              offer_Amount,
-              repayment_date,
               Discharge_Approvedamount,
-              settled,
-              processing_fee,
+              Offer_Type,
+              es_date,
+              Selected_offer_Amount,
+              Settlement_date,
+              es_status,
             },
           ]
         ) => ({
           name: Patient_name,
-          claimNo: claim_number,
           tpa: Insurance_Company,
           disAmount: Discharge_Approvedamount,
-          offerAmt: offer_Amount,
+          offerType: Offer_Type,
+          esDate: es_date,
+          offerAmt: Selected_offer_Amount,
+          dateOfSettle: Settlement_date,
           es_status: es_status,
-          offerAvailDate: Offer_date,
-          settleAmt: settled,
-          dateOfSettle: repayment_date,
-          processingFees: processing_fee,
+
+          action: (
+            <img
+              src={eyeIcon}
+              alt='icon'
+              onClick={() => {
+                showSummary(key);
+              }}
+              className='cursor-pointer'
+            />
+          ),
         })
       );
       setTableRow(res);
@@ -89,44 +125,62 @@ const EarlySettlementDash = () => {
     () => [
       {
         Header: 'Patient Name',
-        accessor: 'name', // accessor is the "key" in the data
-      },
-      {
-        Header: 'Claim Number',
-        accessor: 'claimNo',
+        accessor: 'name',
       },
       {
         Header: 'TPA/ Insurance Company',
         accessor: 'tpa',
       },
+
       {
         Header: 'Discharge Approve Amount',
         accessor: 'disAmount',
       },
+
+      {
+        Header: 'Offer Type',
+        accessor: 'offerType',
+      },
+
+      {
+        Header: 'ES Date',
+        accessor: 'esDate',
+      },
+
       {
         Header: 'Offer Amount',
         accessor: 'offerAmt',
       },
+
       {
-        Header: 'Status',
-        accessor: 'es_status',
-      },
-      {
-        Header: 'Offer Availed Date',
-        accessor: 'offerAvailDate',
-      },
-      {
-        Header: 'Settled Amount',
-        accessor: 'settleAmt',
-      },
-      {
-        Header: 'Date of Settlement',
+        Header: 'Settlement Date',
         accessor: 'dateOfSettle',
       },
+
       {
-        Header: 'Processing Fees',
-        accessor: 'processingFees',
+        Header: 'Offer Status',
+        accessor: 'es_status',
       },
+
+      {
+        Header: 'Action',
+        accessor: 'action',
+      },
+
+      // {
+      //   Header: 'Settled Amount',
+      //   accessor: 'settleAmt',
+      // },
+
+      // {
+      //   Header: 'Claim Number',
+      //   accessor: 'claimNo',
+      // },
+
+      // {
+      //   Header: 'Processing Fees',
+      //   accessor: 'processingFees',
+      // },
     ],
     []
   );
@@ -157,82 +211,91 @@ const EarlySettlementDash = () => {
   }, [setPageSize]);
 
   return (
-    <div
-      className={`py-6 px-10 w-full flex flex-col overflow-x-scroll ${scrollbar.scrollBarDesign}`}
-    >
-      <div className='flex items-center justify-between  flex-wrap'>
-        <div className='flex items-center flex-wrap'>
-          <div className='mr-4 mt-6'>
-            <TableSearch
-              value={inputValue}
-              handleChange={(val) => setInputValue(val)}
-              placeholder='Search'
-            />
-          </div>
-          <div className='mt-6 '>
-            <TableSearchButton
-              handleClick={() => setGlobalFilter(inputValue)}
-            />
+    <>
+      <div
+        className={`py-6 px-10 w-full flex flex-col overflow-x-scroll ${scrollbar.scrollBarDesign}`}
+      >
+        <div className='flex items-center justify-between  flex-wrap'>
+          <div className='flex items-center flex-wrap'>
+            <div className='mr-4 mt-6'>
+              <TableSearch
+                value={inputValue}
+                handleChange={(val) => setInputValue(val)}
+                placeholder='Search'
+              />
+            </div>
+            <div className='mt-6 '>
+              <TableSearchButton
+                handleClick={() => setGlobalFilter(inputValue)}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <table {...getTableProps()} className={`w-full mt-8 my-10`}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className={`bg-secondary py-3 px-4 text-sm font-semibold text-fontColor text-left ${styles.tableHeader}`}
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row: Row<ColumnDetails>) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      className='px-4 pt-5 pb-12 border-b border-fontColor-darkGray text-sm text-fontColor font-thin last:border-b-0'
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+        <table {...getTableProps()} className={`w-full mt-8 my-10`}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    className={`bg-secondary py-3 px-4 text-sm font-semibold text-fontColor text-left ${styles.tableHeader}`}
+                  >
+                    {column.render('Header')}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <div className='flex items-center justify-between pt-7'>
-        <p className='text-sm text-fontColor text-semibold'>
-          Results:{' '}
-          <span className='text-sm text-fontColor pl-1'>{page?.length}</span>{' '}
-        </p>
-        <div className='flex'>
-          <div className='pr-2'>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row: Row<ColumnDetails>) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        className='px-4 pt-5 pb-12 border-b border-fontColor-darkGray text-sm text-fontColor font-thin last:border-b-0'
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className='flex items-center justify-between pt-7'>
+          <p className='text-sm text-fontColor text-semibold'>
+            Results:{' '}
+            <span className='text-sm text-fontColor pl-1'>{page?.length}</span>{' '}
+          </p>
+          <div className='flex'>
+            <div className='pr-2'>
+              <PaginationButton
+                leftIcon={true}
+                handleClick={() => previousPage()}
+                disability={!canPreviousPage}
+              />
+            </div>
             <PaginationButton
-              leftIcon={true}
-              handleClick={() => previousPage()}
-              disability={!canPreviousPage}
+              rightIcon={true}
+              handleClick={() => nextPage()}
+              disability={!canNextPage}
             />
           </div>
-          <PaginationButton
-            rightIcon={true}
-            handleClick={() => nextPage()}
-            disability={!canNextPage}
-          />
         </div>
       </div>
-    </div>
+      {showESDashSummary && (
+        <SummaryModal
+          isOpen={showESDashSummary}
+          closeModal={toggleESDashSummary}
+          summaryData={summaryData}
+        />
+      )}
+    </>
   );
 };
 

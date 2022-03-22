@@ -22,6 +22,8 @@ import bookneworderSlice from './slices/bookneworderSlice';
 import newshipmentdata from './slices/shipmentsSlice';
 import bnplSlice from './slices/bnplSlice';
 import empanelledTPASlice from './slices/empanelledTPASlice';
+import walletSlice from './slices/walletSlice';
+
 const rootReducer = combineReducers({
   utility: utilityReducer,
   user: userReducer,
@@ -48,6 +50,7 @@ const rootReducer = combineReducers({
   shipmentsData: newshipmentdata,
   bnpl: bnplSlice,
   empanelledTPA: empanelledTPASlice,
+  wallet: walletSlice,
 });
 
 // export type RootState = ReturnType<typeof rootReducer>;

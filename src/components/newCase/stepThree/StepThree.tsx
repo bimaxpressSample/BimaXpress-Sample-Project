@@ -23,6 +23,8 @@ type StepThreeProps = {
   toggleDocumentsModal?: () => void;
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
+  freezeFields: boolean;
+  toggleUnfreezeModal?: () => void;
 };
 
 const StepThree = ({
@@ -36,6 +38,8 @@ const StepThree = ({
   toggleDocumentsModal,
   toggleViewDocumentsModal,
   preAuth,
+  freezeFields,
+  toggleUnfreezeModal,
 }: StepThreeProps) => {
   const { diagnosisDetails } = newCaseData;
   const [doctorList, setDoctorList] = useState<any>([]);
@@ -439,7 +443,7 @@ const StepThree = ({
                 handleChange(e);
               }}
               defaultOption='Select Treating Doctor'
-              label='Name of The Treating Doctor *'
+              label='Name Of The Treating Doctor *'
               value={diagnosisDetails?.doctorsName || ''}
             />
           </div>
@@ -462,7 +466,6 @@ const StepThree = ({
               value={diagnosisDetails?.durationOfPresentAilment || ''}
               label='Duration of present ailment (days)'
               style={{ maxWidth: '80px' }}
-        
             />
           </div>
           <div className='mt-6'>
@@ -994,13 +997,21 @@ const StepThree = ({
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={toggleViewDocumentsModal}
           />
+
+          {freezeFields ? (
+            <NextButton
+              text='Unfreeze'
+              style={{ marginRight: '16px', marginBottom: '16px' }}
+              handleClick={toggleUnfreezeModal}
+            />
+          ) : null}
           {/* <NextButton
             text='Generate Pre Auth Form'
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={preAuth}
           /> */}
 
-          <NextButton
+          {/* <NextButton
             text='Send Mail'
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={() => {
@@ -1008,7 +1019,7 @@ const StepThree = ({
               //@ts-ignore
               toggleModal();
             }}
-          />
+          /> */}
         </div>
         <div className='flex'>
           <NextButton
@@ -1043,7 +1054,7 @@ const StepThree = ({
 						handleClick={preAuth}
 					/> */}
 
-          <NextButton
+          {/* <NextButton
             text='Send Mail'
             style={{ marginRight: '16px', marginBottom: '16px' }}
             handleClick={() => {
@@ -1051,7 +1062,7 @@ const StepThree = ({
               //@ts-ignore
               toggleModal();
             }}
-          />
+          /> */}
         </div>
       </div>
     </div>

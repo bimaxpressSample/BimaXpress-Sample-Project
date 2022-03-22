@@ -78,66 +78,11 @@ const UpgradePlan = ({ setCurrentPlan, currentPlan }: UpgradePlanProps) => {
     //     setOpenBuyModal((pre) => !pre);
     // };
     
-    
-
     return (
         <div className="px-8 py-6">
             <h2 className="text-3xl text-fontColor font-semibold">
                 Upgrade your plan
             </h2>
-            {/* <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10 pt-8">
-                {plans &&
-                    plans?.map((plan, index) => {
-                        return (
-                            <div
-                                className={`w-full ml-auto mr-auto max-h-6 border border-fontColor rounded-2xl px-4 py-6 mb-6 flex flex-col ${styles.container}`}
-                                key={index}
-                            >
-                                <img
-                                    src={standard}
-                                    alt="icon"
-                                    className={`w-8 text-fontColor ${styles.svg}`}
-                                />
-                                <p className="font-light text-xl pt-4 text-fontColor capitalize">
-                                    {plan?.name}
-                                </p>
-                                <div className="flex items-center pt-6">
-                                    <img src={rupi} alt="icon" />
-                                    <h2 className="text-5xl text-fontColor font-semibold pl-2 -mt-3">
-                                        {plan?.price}
-                                    </h2>
-                                </div>
-                                <p className="text-xs font-thin pt-8 text-fontColor">
-                                    Features
-                                </p>
-                                <div className={`h-3 ${styles.contentBox}`}>
-                                    {plan?.features?.map((fetures: any, index: number) => {
-                                        return (
-                                            <div className="pt-4 flex items-center" key={index}>
-                                                <span className={styles.boldIcon}></span>
-                                                <p className="text-sm text-fontColor pl-2">{fetures}</p>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-
-                                <div className="mb-4">
-                                    <PlanSelectButton
-                                        text="Buy now"
-                                        disable={plan?.title === currentPlan}
-                                        style={
-                                            plan?.title === currentPlan
-                                                ? { backgroundColor: "#5a5a5a", cursor: "default" }
-                                                : {}
-                                        }
-                                        handleClick={() => setCurrentPlan(plan?.title)}
-                                    />
-                                </div>
-                            </div>
-                        );
-                    })}
-            </div> */}
-
             <section>
                 <div className="container px-6 py-8 mx-auto">
                     <div className="max-w-xl p-1.5 mx-auto overflow-hidden bg-gray-100 rounded-lg dark:bg-gray-700">
@@ -149,24 +94,8 @@ const UpgradePlan = ({ setCurrentPlan, currentPlan }: UpgradePlanProps) => {
                             </button>
                         );
                         })}
-                            
-
-                            {/* <button className="flex items-center justify-center px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-200 transform bg-gray-200 rounded-lg dark:bg-gray-600 focus:outline-none dark:text-gray-200">
-                                <span className="mx-1">Biannually</span>
-                                <span className="text-xs mx-1 font-normal text-white bg-blue-500 rounded-full py-0.5 px-1.5">
-                                    save 10%
-                                </span>
-                            </button>
-
-                            <button className="flex items-center justify-center px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-200 transform bg-transparent rounded-lg focus:outline-none dark:text-gray-200 dark:hover:bg-gray-600 hover:bg-gray-200">
-                                <span className="mx-1">Annually</span>
-                                <span className="text-xs mx-1 font-normal text-white bg-blue-500 rounded-full py-0.5 px-1.5">
-                                    save 20%
-                                </span>
-                            </button> */}
                         </div>
                     </div>
-                    {/* {renderUI} */}
                     {
                         activeTab ? (
                             // <YearlyPlans />

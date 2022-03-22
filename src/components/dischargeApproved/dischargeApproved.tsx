@@ -205,8 +205,10 @@ const DischargeApproved = () => {
               disabled={bucketStatus === 'Enabled' ? false : true}
             >
               {bucketStatus === 'Enabled' || bucketStatus === ''
-                ? 'Check'
-                : 'Availed'}
+                ? 'Settle'
+                : bucketStatus === 'Availed'
+                ? 'Availed'
+                : ''}
             </Button>
           </>
         ),
@@ -216,8 +218,6 @@ const DischargeApproved = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DACaseData]);
-
-  console.log('DA case', DACaseData);
 
   const data = React.useMemo<ColumnDetails[]>(() => tableRow, [tableRow]);
 
@@ -346,18 +346,10 @@ const DischargeApproved = () => {
   // console.log(selectedFlatRows.map( (d:any) => d.original));
 
   const casesArr = selectedFlatRows.map((d: any) => d.original.case);
-  console.log('arr', casesArr);
 
   const TPA = selectedFlatRows.map((d: any) =>
     d.original.insuranceTPA.replace(/&/, '%26')
   );
-
-  console.log('TPA ', TPA);
-  console.log(
-    'is equal',
-    TPA.every((val: any) => val === TPA[0])
-  );
-  console.log('State', userData);
 
   const handleBookOrder = async (TPA: any, casesArr: any) => {
     let caseString = '';
@@ -373,7 +365,6 @@ const DischargeApproved = () => {
 
     dispatch(setLoading(true));
     const URL = `/casesforshipment?email=${user}&cases=${caseString}&insurancecompany=${TPA[0]}`;
-    console.log(URL);
     try {
       const { data } = await axiosConfig.post(URL);
       dispatch(setLoading(false));

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  AiFillHome,
-} from 'react-icons/ai';
+import { AiFillHome } from 'react-icons/ai';
 
 import logo from '../../assets/images/logo.svg';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setCurrentMenu } from '../../redux/slices/homeSlice';
 import menuIcon from '../../assets/icon/menu_black.svg';
@@ -50,7 +48,6 @@ const hospital = {
 //     ),
 //     pageLink: '/newCase',
 //   },
-
 
 //   {
 //     name: 'Discharge',
@@ -148,20 +145,17 @@ const UndSiderBar = () => {
     }
   };
 
-  useEffect(()=>{
-    const fetchRole = async() =>{
-      try{
-          const {
-            data
-          } = await axiosConfig.get(`/role?email=${user}`);
-    
-          // userRole = data.data.Role;
-          console.log(data.data.role);
-        }
-        catch(error){
-            console.log("error",error);
-        }
-    }
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const { data } = await axiosConfig.get(`/role?email=${user}`);
+
+        // userRole = data.data.Role;
+        console.log(data.data.role);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
   });
 
   const { collapsed } = useAppSelector((state) => state?.leftBarSlice);
@@ -207,12 +201,9 @@ const UndSiderBar = () => {
             <p className='text-fontColor font-semibold text-sm'>
               {homeMenu?.name}
             </p>
-          
-          
           </div>
         </div>
       </div>
-
 
       <div className={'bg-primary-dark p-3'}>
         <div
@@ -234,8 +225,6 @@ const UndSiderBar = () => {
             <p className='text-fontColor font-semibold text-sm'>
               {hospital?.name}
             </p>
-          
-          
           </div>
         </div>
       </div>

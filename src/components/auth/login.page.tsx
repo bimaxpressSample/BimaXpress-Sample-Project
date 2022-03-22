@@ -75,6 +75,7 @@ function LoginPage() {
         data: { data: userRole },
       } = await axiosConfig.get(`/role?email=${data.email}`);
       data.role = userRole.Role;
+      console.log('Login Data', data);
       window.sessionStorage.setItem('bimaUser', JSON.stringify(data));
       window.sessionStorage.setItem(
         'bimaUserPlanData',

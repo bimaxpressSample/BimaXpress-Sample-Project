@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./NewCaseSelect.module.css";
+import React from 'react';
+import styles from './NewCaseSelect.module.css';
 
 type SelectProps = {
   options: { label: string; value: string }[];
@@ -11,28 +11,31 @@ type SelectProps = {
   label?: string;
   style?: object;
   defaultOption?: string | number;
+  disable?: boolean;
 };
 
 const NewCaseSelect = ({
   options,
   handleChange,
   name,
-  value = "",
-  label = "",
+  value = '',
+  label = '',
   style = {},
-  defaultOption = "Select One",
+  defaultOption = 'Select One',
+  disable = false,
 }: SelectProps) => {
   return (
     <>
-      {label ? <p className="pb-3 text-sm text-fontColor ">{label}</p> : null}
+      {label ? <p className='pb-3 text-sm text-fontColor '>{label}</p> : null}
       <select
         value={value}
         name={name}
         onChange={(e) => handleChange(e)}
         className={styles.select}
         style={style}
+        disabled={disable}
       >
-        <option value="" className={styles.option}>
+        <option value='' className={styles.option}>
           {defaultOption}
         </option>
         {options?.map((option, index) => {

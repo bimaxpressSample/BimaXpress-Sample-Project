@@ -180,7 +180,7 @@ const Hospitaldetails = () => {
 
     dispatch(setLoading(true));
     try {
-      await axiosConfig.post(`https://www.api.bimaxpress.com/Hospital_savedata?email=${selectedOptions.hospitalList}`, formDetails);
+      await axiosConfig.post(`/Hospital_savedata?email=${selectedOptions.hospitalList}`, formDetails);
       dispatch(setLoading(false));
       notification("success", "Successfully Submited");
 

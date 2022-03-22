@@ -23,6 +23,8 @@ type StepOneProps = {
   toggleDocumentsModal?: () => void;
   toggleViewDocumentsModal?: () => void;
   preAuth?: () => void;
+  freezeFields: boolean;
+  toggleUnfreezeModal?: () => void;
 };
 
 const TPA = [
@@ -62,6 +64,8 @@ const StepOne = ({
   toggleDocumentsModal,
   toggleViewDocumentsModal,
   preAuth,
+  freezeFields,
+  toggleUnfreezeModal,
 }: StepOneProps) => {
   const [insuranceCompany, setInsuranceCompany] = useState<any>([]);
   const { detailsOfTPA } = newCaseData;
@@ -124,7 +128,10 @@ const StepOne = ({
   }, [empanelledCompaniesList]);
 
   useEffect(() => {
-    if (!newCaseNum) {
+    if (
+      !Object.entries(allCompaniesList)?.length ||
+      !Object.entries(empanelledCompaniesList)?.length
+    ) {
       if (!Object.entries(empanelledCompaniesList)?.length) {
         dispatch(setLoading(true));
       } else {
@@ -191,6 +198,7 @@ const StepOne = ({
             defaultOption='Select Insurance Company'
             label='Insurance Company'
             value={detailsOfTPA?.insuranceCompany || ''}
+            disable={freezeFields}
           />
         </div>
         <div className='col-span-1 mb-8'>
@@ -204,6 +212,7 @@ const StepOne = ({
             defaultOption='Select TPA'
             label='Third Party Administrator (TPA)'
             value={detailsOfTPA?.TPA || ''}
+            disable={freezeFields}
           />
         </div>
       </div>
@@ -237,7 +246,7 @@ const StepOne = ({
               style={{ marginRight: '16px', marginBottom: '16px' }}
               handleClick={toggleViewDocumentsModal}
             />
-            <NextButton
+            {/* <NextButton
               text='Send Mail'
               style={{ marginRight: '16px', marginBottom: '16px' }}
               handleClick={() => {
@@ -245,12 +254,18 @@ const StepOne = ({
                 //@ts-ignore
                 toggleModal();
               }}
-            />
+            /> */}
           </div>
-        ) : (
-          <div></div>
-        )}
-        <div>
+        ) : null}
+
+        <div className='flex items-end'>
+          {freezeFields ? (
+            <NextButton
+              text='Unfreeze'
+              style={{ marginRight: '16px', marginBottom: '16px' }}
+              handleClick={toggleUnfreezeModal}
+            />
+          ) : null}
           <NextButton
             iconRight={true}
             handleClick={saveDataToDb}

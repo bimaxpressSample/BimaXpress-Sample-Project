@@ -70,75 +70,10 @@ const OfferSummary = ({
                 display: 'inline-block',
               }}
             >
-              <span>Claim Number</span>
-            </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
-              {offerSummaryData[0]?.claimno}
-            </div>
-          </div>
-          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
-            <div
-              style={{
-                width: '40%',
-                display: 'inline-block',
-              }}
-            >
               <span>Patient Name</span>
             </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
+            <div className={styles.inputMainDiv}>
               {offerSummaryData[0]?.name}
-            </div>
-          </div>
-          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
-            <div
-              style={{
-                width: '40%',
-                display: 'inline-block',
-              }}
-            >
-              <span>Offer Amount</span>
-            </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
-              {offerSummaryData[0]?.offer_Amount}
             </div>
           </div>
 
@@ -149,23 +84,52 @@ const OfferSummary = ({
                 display: 'inline-block',
               }}
             >
-              <span>OD Limit</span>
+              <span>Claim Number</span>
             </div>
+            <div className={styles.inputMainDiv}>
+              {offerSummaryData[0]?.claimno}
+            </div>
+          </div>
+
+          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
             <div
               style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
+                width: '40%',
                 display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
               }}
             >
-              {offerSummaryData[0]?.od_limit}
+              <span>Discharge Approved Amount</span>
+            </div>
+            <div className={styles.inputMainDiv}>
+              {offerSummaryData[0]?.discharge_approved_amount}
+            </div>
+          </div>
+
+          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+            <div
+              style={{
+                width: '40%',
+                display: 'inline-block',
+              }}
+            >
+              <span>Offer Type</span>
+            </div>
+            <div className={styles.inputMainDiv}>
+              {offerSummaryData[0]?.Offer_Type}
+            </div>
+          </div>
+
+          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+            <div
+              style={{
+                width: '40%',
+                display: 'inline-block',
+              }}
+            >
+              <span>Offer Amount</span>
+            </div>
+            <div className={styles.inputMainDiv}>
+              {offerSummaryData[0]?.Selected_offer_Amount}
             </div>
           </div>
 
@@ -178,30 +142,45 @@ const OfferSummary = ({
             >
               <span>Processing Fee</span>
             </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
-              {offerSummaryData[0]?.processing_fee}
+            <div className={styles.inputMainDiv}>
+              {offerSummaryData[0]?.Selected_processing_fees}
             </div>
           </div>
+
+          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+            <div
+              style={{
+                width: '40%',
+                display: 'inline-block',
+              }}
+            >
+              <span>OD Limit</span>
+            </div>
+            <div className={styles.inputMainDiv}>
+              {offerSummaryData[0]?.od_limit}
+            </div>
+          </div>
+
+          {/* <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+            <div
+              style={{
+                width: '40%',
+                display: 'inline-block',
+              }}
+            >
+              <span>Limit Utilised</span>
+            </div>
+            <div className={styles.inputMainDiv}>
+              {offerSummaryData[0]?.Limit_Utilization}
+            </div>
+          </div> */}
 
           <div
             className='flex mt-8 justify-center'
             // style={{ position: 'relative', left: '60%' }}
           >
             <PlanSelectButton
-              text='Confirm Order'
+              text='Confirm'
               style={{ maxWidth: '180px' }}
               handleClick={() => {
                 navigate('/earlysettlementDash');
