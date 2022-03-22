@@ -11,6 +11,11 @@ import DoctorCreate from './components/doctor/doctorCreate/DoctorCreate';
 import DoctorUpdate from './components/doctor/doctorUpdateContainer/DoctorUpdateContainer';
 import NewCase from './components/newCase/NewCase';
 import Order from './components/order/Order';
+import Neworder from './components/order/Neworder';
+import Buyerdetails from './components/order/Buyerdetails';
+import Orderdetails from './components/order/Orderdetails';
+import Destination from './components/order/Destination';
+import Packageweight from './components/order/Packageweight';
 import NewModals from './components/dischargeApproved/newModals';
 import Drafts from './components/drafts/Drafts';
 import EmpanelledCompanies from './components/empanelled/EmpanelledCompanies';
@@ -42,7 +47,7 @@ import ReimbursementTableData from './components/reimbursement/ReimbursementTabl
 import BnplHome from './components/buyNowPayLater/bnplHome';
 import BnplTable from './components/buyNowPayLater/bnplTable';
 import BnplForm from './components/buyNowPayLater/bnplForm';
-import DetailsUnderWriter from './components/UnderWriter/Details'
+import DetailsUnderWriter from './components/UnderWriter/Details';
 
 // Non Cashless
 import NonCashlessAddCase from './components/nonCashless/newCase/NonCashlessAddCase';
@@ -51,6 +56,10 @@ import NonCashlessEarlySettlementDash from './components/nonCashless/earlySettle
 import NonCashlessEarlySettlement from './components/nonCashless/EarlySettlement/NonCashlessEarlySettlement';
 import NonCashlessLayout from './components/nonCashless/Layout/NonCashlessLayout';
 import NonCashlessHome from './components/nonCashless/NonCashlessHome';
+import AllDetails from './components/order/AllDetails';
+import Hospitaldetails from './components/UnderWriter/Details';
+
+
 function App() {
   const { user, role } = useAppSelector((state) => state?.user);
 
@@ -58,6 +67,7 @@ function App() {
 
   const DepWrapper = (element: any) => <DepLayout>{element}</DepLayout>;
   const UndWrapper = (element: any) => <UndLayout>{element}</UndLayout>;
+
   const NonCashlessWrapper = (element: any) => (
     <NonCashlessLayout>{element}</NonCashlessLayout>
   );
@@ -82,6 +92,8 @@ function App() {
             <Route path='/newCase' element={Wrapper(<NewCase />)} />
             <Route path='/newCase/:case' element={Wrapper(<NewCase />)} />
             <Route path='/order' element={Wrapper(<Order />)} />
+            <Route path='/ordernew' element={Wrapper(<Neworder />)} />
+            <Route path='/AllDetails' element={Wrapper(<AllDetails />)} />
             <Route path='/caseData/:case' element={Wrapper(<Drafts />)} />
             <Route path='/mail' element={Wrapper(<Mail />)} />
             <Route
@@ -196,7 +208,7 @@ function App() {
             />
              <Route
               path='/undhospitaldetails'
-              element={UndWrapper(<DetailsUnderWriter />)}
+              element={UndWrapper(<Hospitaldetails />)}
             />
           </>
         );

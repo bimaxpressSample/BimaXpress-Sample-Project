@@ -31,7 +31,7 @@ const ConfirmModal1 = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
  
-  const Submitme = async( fetchData : any ) =>{
+  const Submitme = async( inputOfferAmount : any ,  fetchData:any ) =>{
     //@ts-ignore
     if(!inputOfferAmount.Amount.length){
       notification("error","Please Enter Offer Amount");
@@ -40,28 +40,43 @@ const ConfirmModal1 = ({
     
     dispatch(setLoading(true));
     const viewURL = `/patientApprovedDetailsCaseSummary/${param.case}?email=${param.id}` ;
-    const submitForm = new FormData() ;
+  
 
-    submitForm.append("status",'Rejected');
-    submitForm.append("claimno",fetchData.Claim_Number);
-    submitForm.append("patient_name",fetchData.Patient_name);
-    submitForm.append("Insurance_Company",fetchData.Insurance_Company);
-
-    submitForm.append("Health_Id",fetchData.HealthId);
-    submitForm.append("discharge_approved_amount",fetchData.discharge_approved_amount);
-    submitForm.append("average_settlement_tat",fetchData.average_settlement_tat);
-    submitForm.append("avg_discount_factor",fetchData.avg_discount_factor);
-    submitForm.append("Bank_percent",fetchData.Bank_percent);
-    submitForm.append("mintat",fetchData.mintat);
-    submitForm.append("maxtat",fetchData.maxtat);
-    submitForm.append("processing_fee",fetchData.processing_fee);
+    const formDetails = new FormData();
     //@ts-ignore
-    submitForm.append("offer_Amount",inputOfferAmount.Amount);
+    formDetails.append("offer_Amount_IG", inputOfferAmount?.Amount);
+    //@ts-ignore
+    formDetails.append("claimno", fetchedData?.data1?.Claim_Number);
+    //@ts-ignore
+    formDetails.append("patient_name", fetchedData?.data1?.Patient_name);
+    //@ts-ignore
+    formDetails.append("Insurance_Company", fetchedData?.data1?.Insurance_Company);
+    //@ts-ignore
+    formDetails.append("discharge_approved_amount", fetchedData?.data1?.discharge_approved_amount);
+    //@ts-ignore
+    formDetails.append("Health_Id", fetchedData?.data1?.HealthId);
+    //@ts-ignore
+    formDetails.append("average_settlement_tat", fetchedData?.data2?.average_settlement_tat);
+    //@ts-ignore
+    formDetails.append("maxtat", fetchedData?.data2?.maxtat);
+    //@ts-ignore
+    formDetails.append("mintat", fetchedData?.data2?.mintat);
+    //@ts-ignore
+    formDetails.append("avg_discount_percent", fetchedData?.data2?.avg_discount_percent);
+    //@ts-ignore
+    formDetails.append("Bank_percent", fetchedData?.data2?.Bank_percent);
+    //@ts-ignore
+    formDetails.append("processing_fees_IG", fetchedData?.data2?.processing_fees_IG);
+    //@ts-ignore
+    formDetails.append("processing_fees_ING", fetchedData?.data2?.processing_fees_ING);
+    //@ts-ignore
+    formDetails.append("offer_Amount_ING", inputOfferAmount?.Amount1);
+    formDetails.append("status", 'Rejected');
 
 
     try{
         
-        const { data } = await axiosConfig.post(viewURL,submitForm);
+        const { data } = await axiosConfig.post(viewURL,formDetails);
         dispatch(setLoading(false));
         notification("info","Submitted Successfully");
         navigate(`/patientRejectCase/${param.id}`);
@@ -102,7 +117,7 @@ const ConfirmModal1 = ({
             text="Submit"
             style={{ maxWidth: "180px" }}
           /> */}
-          <button onClick={() => Submitme(fetchData)} className="h-8 w-auto border mx-4 text-fontColor-light rounded outline-none text-sm flex items-center px-6">Yes</button>
+          <button onClick={() => Submitme(inputOfferAmount,fetchData)} className="h-8 w-auto border mx-4 text-fontColor-light rounded outline-none text-sm flex items-center px-6">Yes</button>
           <button onClick={closeModal} className="h-8 w-auto border mx-4 text-fontColor-light rounded outline-none text-sm flex items-center px-6">No</button>
         </div>
       </div>

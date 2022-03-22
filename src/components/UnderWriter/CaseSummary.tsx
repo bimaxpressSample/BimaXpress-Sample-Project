@@ -10,6 +10,9 @@ import notification from '../theme/utility/notification';
 import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 import { color, fontSize } from '@mui/system';
 import { red } from '@mui/material/colors';
+import Modal from "react-modal";
+import styles from './ConfirmModal.module.css';
+import { IoClose } from "react-icons/io5";
 
 const CaseSummary = () => {
   const [showModal, setShowModal] = useState(false);
@@ -25,7 +28,7 @@ const CaseSummary = () => {
     Amount: '',
     Amount1: '',
   });
-
+console.log("fdgdfgfdgrtftr",inputOfferAmount);
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
 
   const toggleConfirmModal = () => {
@@ -124,6 +127,52 @@ const CaseSummary = () => {
 
 
 
+
+
+  const apiund = async (status:any) => {
+    const formDetails = new FormData();
+    formDetails.append("offer_Amount_IG", inputOfferAmount?.Amount);
+    formDetails.append("claimno", fetchedData?.data1?.Claim_Number);
+    formDetails.append("patient_name", fetchedData?.data1?.Patient_name);
+    formDetails.append("Insurance_Company", fetchedData?.data1?.Insurance_Company);
+    formDetails.append("discharge_approved_amount", fetchedData?.data1?.discharge_approved_amount);
+    formDetails.append("Health_Id", fetchedData?.data1?.HealthId);
+    formDetails.append("average_settlement_tat", fetchedData?.data2?.average_settlement_tat);
+    formDetails.append("maxtat", fetchedData?.data2?.maxtat);
+    formDetails.append("mintat", fetchedData?.data2?.mintat);
+    formDetails.append("avg_discount_percent", fetchedData?.data2?.avg_discount_percent);
+    formDetails.append("Bank_percent", fetchedData?.data2?.Bank_percent);
+    formDetails.append("processing_fees_IG", fetchedData?.data2?.processing_fees_IG);
+    formDetails.append("processing_fees_ING", fetchedData?.data2?.processing_fees_ING);
+    formDetails.append("offer_Amount_ING", inputOfferAmount?.Amount1);
+    formDetails.append("status", status);
+
+ 
+    dispatch(setLoading(true));
+    try {
+      await axiosConfig.post(`https://www.api.bimaxpress.com/patientApprovedDetailsCaseSummary/case8?email=${param?.id}`,formDetails);
+    
+      dispatch(setLoading(false));
+      notification("success", "Successfully Submited");
+      navigate(`/patient${status === 'Rejected' ? 'Reject' : 'Enabled'}Case/${param?.id}`);
+
+    } catch (error) {
+      dispatch(setLoading(false));
+
+      //@ts-ignore
+      notification('error', error);
+    }
+  
+  }
+  const [openconfirm, setopenconfirm] = useState<boolean>(false);
+  const [openconfirm1, setopenconfirm1] = useState<boolean>(false);
+  const toggleModal = () => {
+    setopenconfirm((pre) => !pre);
+  };
+  const toggleModal1 = () => {
+    setopenconfirm1((pre) => !pre);
+  };
+
   return (
     <>
       {
@@ -137,8 +186,8 @@ const CaseSummary = () => {
               Claim No.
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.Claim_Number
+              {fetchedData && fetchedData?.data1
+                ? fetchedData?.data1?.Claim_Number
                 : ''}
               {/* {console.log(fetchedData.data.Claim_Number)} */}
             </p>
@@ -148,8 +197,8 @@ const CaseSummary = () => {
               Patient Name
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.Patient_name
+              {fetchedData && fetchedData?.data1
+                ? fetchedData?.data1?.Patient_name
                 : ''}
             </p>
           </div>
@@ -158,8 +207,8 @@ const CaseSummary = () => {
               Insurance Company
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.Insurance_Company
+              {fetchedData && fetchedData?.data1
+                ? fetchedData?.data1?.Insurance_Company
                 : ''}
             </p>
           </div>
@@ -169,8 +218,8 @@ const CaseSummary = () => {
               Discharge Approve Amount
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.discharge_approved_amount
+              {fetchedData && fetchedData?.data1
+                ? fetchedData?.data1?.discharge_approved_amount
                 : ''}
             </p>
           </div>
@@ -180,7 +229,7 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data ? fetchedData.data.HealthId : ''}
+              {fetchedData && fetchedData?.data1 ? fetchedData?.data1?.HealthId : ''}
             </p>
           </div>
           <br></br>
@@ -196,10 +245,11 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.average_settlement_tat
+              {fetchedData && fetchedData?.data2
+                ? fetchedData?.data2?.average_settlement_tat
                 : ''}
             </p>
+            
           </div>
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
@@ -207,7 +257,7 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data ? fetchedData.data.maxtat : ''}
+              {fetchedData && fetchedData?.data2 ? fetchedData?.data2?.maxtat : ''}
             </p>
           </div>
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
@@ -216,7 +266,7 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data ? fetchedData.data.mintat : ''}
+              {fetchedData && fetchedData?.data2 ? fetchedData?.data2?.mintat : ''}
             </p>
           </div>
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
@@ -225,8 +275,8 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.avg_discount_factor
+              {fetchedData && fetchedData?.data2
+                ? fetchedData?.data2?.avg_discount_percent
                 : ''}
             </p>
           </div>
@@ -236,8 +286,8 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.Bank_percent
+              {fetchedData && fetchedData?.data2
+                ? fetchedData?.data2?.Bank_percent
                 : ''}
             </p>
           </div>
@@ -247,8 +297,8 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.processing_fee
+              {fetchedData && fetchedData?.data2
+                ? fetchedData?.data2?.processing_fees_IG
                 : ''}
             </p>
           </div>
@@ -258,14 +308,16 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.offer_Amount
+              {fetchedData && fetchedData.data2
+                ? fetchedData?.data2?.offer_Amount
                 : ''}
             </p>
           </div>
+        
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <input
               name='Amount'
+              value= {inputOfferAmount?.Amount || ''}
               onChange={handleChange}
               style={{ color: 'white' }}
               placeholder='Enter Offer Amount'
@@ -284,8 +336,8 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.processing_fee
+              {fetchedData && fetchedData?.data2
+                ? fetchedData?.data2?.processing_fees_ING
                 : ''}
             </p>
           </div>
@@ -296,8 +348,8 @@ const CaseSummary = () => {
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
-              {fetchedData && fetchedData.data
-                ? fetchedData.data.offer_Amount
+              {fetchedData && fetchedData?.data2
+                ? fetchedData?.data2?.offer_Amount
                 : ''}
             </p>
           </div>
@@ -307,6 +359,7 @@ const CaseSummary = () => {
             <input
               name='Amount1'
               onChange={handleChange}
+              value= {inputOfferAmount?.Amount1 || ''}
               style={{ color: 'white' }}
               placeholder='Enter Offer Amount'
               className='outline-none rounded-md border-2 px-2 py-1 w-full text-base bg-transparent font-thin placeholder-primary-lightest Input_input__1flKu'
@@ -326,56 +379,119 @@ const CaseSummary = () => {
 
           {/* <div className="col-span-2 lg:col-span-1 pb-6 mt-8">
             </div> */}
-          <div className='col-span-2 lg:col-span-2 pb-6 mt-8'>
-            <div className='flex justify-end'>
-              {
-                (!inputOfferAmount.Amount.length || !inputOfferAmount.Amount1.length) && !(!inputOfferAmount.Amount.length && !inputOfferAmount.Amount1.length)  ? (
-                  <button
-                    onClick={toggleConfirmModal}
-                    className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
-                    style={{ color: 'white' }}
-                  >
-                    Submit
-                  </button>
-                ):(
-                  <button
-                    disabled
-            
-                    // onClick={toggleConfirmModal}
-                    className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
-                    style={{ color: 'white' }}
-                    
-                  
-                  >
-                    Submit
-                  </button>
-                )
-              }
-              
-              <button
-                onClick={toggleConfirmModal1}
+        <div className='flex items-center justify-center'>
+        <button
+
+          className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-4'
+          style={{ color: 'white' }}
+          onClick={toggleModal}
+        >
+          Submit
+        </button>
+        <button
+                onClick={toggleModal1}
                 className='h-8 w-auto border mx-4 rounded outline-none text-sm flex items-center px-6'
                 style={{ color: 'white' }}
               >
                 Reject
               </button>
+      </div>
+      <div>
+        <Modal
+          isOpen={openconfirm}
+          className={styles.approveModalContainer}
+          overlayClassName={styles.overlayContainer}
+          onRequestClose={toggleModal}
+          shouldCloseOnOverlayClick={true}
+        >
+          <div className="px-10 py-8 relative">
+            <IoClose
+              className="absolute top-2 right-2 text-2xl text-fontColor cursor-pointer"
+              onClick={toggleModal}
+            />
+
+            <div className="w-full h-auto border-fontColor rounded-lg text-center">
+              <p className="text-sm text-fontColor-gray pt-4">
+                Are You Sure You Want To Submit The Case
+              </p>
+              <div className="flex items-center justify-center mt-4">
+
+              </div>
             </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+
+            </div>
+            <div className="flex justify-center mt-8">
+              {/* <PlanSelectButton
+            text="Submit"
+            style={{ maxWidth: "180px" }}
+          /> */}
+              <button onClick={()=> apiund(`Enabled`)} className="h-8 w-auto border mx-4 text-fontColor-light rounded outline-none text-sm flex items-center px-6">Yes</button>
+              <button onClick={toggleModal} className="h-8 w-auto border mx-4 text-fontColor-light rounded outline-none text-sm flex items-center px-6">No</button>
+            
+            </div>
+
           </div>
-        </div>
+        </Modal>
+
+      </div>
+
+
+
+
+
+
+
+
+      <div>
+        <Modal
+          isOpen={openconfirm1}
+          className={styles.approveModalContainer}
+          overlayClassName={styles.overlayContainer}
+          onRequestClose={toggleModal1}
+          shouldCloseOnOverlayClick={true}
+        >
+          <div className="px-10 py-8 relative">
+            <IoClose
+              className="absolute top-2 right-2 text-2xl text-fontColor cursor-pointer"
+              onClick={toggleModal1}
+            />
+
+            <div className="w-full h-auto border-fontColor rounded-lg text-center">
+              <p className="text-sm text-fontColor-gray pt-4">
+                Are You Sure You Want To Reject The Case
+              </p>
+              <div className="flex items-center justify-center mt-4">
+
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+
+            </div>
+            <div className="flex justify-center mt-8">
+              {/* <PlanSelectButton
+            text="Submit"
+            style={{ maxWidth: "180px" }}
+          /> */}
+              <button onClick={()=> apiund(`Rejected`)} className="h-8 w-auto border mx-4 text-fontColor-light rounded outline-none text-sm flex items-center px-6">Yes</button>
+              <button onClick={toggleModal1} className="h-8 w-auto border mx-4 text-fontColor-light rounded outline-none text-sm flex items-center px-6">No</button>
+            
+            </div>
+
+          </div>
+        </Modal>
+        
+      </div>
+
+
+
+              
+              
+            </div>
+       
       }
 
-      <ConfirmModal
-        closeModal={toggleConfirmModal}
-        isOpen={openConfirmModal}
-        fetchData={fetchedData.data}
-        inputOfferAmount={inputOfferAmount}
-      />
-      <ConfirmModal1
-        closeModal={toggleConfirmModal1}
-        isOpen={openConfirmModal1}
-        fetchData={fetchedData.data}
-        inputOfferAmount={inputOfferAmount}
-      />
+      
     </>
   );
 };
