@@ -2,8 +2,7 @@
 
 } */
 
-
-/* .progressbar {
+.progressbar {
     display: flex;
     align-items: center;
     overflow-x: scroll;
@@ -65,9 +64,10 @@
 .ckeckIcon {
     color: #ffffff;
     font-size: 20px;
-} */
+}
 
-.progressbar {
+
+/* .progressbar {
     display: flex;
     align-items: center;
     overflow-x: scroll;
@@ -137,4 +137,4 @@
 .ckeckIcon {
     color: #ffffff;
     font-size: 20px;
-}
+} */

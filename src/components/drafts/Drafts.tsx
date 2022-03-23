@@ -93,9 +93,7 @@ const Drafts = () => {
     dispatch(setLoading(true));
     const URL = `/${param?.case}?email=${user}`;
     try {
-      const listOfTPA = await axiosConfig.get(
-        `/empanelcompany?email=${user}`
-      );
+      const listOfTPA = await axiosConfig.get(`/empanelcompany?email=${user}`);
 
       Object.entries(listOfTPA.data.data).map(([key, value]) => {
         TPAList.push({
@@ -317,7 +315,6 @@ const Drafts = () => {
               <TableCheckbox {...getToggleAllRowsSelectedProps()} />
             </div>
           ),
-
           Cell: ({ row }) => (
             <div>
               {/* @ts-ignore */}
