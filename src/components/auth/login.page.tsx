@@ -22,6 +22,7 @@ function LoginPage() {
   const { userData } = useAppSelector((state) => state?.user);
   const { user } = useAppSelector((state) => state?.user);
   const { role } = useAppSelector((state) => state?.user);
+  const { customerWalletDetails } = useAppSelector((state) => state?.wallet);
   const [userInput, setUserInput] = useState({
     email: '',
     password: '',
@@ -39,7 +40,7 @@ function LoginPage() {
     let user = sessionStorage.getItem('bimaUser');
     let subscription_details = sessionStorage.getItem('bimaUserPlanData');
     let walletBalance = sessionStorage.getItem('bimaUserWalletBalance');
-    let walletDetials = sessionStorage.getItem('bimaUserWalletDetails');
+    let walletDetails = sessionStorage.getItem('bimaUserWalletDetails');
 
     if (user) {
       //@ts-ignore
@@ -60,9 +61,9 @@ function LoginPage() {
       //@ts-ignore
       dispatch(setwalletBalance(walletBalance));
       //@ts-ignore
-      walletDetials = JSON.parse(walletDetials);
+      walletDetails = JSON.parse(walletDetails);
       //@ts-ignore
-      dispatch(setcustomerWalletDetails(walletDetials));
+      dispatch(setcustomerWalletDetails(walletDetails));
 
 
       if (role === 'admin') {
@@ -96,22 +97,23 @@ function LoginPage() {
         'bimaUserPlanData',
         JSON.stringify(subscription_details)
       );
+      await dispatch(setLoading(false));
+      await dispatch(setUserPlanData(subscription_details));
+      console.log('sub details',subscription_details);
       
-      const walletBalance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+      console.log("wallet details ", wallet_data?.walletdetails) 
+      await dispatch(setcustomerWalletDetails(wallet_data));
+      window.sessionStorage.setItem('bimaUserWalletDetails', JSON.stringify(wallet_data));
+
+      
+      //@ts-ignore
+      const walletBalance = await axiosConfig.get(`/walletBalance?customerId=${wallet_data?.walletdetails}`);
       console.log("wallet balance on login",walletBalance?.data?.data?.balance / 100);
 
 
       await dispatch(setwalletBalance(walletBalance?.data?.data?.balance / 100));
       window.sessionStorage.setItem('bimaUserWalletBalance', JSON.stringify(walletBalance?.data?.data?.balance / 100));
 
-      await dispatch(setLoading(false));
-      await dispatch(setUserPlanData(subscription_details));
-      console.log('sub details',subscription_details);
-
-
-      console.log("wallet details ", wallet_data) 
-      await dispatch(setcustomerWalletDetails(wallet_data));
-      window.sessionStorage.setItem('bimaUserWalletDetails', JSON.stringify(wallet_data));
 
       await dispatch(setUserData(data));
       await dispatch(setUser(data?.email));

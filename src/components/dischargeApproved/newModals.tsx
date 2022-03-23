@@ -1,5 +1,5 @@
-import React, { useState, useEffect,Component } from 'react';
-import scrollbar from '../../scrollbar.module.css';import {
+import React, { useState, useEffect, Component } from 'react';
+import scrollbar from '../../scrollbar.module.css'; import {
   useTable,
   useGlobalFilter,
   usePagination,
@@ -58,6 +58,7 @@ const NewModals = () => {
   const { DACaseData } = useAppSelector((state) => state?.newModals);
   const [ESCaseData, setESCaseData] = useState({});
   const { user } = useAppSelector((state) => state?.user);
+  const { customerWalletDetails } = useAppSelector((state) => state?.wallet);
   const { bookOrderData } = useAppSelector((state) => state?.bookOrderData);
   const { shipmentData } = useAppSelector((state) => state?.shipmentData);
 
@@ -69,7 +70,7 @@ const NewModals = () => {
   const navigate = useNavigate();
 
   console.log("Redux shipment data", shipmentData);
-  
+
 
   const [openEsOfferDetailsModal, setopenEsOfferDetailsModal] =
     useState<boolean>(false);
@@ -77,20 +78,20 @@ const NewModals = () => {
     setopenEsOfferDetailsModal((pre) => !pre);
   };
 
-  
+
   // console.log("parmass" , param.company , "     " , param.weight);
 
   const fetchAnalyst = async () => {
     dispatch(setLoading(true));
     const postUrl = `/Authentication?email=palashshrivastava244@gmail.com&password=Palash@7067`;
 
-    const {data} =  await axiosConfig.post(postUrl);
-    const header = data.data.token ;
+    const { data } = await axiosConfig.post(postUrl);
+    const header = data.data.token;
 
     const URL = `/checkserviceability?email=${user}&insurancecompany=${param.company}&weight=${param.weight}&token=${header}`;
 
     // const awb = `/awbnumber?shipment_id=${user}&courier_company_id=${param.company}&token=${header}`;
-    
+
     try {
       const { data } = await axiosConfig.get(URL);
       dispatch(setLoading(false));
@@ -106,14 +107,14 @@ const NewModals = () => {
     fetchAnalyst();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   // console.log("book order" , bookOrderData);
-  console.log("grdg",DACaseData);
+  console.log("grdg", DACaseData);
 
 
   const showESOfferDetails = (value: string) => {
     navigate('/order');
-    };
+  };
 
 
 
@@ -123,12 +124,12 @@ const NewModals = () => {
   useEffect(() => {
     const res = Object.entries(DACaseData)?.map(
       ([
-          available_courier_companies,
-          {
-            rate,
-            courier_company_id,
-            courier_name,
-          }
+        available_courier_companies,
+        {
+          rate,
+          courier_company_id,
+          courier_name,
+        }
       ]) => ({
         // case: key,
         name: courier_name,
@@ -147,11 +148,11 @@ const NewModals = () => {
               fontWeight: '600',
             }}
             // onClick={() => navigate('/order')}
-            
-            onClick={() =>handleBookOrder(courier_company_id,rate)}
+
+            onClick={() => handleBookOrder(courier_company_id, rate)}
           >
             Book
-             
+
           </Button>
         ),
       })
@@ -211,8 +212,8 @@ const NewModals = () => {
     // @ts-ignore
     selectedFlatRows,
     // @ts-ignore
-    state: {selectedRowIds},
-    
+    state: { selectedRowIds },
+
   } = useTable(
     { columns, data },
     useGlobalFilter,
@@ -222,8 +223,8 @@ const NewModals = () => {
       hooks.visibleColumns.push((columns) => [
         // Let's make a column for selection
         {
-            
-      
+
+
           id: 'selection',
           // @ts-ignore
           Header: ({ getToggleAllRowsSelectedProps }) => (
@@ -231,8 +232,8 @@ const NewModals = () => {
               <TableCheckbox {...getToggleAllRowsSelectedProps()} />
             </div>
           ),
-              
-            
+
+
 
 
           Cell: ({ row }) => (
@@ -246,7 +247,7 @@ const NewModals = () => {
       ]);
     }
   );
-  
+
 
   const [options, setOptions] = useState({
     insuranceTPA: '',
@@ -269,52 +270,52 @@ const NewModals = () => {
     setPageSize(5);
   }, [setPageSize]);
 
-  const [userData,setuserData] = useState({});
+  const [userData, setuserData] = useState({});
 
- 
+
   // selectedFlatRows.map(
   //   (d:any) =>  setuserData(d.original)
   // )
 
   // console.log(selectedFlatRows.map( (d:any) => d.original));
-  const casesArr = selectedFlatRows.map( (d:any) => d.original.case);
-  console.log("arr",casesArr);
+  const casesArr = selectedFlatRows.map((d: any) => d.original.case);
+  console.log("arr", casesArr);
 
-  const TPA = selectedFlatRows.map( (d:any) => d.original.insuranceTPA.replace(/&/,'%26'));
-  
+  const TPA = selectedFlatRows.map((d: any) => d.original.insuranceTPA.replace(/&/, '%26'));
+
   console.log("TPA ", TPA);
-  console.log("is equal",TPA.every((val:any) => val === TPA[0]));
-    console.log("State",userData);
+  console.log("is equal", TPA.every((val: any) => val === TPA[0]));
+  console.log("State", userData);
 
+  const deductAmountFromWallet = async (rate: any) => {
 
-  const deductAmountFromWallet = async(rate:any) =>{
-      
     const orderformData = new FormData();
-      orderformData?.append("amount",`${Number(Number(rate).toFixed(2)) * 100}`);
-      orderformData?.append("currency","INR");
+    orderformData?.append("amount", `${Number(Number(rate).toFixed(2)) * 100}`);
+    orderformData?.append("currency", "INR");
 
-      const transferData = new FormData();
-      transferData.append("method",'wallet');
-      transferData.append("wallet",'openwallet');
-      transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
-      // transferData.append("order_id",'');
-      transferData.append("amount",`${Number(Number(rate).toFixed(2)) * 100}`);
-      transferData.append("currency",'INR');
-      transferData.append("contact",'9198765432');
-      transferData.append("email",user);
-      transferData.append("description",`Courier Charge`);
+    const transferData = new FormData();
+    transferData.append("method", 'wallet');
+    transferData.append("wallet", 'openwallet');
+    //@ts-ignore
+    transferData.append("customer_id", customerWalletDetails?.walletdetails);
+    // transferData.append("order_id",'');
+    transferData.append("amount", `${Number(Number(rate).toFixed(2)) * 100}`);
+    transferData.append("currency", 'INR');
+    transferData.append("contact", '9198765432');
+    transferData.append("email", user);
+    transferData.append("description", `Courier Charge`);
 
-      const createOrder = await axiosConfig.post('/createOrder',orderformData);
-      const orderId = createOrder.data.data.id ;
+    const createOrder = await axiosConfig.post('/createOrder', orderformData);
+    const orderId = createOrder.data.data.id;
 
-      transferData.append("order_id",orderId);
-        
-      const response = await axiosConfig.post('/createPaymentCapture',transferData);
+    transferData.append("order_id", orderId);
+
+    const response = await axiosConfig.post('/createPaymentCapture', transferData);
   }
 
 
 
-  const handleBookOrder = async(claimNumber:any,rate:any)=>{
+  const handleBookOrder = async (claimNumber: any, rate: any) => {
 
     console.log(location.state.length)
     console.log(location.state.breadth)
@@ -325,73 +326,70 @@ const NewModals = () => {
     console.log(location.state.key)
 
     dispatch(setLoading(true));
-   
+
     const postUrl = `/Authentication?email=palashshrivastava244@gmail.com&password=Palash@7067`;
-    const {data} =  await axiosConfig.post(postUrl);
-    const header = data.data.token ;
-  //  console.log("idddddd",DACaseData.courier_company_id);
+    const { data } = await axiosConfig.post(postUrl);
+    const header = data.data.token;
+    //  console.log("idddddd",DACaseData.courier_company_id);
 
     // const ship = data.data.shipment_id;
 
-    const userFormData = new FormData() ;
-        
-    
+    const userFormData = new FormData();
+
+
     userFormData?.append("length", location.state.length);
-    userFormData?.append("breadth",location.state.breadth);
-    userFormData?.append("height",location.state.height);
+    userFormData?.append("breadth", location.state.breadth);
+    userFormData?.append("height", location.state.height);
     userFormData?.append("weight", location.state.weight);
     userFormData?.append("units", location.state.units);
     dispatch(setLoading(true));
 
-    
+
     const URL = `/bookorder?email=${user}&insurancecompany=${location.state.company}&id=${location.state.key}&token=${header}`;
-    
+
     console.log(URL);
     var ship;
 
     try {
-
-      const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
-      let currentBalance = wallet_balance.data.data.balance / 100 ;
+      //@ts-ignore
+      const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=${customerWalletDetails?.walletdetails}`);
+      let currentBalance = wallet_balance.data.data.balance / 100;
       console.log(currentBalance);
-      if(currentBalance < rate.toFixed(2)){
-        notification('error',"Insufficient Wallet Balance");
+      if (currentBalance < rate.toFixed(2)) {
+        notification('error', "Insufficient Wallet Balance");
         dispatch(setLoading(false));
-        return ;
+        return;
       }
-      
-      const {data} = await axiosConfig.post(URL,userFormData);
-      console.log("shipped data = ",data);
+
+      const { data } = await axiosConfig.post(URL, userFormData);
+      console.log("shipped data = ", data);
       ship = data.data.shipment_id;
       dispatch(setShipmentData(data.data));
 
       // Function to Deduct Courier Charges from wallet
       deductAmountFromWallet(rate);
 
-    
       // dispatch(setorderDetails(data?.data));
       // @ts-ignore
       // dispatch(setbookOrderData(data?.data));
-      
+
 
       // dispatch(setDACaseData(data?.data));
-       // onClick={() => navigate('/order')}
+      // onClick={() => navigate('/order')}
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore
       notification('error', error?.message);
     }
 
-    
-
-  const awb = `/awbnumber?shipment_id=${ship}&courier_id=${claimNumber}&token=${header}`;
+    const awb = `/awbnumber?shipment_id=${ship}&courier_id=${claimNumber}&token=${header}`;
     console.log(URL);
     try {
       const { data } = await axiosConfig.post(awb);
       dispatch(setLoading(false));
 
       // dispatch(setDACaseData(data?.data));
-       // onClick={() => navigate('/order')}
+      // onClick={() => navigate('/order')}
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore
@@ -404,7 +402,7 @@ const NewModals = () => {
       const { data } = await axiosConfig.post(pickupapi);
       dispatch(setLoading(false));
       // dispatch(setDACaseData(data?.data));
-       // onClick={() => navigate('/order')}
+      // onClick={() => navigate('/order')}
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore
@@ -414,12 +412,12 @@ const NewModals = () => {
   }
 
 
-  
 
 
-  
+
+
   return (
-    
+
     <div
       className={`py-6 px-10 w-auto flex flex-col overflow-x-scroll ${scrollbar.scrollBarDesign}`}
     >
@@ -501,7 +499,7 @@ const NewModals = () => {
         selectedRowIds={selectedRowIds}
       />
 
-      
+
 
       <EsOfferDetailsModal
         closeModal={toggleEsOfferDetailsModal}
@@ -509,9 +507,9 @@ const NewModals = () => {
         caseData={ESCaseData}
       />
 
-      
+
     </div>
-    
+
   );
 };
 

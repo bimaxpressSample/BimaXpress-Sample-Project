@@ -9,10 +9,12 @@ import { Link } from 'react-router-dom';
 import { setshowWarning } from '../../redux/slices/userSlice';
 import { setCurrentPlan } from "../../redux/slices/planSlice";
 import axiosConfig from "../../config/axiosConfig";
+import { setLoading } from "../../redux/slices/utilitySlice";
+import {setwalletBalance , setwalletStatement} from '../../redux/slices/walletSlice';
 
 const NavBar = () => {
   const { currentMenu } = useAppSelector((state) => state?.home);
-  const { walletBalance } = useAppSelector((state) => state?.wallet);
+  const { walletBalance ,customerWalletDetails } = useAppSelector((state) => state?.wallet);
   const { user, userData, role, userPlanData, showWarning } = useAppSelector((state) => state?.user);
   const [caseHeading, setCaseHeading] = useState('');
   const dispatch = useAppDispatch();
@@ -22,27 +24,6 @@ const NavBar = () => {
   // @ts-ignore
   const [showWarningNotification, setshowWarningNotification] = useState(userPlanData?.claimsleft <= 0.15 * userPlanData?.total_claims);
 
-//   const fetchCurrentPlan = async () => {
-//     // dispatch(setLoading(true));
-//     const URL = `/plandetails?email=${user}`;
-//     try {
-//         const { data } = await axiosConfig.get(URL);
-//         console.log("plain details ", data);
-
-//         // dispatch(setLoading(false));
-//         dispatch(setCurrentPlan(data?.data));
-//     } catch (error) {
-//         // dispatch(setLoading(false));
-//         //@ts-ignore
-//         notification("error", error?.message);
-//     }
-// };
-
-//   useEffect(() => {
-    
-//     fetchCurrentPlan();
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, []);
 
   useEffect(()=>{
     // @ts-ignore
@@ -57,6 +38,8 @@ const NavBar = () => {
   console.log("Show total", userPlanData?.total_claims);
   //@ts-ignore
   console.log("Show Plan", userPlanData);
+  console.log("----wallet balance " , walletBalance);
+
 
 
   // if (userPlanData) {

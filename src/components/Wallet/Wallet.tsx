@@ -22,7 +22,8 @@ interface ColumnDetails {
 
 export default function Wallet() {
     
-    const { walletBalance , walletStatement } = useAppSelector((state) => state?.wallet);
+    const { walletBalance , walletStatement , customerWalletDetails } = useAppSelector((state) => state?.wallet);
+    const { user } = useAppSelector((state) => state?.user);
 
     const [openwalletModal, setOpenwalletModal] = useState<boolean>(false);
     const togglewalletModal = () => {
@@ -37,7 +38,7 @@ export default function Wallet() {
         setAmount(value);
     }
 
-    console.log("add amount = ", amount);
+    console.log("wallet details ", customerWalletDetails);
 
     const [tableRow, setTableRow] = useState<ColumnDetails[]>([]);
 
@@ -45,7 +46,8 @@ export default function Wallet() {
 
     const fetchBalance = async () => {
         dispatch(setLoading(true));
-        const URL = `/walletBalance?customerId=cust_J5HP8WMDYXO6D9`;
+        //@ts-ignore
+        const URL = `/walletBalance?customerId=${customerWalletDetails?.walletdetails}`;
         try {
             const { data } = await axiosConfig.get(URL);
             console.log("wallet balance", data.data.balance / 100);
@@ -60,7 +62,8 @@ export default function Wallet() {
     
     const fetchStatements = async () => {
         dispatch(setLoading(true));
-        const URL = `walletStatement?customerId=cust_J5HP8WMDYXO6D9`;
+        //@ts-ignore
+        const URL = `walletStatement?customerId=${customerWalletDetails?.walletdetails}`;
         try {
             const { data } = await axiosConfig.get(URL);
             console.log("wallet statement", data.data.items);
@@ -148,7 +151,6 @@ export default function Wallet() {
                 Header: 'Status',
                 accessor: 'status',
             },
-
         ],
         []
     );
@@ -254,7 +256,8 @@ export default function Wallet() {
             key: "rzp_test_3zmrZd79YMuTbA", // Enter the Key ID generated from the Dashboard
             amount: Number(amount) * 100 ,
             currency: "INR",
-            name: "Tcs Hospital" ,
+            //@ts-ignore
+            name: customerWalletDetails?.hospital_name ,
             description: "Wallet Recharge",
 
             
@@ -277,7 +280,8 @@ export default function Wallet() {
                 const formData = new FormData();
                 formData?.append("amount",`${Number(amount) * 100}`);
                 formData?.append("currency","INR");
-                formData?.append("customerid","cust_J5HP8WMDYXO6D9");
+                //@ts-ignore
+                formData?.append("customerid",customerWalletDetails?.walletdetails);
 
                 dispatch(setLoading(true));
                 const result = await axiosConfig.post(`/captureTransferPayment?paymentId=${data.razorpayPaymentId}`,formData);
@@ -289,9 +293,11 @@ export default function Wallet() {
                 // alert(result.data.msg);
             },
             prefill: {
-                name: "Tcs Hospital",
-                email: "tcs@gmail.com",
-                contact: "9198765432",
+                //@ts-ignore
+                name: customerWalletDetails?.hospital_name,
+                email: user ,
+                //@ts-ignore
+                contact: customerWalletDetails?.contact,
             },
             notes: {
                 address: "Soumya Dey Corporate Office",

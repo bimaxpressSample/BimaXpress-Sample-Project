@@ -90,8 +90,8 @@ const BuyModal = ({
         const PlanDetailURL = `/plandetails?email=${user}`;
 
         //  if( planAmount > currentPlanPrice * 12){
-
-        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+        //@ts-ignore
+        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=${customerWalletDetails?.walletdetails}`);
         let currentBalance = wallet_balance?.data?.data?.balance / 100;
 
         if (currentBalance >= planAmount) {
@@ -134,7 +134,8 @@ const BuyModal = ({
             const transferData = new FormData();
             transferData.append("method", 'wallet');
             transferData.append("wallet", 'openwallet');
-            transferData.append("customer_id", 'cust_J5HP8WMDYXO6D9');
+            //@ts-ignore
+            transferData.append("customer_id", customerWalletDetails?.walletdetails);
             // transferData.append("order_id",'');
             transferData.append("amount", `${Number(planAmount) * 100}`);
             transferData.append("currency", 'INR');

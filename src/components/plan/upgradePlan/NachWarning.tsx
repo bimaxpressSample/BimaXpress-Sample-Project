@@ -88,9 +88,9 @@ const NachWarning = ({
             mailForm.append("receiver_email", user);
             // @ts-ignore
             mailForm.append("gotmessage", `Dear ${currentPlan.customerName} ,
-        As per your request, Your plan has been changed to ${ModalDetails?.planName}. It will be valid from ${ModalDetails?.startDate} to ${ModalDetails?.endDate}.\n
-        Regards,
-        Team BimaXpress`);
+            As per your request, Your plan has been changed to ${ModalDetails?.planName}. It will be valid from ${ModalDetails?.startDate} to ${ModalDetails?.endDate}.\n
+            Regards,
+            Team BimaXpress`);
             // @ts-ignore
 
             // const URL = "/else" ;
@@ -110,6 +110,18 @@ const NachWarning = ({
             updatePlan.append("planEndDate", ModalDetails?.endDate);
             updatePlan.append("claimsleft", ModalDetails?.totalClaims);
 
+
+            const AmtURL = `/amounttracker?email=${user}`;
+            const amtFormData = new FormData() ;
+
+            let today = new Date();
+            const date = `${today.getDate()}/${(today.getMonth() + 1)}/${today.getFullYear()}`
+
+            amtFormData?.append("amount", ModalDetails?.planAmount);
+            amtFormData?.append("date", date);
+            amtFormData?.append("discount",'0');
+            amtFormData?.append("plan_name",ModalDetails?.planName);
+
             try {
                 const { data } = await axiosConfig.post(SubscriptionURL, subFormData);
                 console.log("cashfree", data);
@@ -119,11 +131,14 @@ const NachWarning = ({
                 const { respone } = await axiosConfig.post(UPDATEURL, updatePlan);
                 console.log(respone);
 
+                await axiosConfig.post(AmtURL,amtFormData);
+
                 //@ts-ignore
                 const { plandata } = await axiosConfig.get(PlanDetailURL);
                 dispatch(setCurrentPlan(plandata?.data?.data[0]));
                 dispatch(setLoading(false));
 
+                closeModal();
                 toggleModal();
 
                 await axiosConfig.post(MAILURL, mailForm);
@@ -168,36 +183,19 @@ const NachWarning = ({
                         !Continue &&
                         <div>
                             <div className="w-full h-auto border-fontColor rounded-lg text-center">
-                                {/* <h1 className="text-2xl text-fontColor-gray pt-4">
-                  Click Here To Proceed Further
-                </h1> */}
                                 <div className="flex justify-center mt-8 mb-16">
                                     <div className="col-span-4 mt-8 ml-2">
                                         <p className="text-base text-fontColor-gray">You Have To Increase Your Nach Limit To Continue This Transaction</p>
                                     </div>
-                                    {/* <div className="col-span-4 mt-8 ml-2">
-                    <a href="#" className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Copy Link</a>
-                  </div> */}
                                 </div>
                             </div>
                             <div className="flex justify-around mt-8">
                                 <a onClick={() => setContinue(!Continue)} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Continue</a>
-                                <a href="#" className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Cancel</a>
+                                <a onClick={closeModal} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Cancel</a>
                             </div>
                         </div>
                     }
-                    {/* <div className="flex justify-around mt-8">
-          <PlanSelectButton
-            text="Confirm"
-            style={{ maxWidth: "180px" }}          
-            handleClick={ () => buyPlan(buyModalDetails.planType , buyModalDetails.planId)}
-          />
-          <PlanSelectButton
-            text="Cancel"
-            style={{ maxWidth: "180px" }}
-            handleClick={closeModal}     
-          />
-        </div> */}
+                    
 
                     {
                         Continue &&

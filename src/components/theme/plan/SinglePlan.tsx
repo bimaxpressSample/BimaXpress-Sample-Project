@@ -19,6 +19,7 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
   const dispatch = useAppDispatch();
   
   const { user , userPlanData } = useAppSelector((state) => state?.user);
+  const { customerWalletDetails } = useAppSelector((state) => state?.wallet);
 
   // const planDetails = userPlanData ;
   // const [planDetails , setplanDetails ] = useState({});
@@ -32,7 +33,6 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
       setOpenBuyModal((pre) => !pre);
   };
 
-
   const deductAmountFromWallet = async(price:any) =>{
     
     const orderformData = new FormData();
@@ -42,11 +42,13 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
     const transferData = new FormData();
     transferData.append("method",'wallet');
     transferData.append("wallet",'openwallet');
-    transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
+    //@ts-ignore
+    transferData.append("customer_id",customerWalletDetails?.walletdetails);
     // transferData.append("order_id",'');
     transferData.append("amount",`${Number(price) * 100}`);
     transferData.append("currency",'INR');
-    transferData.append("contact",'9198765432');
+    //@ts-ignore
+    transferData.append("contact",customerWalletDetails?.contact);
     transferData.append("email",user);
     transferData.append("description",`Add On(${name})`);
     
@@ -77,17 +79,17 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
   let today = new Date();
   const date = `${today.getDate()}/${(today.getMonth() + 1)}/${today.getFullYear()}`
 
-// todo   Remove Comments after API Host
-    amtFormData?.append("amount", price);
-    amtFormData?.append("date", date);
-    amtFormData?.append("discount",'0');
-    amtFormData?.append("plan_name",name);
+  amtFormData?.append("amount", price);
+  amtFormData?.append("date", date);
+  amtFormData?.append("discount",'0');
+  amtFormData?.append("plan_name",name);
 
-    updateTodbFormData?.append("addonn", name);
+  updateTodbFormData?.append("addonn", name);
 
     dispatch(setLoading(true));
     try{
-        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+        //@ts-ignore
+        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=${customerWalletDetails?.walletdetails}`);
         let currentBalance = wallet_balance.data.data.balance / 100 ;
         console.log(currentBalance);
         if(currentBalance < price){
