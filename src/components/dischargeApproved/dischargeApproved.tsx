@@ -373,7 +373,7 @@ const DischargeApproved = () => {
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore
-      notification('error', error?.message);
+      notification('info', 'Please fill all the details');
     }
   };
 
@@ -439,10 +439,10 @@ const DischargeApproved = () => {
               />
             </div>
           </div>
-          <div className='flex items-center text-xs text-fontColor'>
+          {/* <div className='flex items-center text-xs text-fontColor'>
             <RiDeleteBin6Line className='text-fontColor text-lg mr-2 ' />
             Delete
-          </div>
+          </div> */}
         </div>
       </div>
       <ReactTable
