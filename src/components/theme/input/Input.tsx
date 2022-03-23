@@ -1,6 +1,6 @@
-import React, { forwardRef, useState } from "react";
-import { BsEyeSlash, BsEye } from "react-icons/bs";
-import styles from "./Input.module.css";
+import React, { forwardRef, useState } from 'react';
+import { BsEyeSlash, BsEye } from 'react-icons/bs';
+import styles from './Input.module.css';
 
 type InputProps = {
   value: string | number;
@@ -20,12 +20,12 @@ const Input = ({
   handleChange,
   name,
   value,
-  type = "text",
-  label = "",
+  type = 'text',
+  label = '',
   isEdit = true,
   style = {},
   inputRef,
-  placeHolder = "",
+  placeHolder = '',
   isPassword = false,
   labelStyle = {},
 }: InputProps) => {
@@ -34,11 +34,11 @@ const Input = ({
     return (
       <>
         {label ? (
-          <p className="pb-4 text-sm text-fontColor-light font-thin">{label}</p>
+          <p className='pb-4 text-sm text-fontColor-light font-thin'>{label}</p>
         ) : null}
         <p
           className={`border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light `}
-          style={{ height: value ? "inherit" : "34px" }}
+          style={{ height: value ? 'inherit' : '34px' }}
         >
           {value}
         </p>
@@ -48,17 +48,17 @@ const Input = ({
   return (
     <>
       {label ? (
-        <p className="pb-4 text-sm text-fontColor-light" style={labelStyle}>
+        <p className='pb-4 text-sm text-fontColor-light' style={labelStyle}>
           {label}
         </p>
       ) : null}
-      <div className="border border-fontColor-light rounded-md flex items-center">
+      <div className='border border-fontColor-light rounded-md flex items-center'>
         <input
           className={`outline-none rounded-md border-none px-2 py-1 w-full text-base text-fontColor-light bg-transparent font-thin placeholder-primary-lightest ${styles.input}`}
           value={value}
           name={name}
           onChange={(e) => handleChange(e)}
-          type={showInput ? "text" : type}
+          type={showInput ? 'text' : type}
           style={style}
           ref={inputRef ? inputRef : null}
           placeholder={placeHolder}
@@ -66,12 +66,12 @@ const Input = ({
         {isPassword ? (
           showInput ? (
             <BsEyeSlash
-              className="text-lg text-fontColor-light mx-2 cursor-pointer"
+              className='text-lg text-fontColor-light mx-2 cursor-pointer'
               onClick={() => setShowInput((pre) => !pre)}
             />
           ) : (
             <BsEye
-              className="text-lg text-fontColor-light mx-2 cursor-pointer"
+              className='text-lg text-fontColor-light mx-2 cursor-pointer'
               onClick={() => setShowInput((pre) => !pre)}
             />
           )

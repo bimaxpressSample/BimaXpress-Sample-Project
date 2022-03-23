@@ -15,6 +15,7 @@ import axiosConfig from '../../config/axiosConfig';
 import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
 import {setwalletBalance , setcustomerWalletDetails} from '../../redux/slices/walletSlice';
+import ForgotPassword from './forgotpassword';
 
 // INFO: THIS COMPONENT CONTAINS LOGINPAGE LAYOUT
 
@@ -22,7 +23,11 @@ function LoginPage() {
   const { userData } = useAppSelector((state) => state?.user);
   const { user } = useAppSelector((state) => state?.user);
   const { role } = useAppSelector((state) => state?.user);
-  const { customerWalletDetails } = useAppSelector((state) => state?.wallet);
+  const [openPasswordModal, setopenPasswordModal] = useState<boolean>(false);
+
+  function toggleopenPasswordModal() {
+    setopenPasswordModal((pre) => !pre);
+  }
   const [userInput, setUserInput] = useState({
     email: '',
     password: '',
@@ -136,33 +141,45 @@ function LoginPage() {
   };
 
   return (
-    <AuthScreenWrapper title='LOGIN' submit={handleSignin}>
-      <div className='authscreen__login'>
-        <div className='input__group'>
-          <input
-            type='email'
-            placeholder='Email'
-            id='username'
-            required
-            name='email'
-            value={userInput?.email}
-            onChange={handleChange}
-          />
+    <>
+      <AuthScreenWrapper title='LOGIN' submit={handleSignin}>
+        <div className='authscreen__login'>
+          <div className='input__group'>
+            <input
+              type='email'
+              placeholder='Email'
+              id='username'
+              required
+              name='email'
+              value={userInput?.email}
+              onChange={handleChange}
+            />
+          </div>
+          <div className='input__group'>
+            <input
+              type='password'
+              placeholder='Password'
+              id='password'
+              required
+              name='password'
+              value={userInput?.password}
+              onChange={handleChange}
+            />
+          </div>
+          <button>Log In</button>
         </div>
-        <div className='input__group'>
-          <input
-            type='password'
-            placeholder='Password'
-            id='password'
-            required
-            name='password'
-            value={userInput?.password}
-            onChange={handleChange}
-          />
-        </div>
-        <button>Log In</button>
-      </div>
-    </AuthScreenWrapper>
+        <p className='mt-4 cursor-pointer' onClick={toggleopenPasswordModal}>
+          Forget Password
+        </p>
+      </AuthScreenWrapper>
+
+      {openPasswordModal && (
+        <ForgotPassword
+          isOpen={openPasswordModal}
+          closeModal={toggleopenPasswordModal}
+        />
+      )}
+    </>
   );
 }
 
