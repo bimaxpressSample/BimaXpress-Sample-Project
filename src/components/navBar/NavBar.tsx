@@ -102,7 +102,10 @@ const NavBar = () => {
           </div>
         }
 
-        <div onClick={() => navigate('/wallet') } className='flex mr-5 cursor-pointer' style={{background: 'transparent linear-gradient(99deg, #ffffff4d 0%, #ffffff00 100%) 0% 0% no-repeat padding-box' , boxShadow: 'inset 0px 0px 10px #ffffff1a',padding: '5px 7px' , borderRadius: '10px' , alignItems: 'center'}}>
+        {
+          role === 'admin' ? 
+          
+          <div onClick={() => navigate('/wallet') } className='flex mr-5 cursor-pointer' style={{background: 'transparent linear-gradient(99deg, #ffffff4d 0%, #ffffff00 100%) 0% 0% no-repeat padding-box' , boxShadow: 'inset 0px 0px 10px #ffffff1a',padding: '5px 7px' , borderRadius: '10px' , alignItems: 'center'}}>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-wallet2 mr-4 ml-2 md:ml-2 text-xl text-white" viewBox="0 0 16 16">
             <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
           </svg>
@@ -110,6 +113,8 @@ const NavBar = () => {
             ₹ {walletBalance} 
           </span>
         </div>
+        : null  
+      }
 
 
         <BiLink className='mr-3 text-fontColor text-lg' />
