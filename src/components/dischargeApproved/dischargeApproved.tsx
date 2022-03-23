@@ -201,12 +201,14 @@ const DischargeApproved = () => {
                 fontWeight: '600',
               }}
               onClick={() => showESOfferDetails(key)}
-              // disabled={false}
-              disabled={bucketStatus === 'Enabled' ? false : true}
+              disabled={false}
+              // disabled={bucketStatus === 'Enabled' ? false : true}
             >
               {bucketStatus === 'Enabled' || bucketStatus === ''
-                ? 'Check'
-                : 'Availed'}
+                ? 'Settle'
+                : bucketStatus === 'Availed'
+                ? 'Availed'
+                : ''}
             </Button>
           </>
         ),

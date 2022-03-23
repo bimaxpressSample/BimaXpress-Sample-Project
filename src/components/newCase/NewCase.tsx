@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
 import { setUserPlanData } from '../../redux/slices/userSlice';
+import UnfreezeModal from './unfreezeModal';
 
 const months = [
   { label: 'January', value: '01' },
@@ -52,8 +53,6 @@ const NewCase = () => {
   const { userPlanData } = useAppSelector((state) => state?.user);
   const param = useParams();
   const navigate = useNavigate();
-  console.log(param);
-
   const { allCompaniesList } = useAppSelector(
     (state) => state?.empanelledCompanies
   );
@@ -64,6 +63,9 @@ const NewCase = () => {
   const [showRateList, setShowRateList] = useState(true);
   const [openReteList, setReteList] = useState(false);
   const [openWarningModal, setOpenWarningModal] = useState<boolean>(false);
+  const [freezeFields, setFreezeFields] = useState<boolean>(false);
+  const [openUnfreezeModal, setopenUnfreezeModal] = useState<boolean>(false);
+
   const toggleWarningModal = () => {
     setOpenWarningModal((pre) => !pre);
   };
@@ -77,6 +79,10 @@ const NewCase = () => {
   };
   const toggleViewDocumentsModal = () => {
     setopenDocumentsModal((pre) => !pre);
+  };
+
+  const toggleUnfreezeModal = () => {
+    setopenUnfreezeModal((pre) => !pre);
   };
 
   const getNewCaseNumber = async () => {
@@ -100,10 +106,51 @@ const NewCase = () => {
     const planDetailsURL = `/plandetails?email=${user}`;
     try {
       const { data } = await axiosConfig.get(planDetailsURL);
-      console.log('plan data ', data.data);
       dispatch(setUserPlanData(data?.data));
     } catch (error) {
       dispatch(setLoading(false));
+      //@ts-ignore
+      notification('error', error?.message);
+      console.log(error);
+    }
+    dispatch(setLoading(false));
+  };
+
+  const preauthCount = async () => {
+    dispatch(setLoading(true));
+    const generatedcount = `/generatedcount?email=${user}&casenumber=${
+      param?.case || newCaseNum
+    }`;
+    try {
+      const { data } = await axiosConfig.get(generatedcount);
+      if (data?.data !== '') {
+        setFreezeFields(true);
+      }
+
+      if (data?.data === '') {
+        setFreezeFields(false);
+      }
+    } catch (error) {
+      //@ts-ignore
+      notification('error', error?.message);
+      console.log(error);
+    }
+    dispatch(setLoading(false));
+  };
+
+  const unfreezeCase = async () => {
+    dispatch(setLoading(true));
+    const unfreezeCase = `/clonecase?email=${user}&casenumber=${
+      param?.case || newCaseNum
+    }`;
+
+    try {
+      const { data } = await axiosConfig.get(unfreezeCase);
+      console.log("Unfreeze API's DATA", data);
+      preauthCount();
+      setopenUnfreezeModal(false);
+      notification('info', 'Case has been unfreezed');
+    } catch (error) {
       //@ts-ignore
       notification('error', error?.message);
       console.log(error);
@@ -146,7 +193,7 @@ const NewCase = () => {
       dispatch(setNewCaseNum(param?.case));
       //@ts-ignore
       const obj = caseData[param?.case] || {};
-
+      preauthCount();
       const {
         Aadhar_card_Front,
         Aadhar_Card_Back,
@@ -508,23 +555,24 @@ const NewCase = () => {
     }
 
     getPreauthForm();
-    console.log(
-      'userPlanData.claimsleft at new Case',
-      //@ts-ignore
-      userPlanData
-    );
     //@ts-ignore
     if (userPlanData.claimsleft === 0) {
       toggleWarningModal();
     } else {
       window.open(
+        // `https://api.main.bimaxpress.com/preauthform?email=${user}&casenumber=${newCaseNum}`,
         `https://www.api.bimaxpress.com/preauthform?email=${user}&casenumber=${newCaseNum}`,
         '_blank',
         'noopener,noreferrer'
       );
+
+      setTimeout(() => {
+        preauthCount();
+      }, 2000);
     }
     return;
   };
+
   const renderUI = () => {
     switch (Number(steps)) {
       case 1:
@@ -538,6 +586,8 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
       case 2:
@@ -556,6 +606,8 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
       case 3:
@@ -570,6 +622,8 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
       case 4:
@@ -588,6 +642,8 @@ const NewCase = () => {
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
             prevStep={prevStep}
+            freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
 
@@ -602,6 +658,8 @@ const NewCase = () => {
             toggleDocumentsModal={toggleDocumentsModal}
             toggleViewDocumentsModal={toggleViewDocumentsModal}
             preAuth={generatePreAuthForm}
+            freezeFields={freezeFields}
+            toggleUnfreezeModal={toggleUnfreezeModal}
           />
         );
     }
@@ -631,6 +689,7 @@ const NewCase = () => {
           isOpen={openDocumentsModal}
           documents={documentsList}
         />
+
         <ReteListModal
           closeModal={toggleDocumentsModal}
           isOpen={openReteList}
@@ -644,6 +703,12 @@ const NewCase = () => {
               : //@ts-ignore
                 newCaseData?.detailsOfTPA.insuranceCompany
           }
+        />
+
+        <UnfreezeModal
+          isOpen={openUnfreezeModal}
+          closeModal={toggleUnfreezeModal}
+          unfreezeCase={unfreezeCase}
         />
       </div>
       <WarningModal

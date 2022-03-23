@@ -23,9 +23,10 @@ import notification from "../../theme/utility/notification";
 const OverView = () => {
     const [currentPlanDetails, setCurrentPlanDetails] = useState<any>({
         claimsleft: "",
+        addonClaims:"",
         amount: "",
-        planstartdate: "",
-        planenddate: "",
+        planStartDate: "",
+        planEndDate: "",
         planId: "",
         total_claims: "",
         planName : "" ,
@@ -42,10 +43,10 @@ const OverView = () => {
         const URL = `/plandetails?email=${user}`;
         try {
             const { data } = await axiosConfig.get(URL);
-            console.log("plain details ", data?.data[0]);
+            console.log("plain details ", data?.data?.data[0]);
 
             dispatch(setLoading(false));
-            dispatch(setCurrentPlan(data?.data[0]));
+            dispatch(setCurrentPlan(data?.data?.data[0]));
         } catch (error) {
             dispatch(setLoading(false));
             //@ts-ignore

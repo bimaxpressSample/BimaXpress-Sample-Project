@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { setLoading } from '../../../redux/slices/utilitySlice';
 import axiosConfig from '../../../config/axiosConfig';
 import notification from '../../theme/utility/notification';
+import InputRadio from '../../theme/inputRadio/InputRadio';
 Modal.setAppElement('#root');
 
 type ApproveModalProps = {
@@ -22,6 +23,7 @@ const EsOfferDetailsModal = ({
   closeModal = () => {},
   caseData,
 }: ApproveModalProps) => {
+  console.log('caseData AT ES offer Details', caseData);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state?.user);
   const [OpenPddocument, setPdOpenPddocument] = useState<boolean>(false);
@@ -31,6 +33,8 @@ const EsOfferDetailsModal = ({
   const [openOfferSummery, setOpenOfferSummery] = useState<boolean>(false);
   const [bookShipment, setBookShipment] = useState({});
   const [offerSummaryData, setofferSummaryData] = useState({});
+  const [offerSelectionType, setofferSelectionType] =
+    useState('Interest Guarantee');
   function openPDOption() {
     closeModal();
     setPdOpenPddocument(true);
@@ -86,6 +90,7 @@ const EsOfferDetailsModal = ({
   useEffect(() => {
     setPdOpenPddocument(false);
   }, []);
+
   const pushAPIavailOffer = async () => {
     dispatch(setLoading(true));
     const URL = `/es_offer_details/${caseData[1].caseNumber}?email=${user}`;
@@ -135,22 +140,7 @@ const EsOfferDetailsModal = ({
             >
               <span>Claim Number</span>
             </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
-              {caseData[0]?.claimno}
-            </div>
+            <div className={styles.inputMainDiv}>{caseData[0]?.claimno}</div>
           </div>
           <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
             <div
@@ -161,74 +151,8 @@ const EsOfferDetailsModal = ({
             >
               <span>Patient Name </span>
             </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
+            <div className={styles.inputMainDiv}>
               {caseData[0]?.Patient_name}
-            </div>
-          </div>
-          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
-            <div
-              style={{
-                width: '40%',
-                display: 'inline-block',
-              }}
-            >
-              <span>Discharge Approved Amount</span>
-            </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
-              {caseData[0]?.discharge_appr}
-            </div>
-          </div>
-
-          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
-            <div
-              style={{
-                width: '40%',
-                display: 'inline-block',
-              }}
-            >
-              <span>Offer Amount</span>
-            </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
-              {caseData[0]?.offer_Amount}
             </div>
           </div>
 
@@ -241,23 +165,138 @@ const EsOfferDetailsModal = ({
             >
               <span>Insurance Company/TPA</span>
             </div>
-            <div
-              style={{
-                width: '60%',
-                backgroundColor: 'rgba(245, 255, 255, 0.1)',
-                height: '28px',
-                display: 'inline-block',
-                border: '1px solid white',
-                borderRadius: '5px',
-                //   position: 'relative',
-                //   top: '6px',
-                paddingLeft: '10px',
-                whiteSpace: 'pre',
-              }}
-            >
+            <div className={styles.inputMainDiv}>
               {caseData[0]?.insurance_company}
             </div>
           </div>
+
+          <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+            <div
+              style={{
+                width: '40%',
+                display: 'inline-block',
+              }}
+            >
+              <span>Discharge Approved Amount</span>
+            </div>
+            <div className={styles.inputMainDiv}>
+              {caseData[0]?.discharge_appr}
+            </div>
+          </div>
+
+          <hr style={{ marginTop: '20px' }} />
+
+          {/* Interest Guarantee */}
+          <div style={{ width: '100%', color: 'white', marginTop: '15px' }}>
+            <div
+              style={{
+                display: 'inline-block',
+                width: '48%',
+                borderRight: '1px solid white',
+                marginRight: '15px',
+              }}
+            >
+              <InputRadio
+                name='Interest Guarantee'
+                value='Interest Guarantee'
+                handleChange={(e) =>
+                  setofferSelectionType(e.currentTarget.value)
+                }
+                fieldName={offerSelectionType}
+                radioLabel='Interest Guarantee'
+              />
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Offer Amount</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Guarantee Offer Amount
+                </div>
+              </div>
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Processing Fees</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Guarantee Processing Fees
+                </div>
+              </div>
+            </div>
+
+            {/* Interest Not Guarantee */}
+            <div style={{ display: 'inline-block', width: '48%' }}>
+              <InputRadio
+                name='Interest Not Guarantee'
+                value='Interest Not Guarantee'
+                handleChange={(e) =>
+                  setofferSelectionType(e.currentTarget.value)
+                }
+                fieldName={offerSelectionType}
+                radioLabel='Interest Not Guarantee'
+              />
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Offer Amount</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Not Guarantee Offer Amount
+                </div>
+              </div>
+
+              <div style={{ width: '90%', color: 'white', marginTop: '15px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'inline-block',
+                  }}
+                >
+                  <span>Processing Fees</span>
+                </div>
+                <div
+                  className={styles.inputMainDiv}
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  Interest Not Guarantee Processing Fees
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className='flex justify-center mt-8'>
             <PlanSelectButton
               text='Avail Offer'

@@ -22,12 +22,53 @@ const OfferSummary = ({
 }: ApproveModalProps) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state?.user);
+
+  const deductAmountFromWallet = async() =>{
+
+      const orderformData = new FormData();
+      orderformData?.append("amount",`${Number(Number(offerSummaryData[0]?.processing_fee).toFixed(2)) * 100}`);
+      orderformData?.append("currency","INR");
+
+      const transferData = new FormData();
+      transferData.append("method",'wallet');
+      transferData.append("wallet",'openwallet');
+      transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
+      // transferData.append("order_id",'');
+      transferData.append("amount",`${Number(Number(offerSummaryData[0]?.processing_fee).toFixed(2)) * 100}`);
+      transferData.append("currency",'INR');
+      transferData.append("contact",'9198765432');
+      transferData.append("email",user);
+      transferData.append("description",`Processing Fee`);
+
+      const createOrder = await axiosConfig.post('/createOrder',orderformData);
+      const orderId = createOrder.data.data.id ;
+
+      transferData.append("order_id",orderId);
+        
+      const response = await axiosConfig.post('/createPaymentCapture',transferData);
+
+  }
+
   const confirmOrderAPI = async () => {
     dispatch(setLoading(true));
     const URL = `/Confirm_order/${offerSummaryData[1].caseNumber}?email=${user}`;
     notification('success', 'Your Order Has been Submitted');
     try {
+
+      const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+      let currentBalance = wallet_balance.data.data.balance / 100 ;
+      console.log(currentBalance);
+      if(currentBalance < (offerSummaryData[0]?.processing_fee).toFixed(2)){
+        notification('error',"Insufficient Wallet Balance");
+        dispatch(setLoading(false));
+        return ;
+      }
+
       await axiosConfig.post(URL);
+
+      // Function To Deduct Processing Fee From Wallet 
+      deductAmountFromWallet();
+
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -201,7 +242,7 @@ const OfferSummary = ({
             // style={{ position: 'relative', left: '60%' }}
           >
             <PlanSelectButton
-              text='Confirm Order'
+              text='Confirm'
               style={{ maxWidth: '180px' }}
               handleClick={() => {
                 navigate('/earlysettlementDash');

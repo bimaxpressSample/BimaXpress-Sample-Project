@@ -14,7 +14,7 @@ import {
 import axiosConfig from '../../config/axiosConfig';
 import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
-import {setwalletBalance} from '../../redux/slices/walletSlice';
+import {setwalletBalance , setcustomerWalletDetails} from '../../redux/slices/walletSlice';
 
 // INFO: THIS COMPONENT CONTAINS LOGINPAGE LAYOUT
 
@@ -39,6 +39,7 @@ function LoginPage() {
     let user = sessionStorage.getItem('bimaUser');
     let subscription_details = sessionStorage.getItem('bimaUserPlanData');
     let walletBalance = sessionStorage.getItem('bimaUserWalletBalance');
+    let walletDetials = sessionStorage.getItem('bimaUserWalletDetails');
 
     if (user) {
       //@ts-ignore
@@ -58,6 +59,10 @@ function LoginPage() {
       walletBalance = JSON.parse(walletBalance);
       //@ts-ignore
       dispatch(setwalletBalance(walletBalance));
+      //@ts-ignore
+      walletDetials = JSON.parse(walletDetials);
+      //@ts-ignore
+      dispatch(setcustomerWalletDetails(walletDetials));
 
 
       if (role === 'admin') {
@@ -75,7 +80,7 @@ function LoginPage() {
     dispatch(setLoading(true));
     try {
       const {
-        data: { data, subscription_details },
+        data: { data, subscription_details ,wallet_data },
       } = await axiosConfig.post('/signin', {
         email: userInput?.email,
         password: userInput?.password,
@@ -102,6 +107,12 @@ function LoginPage() {
       await dispatch(setLoading(false));
       await dispatch(setUserPlanData(subscription_details));
       console.log('sub details',subscription_details);
+
+
+      console.log("wallet details ", wallet_data) 
+      await dispatch(setcustomerWalletDetails(wallet_data));
+      window.sessionStorage.setItem('bimaUserWalletDetails', JSON.stringify(wallet_data));
+
       await dispatch(setUserData(data));
       await dispatch(setUser(data?.email));
       await dispatch(setRole(data.role));

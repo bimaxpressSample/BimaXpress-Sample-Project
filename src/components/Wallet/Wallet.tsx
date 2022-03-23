@@ -120,10 +120,10 @@ export default function Wallet() {
 
     let columns = React.useMemo(
         () => [
-            {
-                Header: 'Invoice',
-                accessor: 'invoice',
-            },
+            // {
+            //     Header: 'Invoice',
+            //     accessor: 'invoice',
+            // },
             {
                 Header: 'Summary',
                 accessor: 'summary',

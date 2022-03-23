@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  AiFillHome,
-} from 'react-icons/ai';
+import { AiFillHome } from 'react-icons/ai';
 
 import logo from '../../assets/images/logo.svg';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setCurrentMenu } from '../../redux/slices/homeSlice';
 import menuIcon from '../../assets/icon/menu_black.svg';
@@ -16,6 +14,12 @@ const homeMenu = {
 
   icon: <AiFillHome className='text-fontColor mr-4 ml-2 md:ml-5 text-xl' />,
   pageLink: '/',
+};
+const hospital = {
+  name: 'Hospital Details',
+
+  icon: <AiFillHome className='text-fontColor mr-4 ml-2 md:ml-2 text-xl' />,
+  pageLink: '/undhospitaldetails',
 };
 // const emailMenu = {
 //   name: 'Mail',
@@ -44,7 +48,6 @@ const homeMenu = {
 //     ),
 //     pageLink: '/newCase',
 //   },
-
 
 //   {
 //     name: 'Discharge',
@@ -142,20 +145,17 @@ const UndSiderBar = () => {
     }
   };
 
-  useEffect(()=>{
-    const fetchRole = async() =>{
-      try{
-          const {
-            data
-          } = await axiosConfig.get(`/role?email=${user}`);
-    
-          // userRole = data.data.Role;
-          console.log(data.data.role);
-        }
-        catch(error){
-            console.log("error",error);
-        }
-    }
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const { data } = await axiosConfig.get(`/role?email=${user}`);
+
+        // userRole = data.data.Role;
+        console.log(data.data.role);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
   });
 
   const { collapsed } = useAppSelector((state) => state?.leftBarSlice);
@@ -167,7 +167,7 @@ const UndSiderBar = () => {
         </div>
 
         <div
-          className={`flex ml-auto mb-8 absolute overflow-hidden top-14 rounded-full h-10 w-10 md:hidden`}
+          className={`flex ml-auto mb-8 absolute overflow-hidden top-4 rounded-full h-10 w-10 md:hidden`}
         >
           <div
             className={`w-full h-full grid items-center justify-center bg-primary-light`}
@@ -200,6 +200,30 @@ const UndSiderBar = () => {
             {homeMenu?.icon}
             <p className='text-fontColor font-semibold text-sm'>
               {homeMenu?.name}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className={'bg-primary-dark p-3'}>
+        <div
+          className={
+            collapsed
+              ? 'mt-120-neg duration-4000 md:mt-0'
+              : 'mt-0 duration-2000'
+          }
+        >
+          <div
+            className={`flex items-center p-3 my-4 rounded cursor-pointer ${
+              activeMenu === 7 ? 'bg-primary-light' : ''
+            } `}
+            onClick={() =>
+              handleActiveMenu(7, hospital?.name, hospital?.pageLink)
+            }
+          >
+            {hospital?.icon}
+            <p className='text-fontColor font-semibold text-sm'>
+              {hospital?.name}
             </p>
           </div>
         </div>

@@ -123,21 +123,18 @@ const NewModals = () => {
   useEffect(() => {
     const res = Object.entries(DACaseData)?.map(
       ([
-        
-      
           available_courier_companies,
           {
             rate,
             courier_company_id,
             courier_name,
           }
-  
       ]) => ({
         // case: key,
         name: courier_name,
         claimNumber: courier_company_id,
         // approveAmount: Approvedamount,
-        rate: rate,
+        rate: `${Number(rate).toFixed(2)}`,
         earlySettlement: (
           <Button
 
@@ -151,8 +148,7 @@ const NewModals = () => {
             }}
             // onClick={() => navigate('/order')}
             
-            onClick={() =>handleBookOrder(courier_company_id)}
-   
+            onClick={() =>handleBookOrder(courier_company_id,rate)}
           >
             Book
              
@@ -291,11 +287,34 @@ const NewModals = () => {
     console.log("State",userData);
 
 
+  const deductAmountFromWallet = async(rate:any) =>{
+      
+    const orderformData = new FormData();
+      orderformData?.append("amount",`${Number(Number(rate).toFixed(2)) * 100}`);
+      orderformData?.append("currency","INR");
+
+      const transferData = new FormData();
+      transferData.append("method",'wallet');
+      transferData.append("wallet",'openwallet');
+      transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
+      // transferData.append("order_id",'');
+      transferData.append("amount",`${Number(Number(rate).toFixed(2)) * 100}`);
+      transferData.append("currency",'INR');
+      transferData.append("contact",'9198765432');
+      transferData.append("email",user);
+      transferData.append("description",`Courier Charge`);
+
+      const createOrder = await axiosConfig.post('/createOrder',orderformData);
+      const orderId = createOrder.data.data.id ;
+
+      transferData.append("order_id",orderId);
+        
+      const response = await axiosConfig.post('/createPaymentCapture',transferData);
+  }
 
 
 
-
-  const handleBookOrder = async(claimNumber:any)=>{
+  const handleBookOrder = async(claimNumber:any,rate:any)=>{
 
     console.log(location.state.length)
     console.log(location.state.breadth)
@@ -331,12 +350,25 @@ const NewModals = () => {
     var ship;
 
     try {
+
+      const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+      let currentBalance = wallet_balance.data.data.balance / 100 ;
+      console.log(currentBalance);
+      if(currentBalance < rate.toFixed(2)){
+        notification('error',"Insufficient Wallet Balance");
+        dispatch(setLoading(false));
+        return ;
+      }
+      
       const {data} = await axiosConfig.post(URL,userFormData);
       console.log("shipped data = ",data);
       ship = data.data.shipment_id;
       dispatch(setShipmentData(data.data));
 
-      
+      // Function to Deduct Courier Charges from wallet
+      deductAmountFromWallet(rate);
+
+    
       // dispatch(setorderDetails(data?.data));
       // @ts-ignore
       // dispatch(setbookOrderData(data?.data));
