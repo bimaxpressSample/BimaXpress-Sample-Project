@@ -201,8 +201,8 @@ const DischargeApproved = () => {
                 fontWeight: '600',
               }}
               onClick={() => showESOfferDetails(key)}
-              disabled={false}
-              // disabled={bucketStatus === 'Enabled' ? false : true}
+              // disabled={false}
+              disabled={bucketStatus === 'Enabled' ? false : true}
             >
               {bucketStatus === 'Enabled' || bucketStatus === ''
                 ? 'Settle'
@@ -218,8 +218,6 @@ const DischargeApproved = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DACaseData]);
-
-  console.log('DA case', DACaseData);
 
   const data = React.useMemo<ColumnDetails[]>(() => tableRow, [tableRow]);
 
@@ -348,18 +346,10 @@ const DischargeApproved = () => {
   // console.log(selectedFlatRows.map( (d:any) => d.original));
 
   const casesArr = selectedFlatRows.map((d: any) => d.original.case);
-  console.log('arr', casesArr);
 
   const TPA = selectedFlatRows.map((d: any) =>
     d.original.insuranceTPA.replace(/&/, '%26')
   );
-
-  console.log('TPA ', TPA);
-  console.log(
-    'is equal',
-    TPA.every((val: any) => val === TPA[0])
-  );
-  console.log('State', userData);
 
   const handleBookOrder = async (TPA: any, casesArr: any) => {
     let caseString = '';
@@ -375,7 +365,6 @@ const DischargeApproved = () => {
 
     dispatch(setLoading(true));
     const URL = `/casesforshipment?email=${user}&cases=${caseString}&insurancecompany=${TPA[0]}`;
-    console.log(URL);
     try {
       const { data } = await axiosConfig.post(URL);
       dispatch(setLoading(false));
@@ -384,7 +373,7 @@ const DischargeApproved = () => {
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore
-      notification('error', error?.message);
+      notification('info', 'Please fill all the details');
     }
   };
 
@@ -450,10 +439,10 @@ const DischargeApproved = () => {
               />
             </div>
           </div>
-          <div className='flex items-center text-xs text-fontColor'>
+          {/* <div className='flex items-center text-xs text-fontColor'>
             <RiDeleteBin6Line className='text-fontColor text-lg mr-2 ' />
             Delete
-          </div>
+          </div> */}
         </div>
       </div>
       <ReactTable

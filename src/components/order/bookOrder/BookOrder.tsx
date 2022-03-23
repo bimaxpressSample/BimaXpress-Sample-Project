@@ -458,6 +458,7 @@ useEffect(() => {
       </div>
       <NameModal
         // key={index}
+
         closeModal={closeNameModal}
         isOpen={openNameModal}
         Data={Names}

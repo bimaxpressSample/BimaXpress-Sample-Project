@@ -312,7 +312,7 @@ const StepTwo = ({
               handleChange={handleChange}
               name='patientName'
               value={patientDetails?.patientName || ''}
-              label='Patient name *'
+              label='Patient Name *'
               labelStyle={{ paddingBottom: '12px' }}
               style={{ height: '40px' }}
               isEdit={!freezeFields}
@@ -360,7 +360,7 @@ const StepTwo = ({
               handleChange={handleDate}
               name='DOB'
               value={patientDetails?.DOB || ''}
-              label='Date of birth *'
+              label='Date Of Birth *'
               style={{ maxWidth: '220px' }}
               disable={freezeFields}
             />
@@ -370,7 +370,7 @@ const StepTwo = ({
                 handleChange={handleChange}
                 name='patient_details_ageYear'
                 value={patientDetails?.AgeYear || ''}
-                label='Age : (Year) *'
+                label='Age (Year) *'
                 labelStyle={{ paddingBottom: '12px' }}
                 style={{ height: '40px' }}
                 isEdit={!freezeFields}
@@ -386,7 +386,7 @@ const StepTwo = ({
                     ? patientDetails.AgeMonth
                     : ''
                 }
-                label='Age : (Month)'
+                label='Age (Month)'
                 labelStyle={{ paddingBottom: '12px' }}
                 style={{ height: '40px' }}
                 isEdit={!freezeFields}
@@ -454,7 +454,7 @@ const StepTwo = ({
               handleChange={handleChange}
               name='contractNumber'
               value={patientDetails?.contractNumber || ''}
-              label='Contact number *'
+              label='Contact Number *'
               labelStyle={{ paddingBottom: '12px' }}
               style={{ height: '40px' }}
             />
@@ -475,7 +475,7 @@ const StepTwo = ({
               handleChange={handleChange}
               name='insuredCardNumber'
               value={patientDetails?.insuredCardNumber || ''}
-              label='Insured Member ID Card No'
+              label='Insured Member ID Card Number'
               labelStyle={{ paddingBottom: '12px' }}
               style={{ height: '40px' }}
             />
@@ -510,7 +510,7 @@ const StepTwo = ({
 
           <div className='mt-8'>
             <p className='pb-4 text-sm text-fontColor-light'>
-              Currently do you have ant other mediclaim/ health insurance ?
+              Currently do you have any other mediclaim/ health insurance ?
             </p>
             <div className='flex items-center'>
               <div className='mr-8'>
@@ -541,7 +541,7 @@ const StepTwo = ({
                   handleChange={handleChange}
                   name='HealthInsuranceYesCompanyName'
                   value={patientDetails?.HealthInsuranceYesCompanyName || ''}
-                  label='Company name'
+                  label='Company Name'
                   labelStyle={{ paddingBottom: '12px' }}
                   style={{ height: '40px' }}
                 />
@@ -592,7 +592,7 @@ const StepTwo = ({
                   handleChange={handleChange}
                   name='PhysicianYesPhysicianName'
                   value={patientDetails?.PhysicianYesPhysicianName || ''}
-                  label='Physician name'
+                  label='Physician Name'
                   labelStyle={{ paddingBottom: '12px' }}
                   style={{ height: '40px' }}
                 />

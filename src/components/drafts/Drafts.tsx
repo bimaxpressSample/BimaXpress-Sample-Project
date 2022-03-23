@@ -33,6 +33,8 @@ import NewAction from './newAction/NewAction';
 import SentMail from './sentMail/SentMail';
 import ApproveModal from './approveModal/ApproveModal';
 import EnchanceAndFciModal from './enhanceAndFci/EnchanceAndFci';
+import DeleteModal from './DeleteModal/DeleteModal';
+import { loadavg } from 'os';
 
 const insuranceCompany = [
   { label: 'Health India Insurance', value: 'health_india_insurance' },
@@ -77,30 +79,32 @@ const Drafts = () => {
     setOpenNewActionModal((pre) => !pre);
   };
   const [openSentmailModal, setOpenSentmailModal] = useState<boolean>(false);
+  const [openDeleteModal, setopenDeleteModal] = useState<boolean>(false);
+
   const toggleSentmailModal = () => {
     setOpenSentmailModal((pre) => !pre);
   };
   const [openApproveModal, setOpenApproveModal] = useState<boolean>(false);
+
+  const [numberOfCaseDelete, setNumberOfCaseDelete] = useState<number>(0);
+
   const toggleApproveModal = () => {
     setOpenApproveModal((pre) => !pre);
   };
 
   const [TPAList, setTPAList] = useState<any>([]);
-
   console.log(TPAList);
 
   const fetchAnalyst = async () => {
     dispatch(setLoading(true));
     const URL = `/${param?.case}?email=${user}`;
     try {
-      const listOfTPA = await axiosConfig.get(
-        `/empanelledinsurancecompany?email=${user}`
-      );
+      const listOfTPA = await axiosConfig.get(`/empanelcompany?email=${user}`);
 
       Object.entries(listOfTPA.data.data).map(([key, value]) => {
         TPAList.push({
-          label: value,
-          value: value,
+          label: key,
+          value: key,
         });
       });
       setTPAList(TPAList);
@@ -190,6 +194,7 @@ const Drafts = () => {
           audit_trail,
         },
       ]) => ({
+        case: key,
         name: Name,
         phone: Phone,
         claimNumber: claimno,
@@ -296,7 +301,10 @@ const Drafts = () => {
     // @ts-ignore
     setPageSize,
     // @ts-ignore
-    // selectedFlatRows,
+    // @ts-ignore
+    selectedFlatRows,
+    // @ts-ignore
+    state: { selectedRowIds },
   } = useTable(
     { columns, data },
     useGlobalFilter,
@@ -310,14 +318,17 @@ const Drafts = () => {
           // @ts-ignore
           Header: ({ getToggleAllRowsSelectedProps }) => (
             <div>
-              <TableCheckbox {...getToggleAllRowsSelectedProps()} />
+              {param?.case === 'draftcases' ? (
+                <TableCheckbox {...getToggleAllRowsSelectedProps()} />
+              ) : null}
             </div>
           ),
-
           Cell: ({ row }) => (
             <div>
-              {/* @ts-ignore */}
-              <TableCheckbox {...row.getToggleRowSelectedProps()} />
+              {param?.case === 'draftcases' ? (
+                //@ts-ignore
+                <TableCheckbox {...row.getToggleRowSelectedProps()} />
+              ) : null}
             </div>
           ),
         },
@@ -330,6 +341,34 @@ const Drafts = () => {
     insuranceTPA: '',
     dateRange: '',
   });
+
+  const toggleopenDeleteModal = () => {
+    const listOfCases = selectedFlatRows.map((d: any) => d.original.case);
+    if (listOfCases.length === 0) {
+      return notification('info', 'Select atleast one case to delete');
+    }
+    setNumberOfCaseDelete(listOfCases.length);
+    setopenDeleteModal((pre) => !pre);
+  };
+
+  const deleteCaseAPI = async () => {
+    const listOfCases = selectedFlatRows.map((d: any) => d.original.case);
+    dispatch(setLoading(true));
+    try {
+      await axiosConfig.delete(`delete_draftcases?email=${user}`, {
+        data: { list_item: listOfCases },
+      });
+
+      dispatch(setLoading(false));
+      setopenDeleteModal(false);
+      fetchAnalyst();
+      notification('info', 'Case successfully deleted');
+    } catch (error) {
+      dispatch(setLoading(false));
+      //@ts-ignore
+      notification('error', error?.message);
+    }
+  };
 
   const fetchSelectedTPA = async () => {
     dispatch(setLoading(true));
@@ -476,10 +515,15 @@ const Drafts = () => {
               />
             </div>
           </div>
-          <div className='flex items-center text-xs text-fontColor'>
-            <RiDeleteBin6Line className='text-fontColor text-lg mr-2 ' />
-            Delete
-          </div>
+          {param?.case === 'draftcases' ? (
+            <div
+              className='flex items-center text-xs text-fontColor cursor-pointer'
+              onClick={toggleopenDeleteModal}
+            >
+              <RiDeleteBin6Line className='text-fontColor text-lg mr-2 ' />
+              Delete
+            </div>
+          ) : null}
         </div>
       </div>
       <ReactTable
@@ -492,6 +536,8 @@ const Drafts = () => {
         previousPage={previousPage}
         canNextPage={canNextPage}
         canPreviousPage={canPreviousPage}
+        selectedFlatRows={selectedFlatRows}
+        selectedRowIds={selectedRowIds}
       />
 
       <SummeryModal
@@ -532,6 +578,15 @@ const Drafts = () => {
         newCaseData={summeryData}
         action={action}
       />
+
+      {openDeleteModal && (
+        <DeleteModal
+          isOpen={openDeleteModal}
+          closeModal={toggleopenDeleteModal}
+          numberOfCaseDelete={numberOfCaseDelete}
+          deleteCase={deleteCaseAPI}
+        />
+      )}
     </div>
   );
 };

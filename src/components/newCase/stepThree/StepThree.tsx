@@ -443,7 +443,7 @@ const StepThree = ({
                 handleChange(e);
               }}
               defaultOption='Select Treating Doctor'
-              label='Name of The Treating Doctor *'
+              label='Name Of The Treating Doctor *'
               value={diagnosisDetails?.doctorsName || ''}
             />
           </div>
@@ -453,7 +453,7 @@ const StepThree = ({
               handleChange={handleChange}
               name='natureOfIllness'
               value={diagnosisDetails?.natureOfIllness || ''}
-              label='Nature of illness / Disease With Presenting complaints *'
+              label='Nature Of Illness / Disease With Presenting Complaints *'
               style={{ height: '40px' }}
               labelStyle={{ paddingBottom: '12px' }}
             />
@@ -464,7 +464,7 @@ const StepThree = ({
               handleChange={handleChange}
               name='durationOfPresentAilment'
               value={diagnosisDetails?.durationOfPresentAilment || ''}
-              label='Duration of present ailment (days)'
+              label='Duration Of Present Ailment (Days)'
               style={{ maxWidth: '80px' }}
             />
           </div>
@@ -473,7 +473,7 @@ const StepThree = ({
               handleChange={handleChange}
               name='firstConsultation'
               value={diagnosisDetails?.firstConsultation || ''}
-              label='Date of first consultation'
+              label='Date Of First Consultation'
             />
           </div>
 
@@ -484,7 +484,7 @@ const StepThree = ({
               value={diagnosisDetails?.Ailment || ''}
               style={{ height: '40px' }}
               labelStyle={{ paddingBottom: '12px' }}
-              label='Ailment as per user'
+              label='Ailment As Per User'
             />
           </div>
 
@@ -561,7 +561,7 @@ const StepThree = ({
 
           <div className='mt-6'>
             <p className='pb-4 text-sm text-fontColor-light'>
-              Proposed line of treatment ? *
+              Proposed Line Of Treatment ? *
             </p>
             <div className='grid grid-cols-2 gap-4'>
               <div className='col-span-1'>
@@ -569,7 +569,7 @@ const StepThree = ({
                   handleChange={handleChange}
                   name='doctor_proposedLineOfTreatment_Medical_Managment'
                   value='yes'
-                  checkboxLabel='Medical manageemnt'
+                  checkboxLabel='Medical Manageemnt'
                   fieldName={
                     diagnosisDetails?.doctor_proposedLineOfTreatment_Medical_Managment ||
                     ''
@@ -634,7 +634,7 @@ const StepThree = ({
                   diagnosisDetails?.proposedLineOfTreatmentInvestigationDetails ||
                   ''
                 }
-                label='If Investigation & /Or Medical Management Provide Details'
+                label='If Investigation Or Medical Management Provide Details'
                 style={{ height: '40px' }}
                 labelStyle={{ paddingBottom: '12px' }}
                 placeHolder='If investigation / medical management provide details'
@@ -646,7 +646,7 @@ const StepThree = ({
               handleChange={handleChange}
               name='routeOfDrag'
               value={diagnosisDetails?.routeOfDrag || ''}
-              label='Route of drug administration'
+              label='Route Of Drug Administration'
               style={{ maxWidth: '100px' }}
             />
           </div>
@@ -677,7 +677,7 @@ const StepThree = ({
           </div>
           <div className='mt-6'>
             <p className='pb-4 text-sm text-fontColor-light'>
-              Relevant clinic findings
+              Relevant Clinic Findings
             </p>
 
             <div className='flex items-center'>
@@ -734,7 +734,7 @@ const StepThree = ({
                 <>
                   <div className='mt-6'>
                     <p className='pb-4 text-sm text-fontColor-light'>
-                      In case of accident ?
+                      In Case Of Accident ?
                     </p>
                     <div className='flex items-center'>
                       <div className='mr-8'>
@@ -846,7 +846,7 @@ const StepThree = ({
                     </div>
                     <div className='mt-6'>
                       <p className='pb-4 text-sm text-fontColor-light'>
-                        Test conducted or not ?
+                        Test Conducted Or Not?
                       </p>
                       <div className='flex items-center'>
                         <div className='mr-8'>
@@ -876,7 +876,7 @@ const StepThree = ({
 
                     <div className='mt-6'>
                       <p className='pb-4 text-sm text-fontColor-light'>
-                        is it RTA?
+                        Is It RTA?
                       </p>
                       <div className='flex items-center'>
                         <div className='mr-8'>
@@ -963,7 +963,7 @@ const StepThree = ({
                         handleChange={handleChange}
                         name='expectedDeliveryDate'
                         value={diagnosisDetails?.expectedDeliveryDate || ''}
-                        label='Expected delivery date'
+                        label='Expected Delivery Date'
                       />
                     </div>
                   </div>
@@ -977,7 +977,7 @@ const StepThree = ({
               handleChange={handleChange}
               name='otherTreatments'
               value={diagnosisDetails?.otherTreatments || ''}
-              label='if other treatments, please provide'
+              label='If Other Treatments, Please Provide Details'
               style={{ height: '40px' }}
               labelStyle={{ paddingBottom: '12px' }}
             />

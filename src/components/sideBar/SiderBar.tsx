@@ -127,6 +127,14 @@ const sideBarMenu = [
     pageLink: '/order',
   },
   {
+    name: 'New Order',
+    icon: (
+      <AiOutlineShoppingCart className='text-fontColor mr-4 ml-2 md:ml-5 text-xl' />
+    ),
+
+    pageLink: '/ordernew',
+  },
+  {
     name: 'Reimbursement',
     icon: (
       <AiOutlineUserAdd className='text-fontColor mr-4 ml-2 md:ml-5 text-xl' />
