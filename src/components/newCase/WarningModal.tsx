@@ -100,7 +100,7 @@ const WarningModal = ({
         try {
             await axiosConfig.post(AmtURL, amtFormData);
             const { data } = await axiosConfig.get(PlanDetailURL);
-            dispatch(setCurrentPlan(data?.data));
+            dispatch(setCurrentPlan(data?.data?.data[0]));
 
             // console.log(" post Amount tracker ",Amtdata);                                   //---------------------------------------------------
             await axiosConfig.post(UpdateTodbURL, updateTodbFormData);

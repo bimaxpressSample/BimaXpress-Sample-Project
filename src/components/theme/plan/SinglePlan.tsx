@@ -19,6 +19,7 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
   const dispatch = useAppDispatch();
   
   const { user , userPlanData } = useAppSelector((state) => state?.user);
+  const { customerWalletDetails } = useAppSelector((state) => state?.wallet);
 
   // const planDetails = userPlanData ;
   // const [planDetails , setplanDetails ] = useState({});
@@ -32,27 +33,8 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
       setOpenBuyModal((pre) => !pre);
   };
 
-  const buyAddOn = async(name:any , price : any , claims : any) =>{
-    const AmtURL = `/amounttracker?email=${user}`;
-    const UpdateTodbURL = `/updateaddontodb?email=${user}`;
-
-    const PlanDetailURL = `/plandetails?email=${user}`;
-
-    const MAILURL = `/sendmail`;
-    const mailForm = new FormData();
-    mailForm.append("receiver_email",user);
-    // @ts-ignore
-    mailForm.append("gotmessage", `Dear ${user},\n
-            As per your request, We have activated the ${name} plan to your current pack. You will be charged as per the plan rate.\n
-            Regards,
-            Team Bimaxpress`);
-
-    const amtFormData = new FormData() ;
-    const updateTodbFormData = new FormData() ;
-
-    amtFormData?.append("amount", price);
-    updateTodbFormData?.append("addonn", name);
-
+  const deductAmountFromWallet = async(price:any) =>{
+    
     const orderformData = new FormData();
     orderformData?.append("amount",`${Number(price) * 100}`);
     orderformData?.append("currency","INR");
@@ -60,18 +42,54 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
     const transferData = new FormData();
     transferData.append("method",'wallet');
     transferData.append("wallet",'openwallet');
-    transferData.append("customer_id",'cust_J5HP8WMDYXO6D9');
+    //@ts-ignore
+    transferData.append("customer_id",customerWalletDetails?.walletdetails);
     // transferData.append("order_id",'');
     transferData.append("amount",`${Number(price) * 100}`);
     transferData.append("currency",'INR');
-    transferData.append("contact",'9198765432');
+    //@ts-ignore
+    transferData.append("contact",customerWalletDetails?.contact);
     transferData.append("email",user);
     transferData.append("description",`Add On(${name})`);
+    
+    const createOrder = await axiosConfig.post('/createOrder',orderformData);
+    const orderId = createOrder.data.data.id ;
+    transferData.append("order_id",orderId);
+    const response = await axiosConfig.post('/createPaymentCapture',transferData);
+  }
+
+  const buyAddOn = async(name:any , price : any , claims : any) =>{
+  const AmtURL = `/amounttracker?email=${user}`;
+  const UpdateTodbURL = `/updateaddontodb?email=${user}`;
+
+  const PlanDetailURL = `/plandetails?email=${user}`;
+
+  const MAILURL = `/sendmail`;
+  const mailForm = new FormData();
+  mailForm.append("receiver_email",user);
+  // @ts-ignore
+  mailForm.append("gotmessage", `Dear ${user},\n
+          As per your request, We have activated the ${name} plan to your current pack. You will be charged as per the plan rate.\n
+          Regards,
+          Team Bimaxpress`);
+
+  const amtFormData = new FormData() ;
+  const updateTodbFormData = new FormData() ;
+
+  let today = new Date();
+  const date = `${today.getDate()}/${(today.getMonth() + 1)}/${today.getFullYear()}`
+
+  amtFormData?.append("amount", price);
+  amtFormData?.append("date", date);
+  amtFormData?.append("discount",'0');
+  amtFormData?.append("plan_name",name);
+
+  updateTodbFormData?.append("addonn", name);
 
     dispatch(setLoading(true));
     try{
-
-        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=cust_J5HP8WMDYXO6D9`);
+        //@ts-ignore
+        const wallet_balance = await axiosConfig.get(`/walletBalance?customerId=${customerWalletDetails?.walletdetails}`);
         let currentBalance = wallet_balance.data.data.balance / 100 ;
         console.log(currentBalance);
         if(currentBalance < price){
@@ -79,28 +97,20 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
           dispatch(setLoading(false));
           return ;
         }
-
         await axiosConfig.post(AmtURL,amtFormData);
         const { data } = await axiosConfig.get(PlanDetailURL);
-        dispatch(setCurrentPlan(data?.data));
-        
-        // console.log(" post Amount tracker ",Amtdata);                                   //---------------------------------------------------
-        
+        dispatch(setCurrentPlan(data?.data?.data[0]));
+
+        // console.log(" post Amount tracker ",Amtdata);                                //---------------------------------------------------
         // console.log(" post Amount tracker ",data);                                   //---------------------------------------------------
         
-
-        const createOrder = await axiosConfig.post('/createOrder',orderformData);
-        const orderId = createOrder.data.data.id ;
-
-        transferData.append("order_id",orderId);
-        
-        const response = await axiosConfig.post('/createPaymentCapture',transferData);
-        
         await axiosConfig.post(UpdateTodbURL,updateTodbFormData);
-
+        
+        deductAmountFromWallet(price);
+        
         const planDetails = await axiosConfig.get(`/plandetails?email=${user}`);
       
-        dispatch(setCurrentPlan(planDetails?.data.data));
+        dispatch(setCurrentPlan(planDetails?.data?.data[0]));
 
         dispatch(setLoading(false));
         notification("info", `${claims} Claims Has Been Added To Your Plan`);
@@ -112,9 +122,7 @@ const SinglePlan = ({Claims , price, name , discount }: any) => {
         //@ts-ignore
         notification("error", error?.message);
     }
-
   }
-
   return (
     <div className="h-60 w-72 border border-fontColor rounded-xl p-4 flex flex-col">
       <span className="mb-2 bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import axiosConfig from "../../../config/axiosConfig";
@@ -21,6 +21,29 @@ export default function AccountDetails() {
         const { name, value } = e?.target;
         setData((pre: any) => ({ ...pre, [name] : value }));
     }
+
+    const fetchAccDetail = async() =>{
+
+        dispatch(setLoading(true));
+        try{
+            const AccData = await axiosConfig.get(`/AccountDeta?email=${user}`);
+            dispatch(setLoading(false));
+            console.log("Document Data", AccData?.data?.data);
+            console.log("length", !Object.keys(AccData?.data?.data).length);
+            if(Object.keys(AccData?.data?.data).length){
+                navigate('/IntimationPanel');
+            }
+        }
+        catch(error){
+            dispatch(setLoading(false));
+            //@ts-ignore
+            notification("error", error?.message);
+        }
+    }
+
+    useEffect(() => {
+        fetchAccDetail();
+    }, [])
     
     const sendData = async() =>{
         const sendURL = `/AccountDetails?email=${user}`;

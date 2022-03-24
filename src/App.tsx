@@ -61,7 +61,6 @@ import NonCashlessHome from './components/nonCashless/NonCashlessHome';
 import Hospitaldetails from './components/UnderWriter/Details';
 import AllDetails from './components/order/AllDetails';
 
-
 function App() {
   const { user, role } = useAppSelector((state) => state?.user);
 
@@ -76,6 +75,7 @@ function App() {
   function DisplayUser(role: string) {
     switch (role) {
       case 'admin':
+      case 'claim_analyst':
         return (
           <>
             <Route path='/preauthform' element={<PreauthForm />} />
@@ -117,10 +117,11 @@ function App() {
               element={Wrapper(<DischargeApproved />)}
             />
 
-            <Route
+            {/* <Route
               path='/earlySettlement'
               element={Wrapper(<EarlySettlement />)}
-            />
+            /> */}
+            
             <Route
               path='/earlySettlementDash'
               element={Wrapper(<EarlySettlementDash />)}
