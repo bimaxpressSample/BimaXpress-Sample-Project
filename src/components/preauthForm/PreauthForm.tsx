@@ -37,7 +37,7 @@ const PreauthForm = () => {
     try {
       const { data } = await axiosConfig.get(planDetailsURL);
       console.log('plan data ', data.data);
-      dispatch(setUserPlanData(data?.data));
+      dispatch(setUserPlanData(data?.data[0]));
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore

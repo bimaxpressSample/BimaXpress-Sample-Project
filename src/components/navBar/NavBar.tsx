@@ -16,28 +16,31 @@ const NavBar = () => {
   const { currentMenu } = useAppSelector((state) => state?.home);
   const { walletBalance ,customerWalletDetails } = useAppSelector((state) => state?.wallet);
   const { user, userData, role, userPlanData, showWarning } = useAppSelector((state) => state?.user);
+  const { currentPlan } = useAppSelector((state) => state?.plan);
   const [caseHeading, setCaseHeading] = useState('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
 
+  console.log("plan data ",currentPlan);
+
   // @ts-ignore
-  const [showWarningNotification, setshowWarningNotification] = useState(userPlanData?.claimsleft <= 0.15 * userPlanData?.total_claims);
+  const [showWarningNotification, setshowWarningNotification] = useState((currentPlan?.claimsleft + currentPlan?.addonClaims) <= 0.15 * currentPlan?.total_claims);
 
 
   useEffect(()=>{
     // @ts-ignore
-    setshowWarningNotification(userPlanData?.claimsleft <= 0.15 * userPlanData?.total_claims);
-  },[userPlanData])
+    setshowWarningNotification((currentPlan?.claimsleft + currentPlan?.addonClaims) <= 0.15 * currentPlan?.total_claims);
+  },[currentPlan])
 
   console.log("Show warning", showWarning);
   console.log("Show warning notification ", showWarningNotification);
   //@ts-ignore
-  console.log("user claim left", userPlanData?.claimsleft);
+  console.log("user claim left", currentPlan?.claimsleft);
   //@ts-ignore
-  console.log("Show total", userPlanData?.total_claims);
+  console.log("Show total", currentPlan?.total_claims);
   //@ts-ignore
-  console.log("Show Plan", userPlanData);
+  console.log("Show Plan", currentPlan);
   console.log("----wallet balance " , walletBalance);
 
 
@@ -93,7 +96,7 @@ const NavBar = () => {
             <svg className="flex-shrink-0 w-5 h-5 text-yellow-700 dark:text-yellow-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
             <div className="ml-3 mr-2 text-sm font-medium text-yellow-700 dark:text-yellow-800">
               {/* @ts-ignore */}
-              You Have Only {userPlanData?.claimsleft} Claims Left. <Link to='/plan' className="font-semibold underline hover:text-yellow-800 dark:hover:text-yellow-900">Click Here</Link> to Buy Add-on.
+              You Have Only {currentPlan?.claimsleft + currentPlan?.addonClaims} Claims Left. <Link to='/plan' className="font-semibold underline hover:text-yellow-800 dark:hover:text-yellow-900">Click Here</Link> to Buy Add-on.
             </div>
             <button onClick={() => setshowWarningNotification(!showWarningNotification)} type="button" className="ml-auto -mx-1.5 -my-1.5 bg-yellow-100 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex h-8 w-8 dark:bg-yellow-200 dark:text-yellow-600 dark:hover:bg-yellow-300" data-collapse-toggle="alert" aria-label="Close">
               <span className="sr-only">Close</span>

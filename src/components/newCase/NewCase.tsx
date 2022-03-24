@@ -51,6 +51,8 @@ const NewCase = () => {
   const { newCaseNum } = useAppSelector((state) => state?.case);
   const { caseData } = useAppSelector((state) => state?.home);
   const { userPlanData } = useAppSelector((state) => state?.user);
+  const { currentPlan } = useAppSelector((state) => state?.plan);
+
   const param = useParams();
   const navigate = useNavigate();
   const { allCompaniesList } = useAppSelector(
@@ -106,7 +108,7 @@ const NewCase = () => {
     const planDetailsURL = `/plandetails?email=${user}`;
     try {
       const { data } = await axiosConfig.get(planDetailsURL);
-      dispatch(setUserPlanData(data?.data));
+      dispatch(setUserPlanData(data?.data[0]));
     } catch (error) {
       dispatch(setLoading(false));
       //@ts-ignore
@@ -556,7 +558,7 @@ const NewCase = () => {
 
     getPreauthForm();
     //@ts-ignore
-    if (userPlanData.claimsleft === 0) {
+    if (currentPlan?.claimsleft + currentPlan?.addonClaims === 0) {
       toggleWarningModal();
     } else {
       window.open(
