@@ -5,6 +5,7 @@ import TableSearchButton from "../../theme/table/tableSearchButton/TableSearchBu
 // import { Link } from "react-router-dom";
 import ReactTable from "../../theme/reactTable/ReactTable";
 import external_link from "../../../assets/icon/external_link.svg";
+import cancell from "../../../assets/icon/cancell.svg";
 import filter from "../../../assets/icon/filter.svg";
 import NewCaseSelect from "../../theme/select/newCaseSelect/NewCaseSelect";
 import InputDate from "../../theme/inputDate/InputDate";
@@ -114,6 +115,10 @@ const TrackOrder = () => {
 				Header: "Track",
 				accessor: "track",
 			},
+			{
+				Header: "Cancel Order",
+				accessor: "cancelorder",
+			},
 		],
 		[]
 	);
@@ -147,8 +152,9 @@ const TrackOrder = () => {
 		const { data } = await axiosConfig.post(postUrl);
 		const header = data.data.token;
 		let URL = `/trackorder?shipment_id=${order_id}&token=${header}`;
+
 		try {
-			await axiosConfig.get(URL).then((response) => {});
+			await axiosConfig.get(URL).then((response) => { });
 			dispatch(setLoading(false));
 			/* console.log(data.data.invoice_url); */
 			// return data.data.invoice_url ;
@@ -158,6 +164,38 @@ const TrackOrder = () => {
 			//@ts-ignore
 			notification("error", error?.message);
 		}
+	};
+
+
+
+
+	const cancelorder = async (order_id: string) => {
+		dispatch(setLoading(true));
+		// const URL = `/${param?.case}`;
+		const postUrl = `/Authentication?email=palashshrivastava244@gmail.com&password=Palash@7067`;
+
+		// const { data } = await axiosConfig.post(postUrl);
+		// const header = data.data.token;
+		const URL = `/cancelorder?order_id=${order_id}&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIzMDY1OTMsImlzcyI6Imh0dHBzOi8vYXBpdjIuc2hpcHJvY2tldC5pbi92MS9leHRlcm5hbC9hdXRoL2xvZ2luIiwiaWF0IjoxNjQ4MDI3MjU3LCJleHAiOjE2NDg4OTEyNTcsIm5iZiI6MTY0ODAyNzI1NywianRpIjoiSmFzUnRXbjNGVzBYUVJCZCJ9.pbPR_i7ikQDmI8De6t_ADmnfblcIOvQLG4IJtV75OGQ`;
+		try {
+			const { data } = await axiosConfig.post(URL);
+			console.log("shipped data = ", data);
+			dispatch(setLoading(false))
+			notification('success', 'Order Cancelled successfully');
+
+			// dispatch(setorderDetails(data?.data));
+			// @ts-ignore
+			// dispatch(setbookOrderData(data?.data));
+
+
+			// dispatch(setDACaseData(data?.data));
+			// onClick={() => navigate('/order')}
+		} catch (error) {
+			dispatch(setLoading(false));
+			//@ts-ignore
+			notification('error', error?.message);
+		}
+
 	};
 
 	useEffect(() => {
@@ -190,6 +228,15 @@ const TrackOrder = () => {
 							onClick={() => downloadInvoice(shipmentId)}
 						/>
 					</Link>
+				),
+				cancelorder: (
+
+					<img
+						src={cancell}
+						alt="icon"
+						onClick={() => cancelorder(orderId)}
+					/>
+
 				),
 			})
 		);

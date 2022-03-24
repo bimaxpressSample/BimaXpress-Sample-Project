@@ -43,116 +43,34 @@ const BuyerDetails = ({
   const { counter } = useAppSelector((state) => state?.home);
   const navigate = useNavigate();
   const { UndSelectedHospital } = useAppSelector((state) => state?.user);
-
-  const [hospitalList, sethospitalList] = useState<any>([true]);
-
-
-  // useEffect(() => {
-    
-  // }, [hospitalList]);
+  const [hospitalList, sethospitalList] = useState<any>([]);
 
 
-//  const [options, setOptions] = useState({
-//     hospitalList: '',
-//     insuranceTPA: '',
-//     dateRange: '',
-//   });
-
-const [selectedOptions, setselectedOptions] = useState({
-  hospitalList: 'abc',
-});
-
-
-
-  const handleHospitalChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLDataElement | any
-    >
-  ) => {
-    const { name, value } = e.target;
-    dispatch(setUndSelectedHospital({name:value}));
-    setselectedOptions((pre: any) => ({
-      ...pre,
-      [name]: value,
-    }));
-    // debugger;
-    console.log("under select",UndSelectedHospital);
-    // fetchSelectedHospital(value);
-  };
-
-
-
-
-// const fetchSelectedHospital = async (selectedHospital: any) => {
-//     dispatch(setLoading(true));
-//     // const URL = `/${param?.case}`;
-//     let URL = `/${param?.case}?email=${selectedHospital}`;
-//     try {
-//       if (selectedHospital === '') {
-//         URL = `/all${param?.case}`;
-//       }
-//       const { data } = await axiosConfig.get(URL);
-//       console.log('After select URL - ', URL);
-//       console.log(data); // -------------------------------
-//       dispatch(setLoading(false));
-//       dispatch(setCaseData(data?.data));
-//     } catch (error) {
-//       dispatch(setLoading(false));
-//       //@ts-ignore
-//       notification('error', error?.message);
-//     }
-//   };
-
-//   const handleHospitalChange = (
-//     e: React.ChangeEvent<
-//       HTMLInputElement | HTMLSelectElement | HTMLDataElement | any
-//     >
-//   ) => {
-//     const { name, value } = e.target;
-//     setOptions((pre: any) => ({
-//       ...pre,
-//       [name]: value,
-//     }));
-//     fetchSelectedHospital(value);
-//   };
-console.log('selected',selectedOptions)
-
-const [TPAList, setTPAList] = useState<any>([]);
-const Fetchdetails = async () => {
-    dispatch(setLoading(true));
-  
-    try {
-      const listOfTPA = await axiosConfig.get(
-        `/empanelcompany?email=tcs@gmail.com`
+  const fetchAnalyst = async () => {
+		dispatch(setLoading(true));
+    try{
+      const listOfHospital = await axiosConfig.get(
+        `/empanelcompany?email=${user}`
       );
-
-      Object.entries(listOfTPA.data.data).map(([key, value]) => {
-        TPAList.push({
-          label: key,
-          value: key,
-        });
+  
+      Object.entries(listOfHospital.data.data).forEach(([key, value]) => {
+        hospitalList.push({ label: key.replaceAll("_", " "), value: key });
       });
-      setTPAList(TPAList);
-      
-      
+  
+      sethospitalList(hospitalList);
       dispatch(setLoading(false));
-   
-    } catch (error) {
-      dispatch(setLoading(false));
-      //@ts-ignore
-      notification('error', error?.message);
+      
     }
-  };
+    catch(error){
+      notification("error","Something Went Wrong");
+      dispatch(setLoading(false));
+    }
+
+	};
+
   useEffect(() => {
-    Fetchdetails();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const [options, setOptions] = useState({
-    insuranceTPA: '',
-  });
-
+		fetchAnalyst();
+	}, []);
   
 
   const handleChange = (
@@ -181,37 +99,60 @@ const Fetchdetails = async () => {
     let path = `newPath`; 
     navigates('/Orderdetails');
   }
+
+	const [options, setOptions] = useState({
+		insuranceTPA: "",
+	});
+
+
+  const fetchSelectedHospital = async (selectedHospital: any) => {
+		dispatch(setLoading(true));
+		// const URL = `/${param?.case}`;
+		const postUrl = `/Authentication?email=palashshrivastava244@gmail.com&password=Palash@7067`;
+
+		const { data } = await axiosConfig.post(postUrl);
+		const header = data.data.token;
+		let URL = `/insurancefilter?email=${user}&insurance_company=${selectedHospital}&token=${header}`;
+
+		try {
+			if (selectedHospital === "") {
+				URL = `/allorders?email=${user}&token=${header}`;
+			}
+			const { data } = await axiosConfig.get(URL);
+			console.log("After select URL - ", URL);
+			console.log(data); // -------------------------------
+			dispatch(setLoading(false));
+			dispatch(setCaseData(data?.data));
+		} catch (error) {
+			dispatch(setLoading(false));
+			//@ts-ignore
+			notification("error", error?.message);
+		}
+	};
+  
+
+  const handleChanges = (
+		e: React.ChangeEvent<
+		HTMLSelectElement | HTMLDataElement | any
+		>
+	) => {
+		const { name, value } = e.target;
+		setOptions((pre: any) => ({
+			...pre,
+			[name]: value,
+		}));
+		fetchSelectedHospital(value);
+		
+	};
+  
+
   return (
     
     <>
     <div className="grid grid-cols-6 gap-4 p-6">
     <div className="col-start-1 col-end-3 ..."></div>
   <div className="col-end-7 col-span-2 ..."></div>
-
-
   <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
-            <p className='pb-4 text-sm text-white font-semibold'>
-            Company Name
-            </p>
-            <NewCaseSelect
-                options={TPAList}
-                name='insuranceTPA'
-                handleChange={handleChange}
-                defaultOption='Insurance TPA'
-                value={options?.insuranceTPA || ''}
-                style={{
-                  minWidth: '170px',
-                  height: '30px',
-                  backgroundColor: '#FFFFFF17',
-                  padding: '0px 5px',
-                  borderRadius: '3px',
-                  fontSize: '12px',
-                }}
-              />
-            
-          </div>
-            <br></br>
-            <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-white font-semibold'>
             Email
             </p>
@@ -223,6 +164,30 @@ const Fetchdetails = async () => {
               style={{ height: '40px' }}
               labelStyle={{ paddingBottom: '12px' }}
             />
+          </div>
+
+  
+            <br></br>
+            <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
+            <p className='pb-4 text-sm text-white font-semibold'>
+            Company Name
+            </p>
+            <NewCaseSelect
+							options={hospitalList}
+							name="insuranceTPA"
+							handleChange={handleChanges}
+							defaultOption="Insurance TPA"
+							value={options?.insuranceTPA || ""}
+							style={{
+								maxWidth: "170px",
+								height: "30px",
+								backgroundColor: "#FFFFFF17",
+								padding: "0px",
+								borderRadius: "3px",
+								fontSize: "12px",
+							}}
+              />
+            
           </div>
             
             <br></br>
