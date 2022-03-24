@@ -16,6 +16,7 @@ import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
 import {setwalletBalance , setcustomerWalletDetails} from '../../redux/slices/walletSlice';
 import ForgotPassword from './forgotpassword';
+import { setCurrentPlan } from '../../redux/slices/planSlice' ;
 
 // INFO: THIS COMPONENT CONTAINS LOGINPAGE LAYOUT
 
@@ -23,6 +24,7 @@ function LoginPage() {
   const { userData } = useAppSelector((state) => state?.user);
   const { user } = useAppSelector((state) => state?.user);
   const { role } = useAppSelector((state) => state?.user);
+  const { currentPlan } = useAppSelector((state) => state?.plan);
   const [openPasswordModal, setopenPasswordModal] = useState<boolean>(false);
 
   function toggleopenPasswordModal() {
@@ -108,6 +110,11 @@ function LoginPage() {
       await dispatch(setLoading(false));
       await dispatch(setUserPlanData(subscription_details));
       console.log('sub details',subscription_details);
+      
+      await dispatch(setCurrentPlan(subscription_details[0]));
+      console.log('sub details',subscription_details[0]);
+
+
 
       if(data.role === 'admin' ){
         console.log("wallet details ", wallet_data?.walletdetails) 

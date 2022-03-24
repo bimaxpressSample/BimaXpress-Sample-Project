@@ -36,7 +36,7 @@ const Home = () => {
   if (userPlanData) {
     if (
       // @ts-ignore
-      userPlanData.claimsleft <= 0.15 * userPlanData.total_claims &&
+      (userPlanData[0]?.claimsleft + userPlanData[0]?.addonClaims)  <= 0.15 * userPlanData[0]?.total_claims &&
       showWarning
     ) {
       // settoggleCounter(false);

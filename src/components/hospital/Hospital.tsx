@@ -170,7 +170,7 @@ const Hospital = () => {
                     value:
                       hospitalInfo?.plan === "freemium"
                         ? "freemium"
-                        : "preemium",
+                        : "premium",
                   },
                 ]}
                 handleChange={updateHospitalInfo}
