@@ -13,6 +13,10 @@ import { red } from '@mui/material/colors';
 import Modal from "react-modal";
 import styles from './ConfirmModal.module.css';
 import { IoClose } from "react-icons/io5";
+import Button from '@mui/material/Button';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 const CaseSummary = () => {
   const [showModal, setShowModal] = useState(false);
@@ -54,7 +58,7 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
     // console.log(user);
     try {
       const { data } = await axiosConfig.get(URL);
-      console.log('case sum', data);
+      console.log('harsh', data.calculationValues.average_settlement_Tat);
       //console.log("Claim number :- ", fetchedData.data.Claim_Number)
 
       setfetchedData(data);
@@ -72,6 +76,18 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
   function openWindow(e: string) {
     window.open(e);
   }
+
+  const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }));
 
   const viewDocument = async () => {
     dispatch(setLoading(true));
@@ -124,7 +140,7 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
     const { name, value } = e?.target;
     setinputOfferAmount((pre: any) => ({ ...pre, [name]: value }));
   };
-
+console.log("harshdiwan11",fetchedData)
 
 
 
@@ -242,6 +258,18 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Average Settlement TAT
+              <HtmlTooltip
+                title={
+                  <React.Fragment>
+                    <Typography color="inherit">average settlement Tat ={fetchedData?.calculationValues?.average_settlement_Tat},     median={fetchedData?.calculationValues?.average_settlement_median}  ,mode={fetchedData?.calculationValues?.average_settlement_mode}</Typography>
+                    {"Whichever is highest."}
+                  </React.Fragment>
+                }
+              >
+                <Button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+</svg></Button>
+              </HtmlTooltip>
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
@@ -272,6 +300,19 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Average Discount Percentage
+              <HtmlTooltip
+                title={
+                  <React.Fragment>
+                    <Typography color="inherit">Sum of discount={fetchedData?.calculationValues?.Sum_of_discount},   total number of cases={fetchedData?.calculationValues?.total_number_of_cases}, avg_discount_percent ={fetchedData?.calculationValues?.avg_discount_percent}</Typography>
+                   
+                   
+                  </React.Fragment>
+                }
+              >
+                <Button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+</svg></Button>
+              </HtmlTooltip>
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
@@ -294,7 +335,21 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Processing_fee
+              <HtmlTooltip
+                title={
+                  <React.Fragment>
+                    <Typography color="inherit">BXP_Fees+Interest = {fetchedData?.calculationValues?.calculation_processing_fees_IG_BXP_Fees} + {fetchedData?.calculationValues?.calculation_processing_fees_IG_Interest} </Typography>
+                   
+                  
+                  </React.Fragment>
+                }
+              >
+                <Button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+</svg></Button>
+              </HtmlTooltip>
             </p>
+
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
               {fetchedData && fetchedData?.data2
@@ -303,8 +358,22 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
             </p>
           </div>
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
+
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Offer Amount
+              <HtmlTooltip
+                title={
+                  <React.Fragment>
+                    <Typography color="inherit">Average Discounting Factor={fetchedData?.calculationValues?.Average_Discounting_Factor},Limit_Utilization={fetchedData?.calculationValues?.Limit_Utilization}</Typography>
+                   <b>{''}</b> {' '}
+                    {"Whichever is Highest"}
+                  </React.Fragment>
+                }
+              >
+                <Button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+</svg></Button>
+              </HtmlTooltip>
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
@@ -333,7 +402,21 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Processing_fee
+              <HtmlTooltip
+                title={
+                  <React.Fragment>
+                    <Typography color="inherit">BXP_Fees = {fetchedData?.calculationValues?.calculation_processing_fees_ING_BXP_Fees}</Typography>
+                    
+                    {""}
+                  </React.Fragment>
+                }
+              >
+                <Button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+</svg></Button>
+              </HtmlTooltip>
             </p>
+            
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
               {fetchedData && fetchedData?.data2
@@ -345,6 +428,19 @@ console.log("fdgdfgfdgrtftr",inputOfferAmount);
           <div className='col-span-2 lg:col-span-1 pb-6 mt-8'>
             <p className='pb-4 text-sm text-fontColor-light font-thin'>
               Offer Amount
+              <HtmlTooltip
+                title={
+                  <React.Fragment>
+                    <Typography color="inherit">Average Discounting Factor={fetchedData?.calculationValues?.Average_Discounting_Factor},Limit_Utilization={fetchedData?.calculationValues?.Limit_Utilization}</Typography>
+                   <b>{''}</b> {' '}
+                    {"Whichever is Highest"}
+                  </React.Fragment>
+                }
+              >
+                <Button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+</svg></Button>
+              </HtmlTooltip>
             </p>
             <p className='border-b-2 border-fontColor-darkGray py-1 w-full text-base text-fontColor-light '>
               {/* @ts-ignore */}
