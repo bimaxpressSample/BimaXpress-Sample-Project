@@ -14,6 +14,8 @@ import {
 import axiosConfig from '../../config/axiosConfig';
 import notification from '../theme/utility/notification';
 import { setLoading } from '../../redux/slices/utilitySlice';
+import {setwalletBalance , setcustomerWalletDetails} from '../../redux/slices/walletSlice';
+import ForgotPassword from './forgotpassword';
 
 // INFO: THIS COMPONENT CONTAINS LOGINPAGE LAYOUT
 
@@ -21,6 +23,11 @@ function LoginPage() {
   const { userData } = useAppSelector((state) => state?.user);
   const { user } = useAppSelector((state) => state?.user);
   const { role } = useAppSelector((state) => state?.user);
+  const [openPasswordModal, setopenPasswordModal] = useState<boolean>(false);
+
+  function toggleopenPasswordModal() {
+    setopenPasswordModal((pre) => !pre);
+  }
   const [userInput, setUserInput] = useState({
     email: '',
     password: '',
@@ -37,6 +44,7 @@ function LoginPage() {
   useEffect(() => {
     let user = sessionStorage.getItem('bimaUser');
     let subscription_details = sessionStorage.getItem('bimaUserPlanData');
+    
 
     if (user) {
       //@ts-ignore
@@ -49,7 +57,23 @@ function LoginPage() {
       //@ts-ignore
       dispatch(setRole(user?.role));
       //@ts-ignore
+      subscription_details = JSON.parse(subscription_details);
+      //@ts-ignore
       dispatch(setUserPlanData(subscription_details));
+
+      if(role === 'admin'){
+        let walletBalance = sessionStorage.getItem('bimaUserWalletBalance');
+        let walletDetails = sessionStorage.getItem('bimaUserWalletDetails');
+        //@ts-ignore
+        walletBalance = JSON.parse(walletBalance);
+        //@ts-ignore
+        dispatch(setwalletBalance(walletBalance));
+        //@ts-ignore
+        walletDetails = JSON.parse(walletDetails);
+        //@ts-ignore
+        dispatch(setcustomerWalletDetails(walletDetails));
+      }
+
       if (role === 'admin') {
         navigate('/home');
       }
@@ -65,7 +89,7 @@ function LoginPage() {
     dispatch(setLoading(true));
     try {
       const {
-        data: { data, subscription_details },
+        data: { data, subscription_details ,wallet_data },
       } = await axiosConfig.post('/signin', {
         email: userInput?.email,
         password: userInput?.password,
@@ -83,6 +107,21 @@ function LoginPage() {
       );
       await dispatch(setLoading(false));
       await dispatch(setUserPlanData(subscription_details));
+      console.log('sub details',subscription_details);
+
+      if(data.role === 'admin' ){
+        console.log("wallet details ", wallet_data?.walletdetails) 
+        await dispatch(setcustomerWalletDetails(wallet_data));
+        window.sessionStorage.setItem('bimaUserWalletDetails', JSON.stringify(wallet_data));
+
+        //@ts-ignore
+        const walletBalance = await axiosConfig.get(`/walletBalance?customerId=${wallet_data?.walletdetails}`);
+        console.log("wallet balance on login",walletBalance?.data?.data?.balance / 100);
+        await dispatch(setwalletBalance(walletBalance?.data?.data?.balance / 100));
+        window.sessionStorage.setItem('bimaUserWalletBalance', JSON.stringify(walletBalance?.data?.data?.balance / 100));
+      }
+      
+
       await dispatch(setUserData(data));
       await dispatch(setUser(data?.email));
       await dispatch(setRole(data.role));
@@ -104,33 +143,45 @@ function LoginPage() {
   };
 
   return (
-    <AuthScreenWrapper title='LOGIN' submit={handleSignin}>
-      <div className='authscreen__login'>
-        <div className='input__group'>
-          <input
-            type='email'
-            placeholder='Email'
-            id='username'
-            required
-            name='email'
-            value={userInput?.email}
-            onChange={handleChange}
-          />
+    <>
+      <AuthScreenWrapper title='LOGIN' submit={handleSignin}>
+        <div className='authscreen__login'>
+          <div className='input__group'>
+            <input
+              type='email'
+              placeholder='Email'
+              id='username'
+              required
+              name='email'
+              value={userInput?.email}
+              onChange={handleChange}
+            />
+          </div>
+          <div className='input__group'>
+            <input
+              type='password'
+              placeholder='Password'
+              id='password'
+              required
+              name='password'
+              value={userInput?.password}
+              onChange={handleChange}
+            />
+          </div>
+          <button>Log In</button>
         </div>
-        <div className='input__group'>
-          <input
-            type='password'
-            placeholder='Password'
-            id='password'
-            required
-            name='password'
-            value={userInput?.password}
-            onChange={handleChange}
-          />
-        </div>
-        <button>Log In</button>
-      </div>
-    </AuthScreenWrapper>
+        <p className='mt-4 cursor-pointer' onClick={toggleopenPasswordModal}>
+          Forget Password
+        </p>
+      </AuthScreenWrapper>
+
+      {openPasswordModal && (
+        <ForgotPassword
+          isOpen={openPasswordModal}
+          closeModal={toggleopenPasswordModal}
+        />
+      )}
+    </>
   );
 }
 

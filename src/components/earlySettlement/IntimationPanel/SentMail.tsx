@@ -25,6 +25,7 @@ type ComposeModalProps = {
   AccountDetails: any;
   total?: number;
   companyDetail?: any;
+  fetchEmpanelCompany?: () => void ;
 };
 
 const SentMail = ({
@@ -33,6 +34,7 @@ const SentMail = ({
   AccountDetails,
   total = 0,
   companyDetail,
+  fetchEmpanelCompany = () => {}
 }: ComposeModalProps) => {
   const [mail, setMail] = useState<{
     to: string;
@@ -78,7 +80,7 @@ const SentMail = ({
 
     dispatch(setLoading(true));
 
-    const URL = `/sendEmail?email=${user}&companyname=${companyDetail.companyName}`;
+    const URL = `/SendEmail?email=${user}&companyname=${companyDetail.companyName}`;
 
     const formData = new FormData();
     formData?.append('reciever', email ? email : '');
@@ -101,6 +103,7 @@ const SentMail = ({
 
       dispatch(setLoading(false));
       notification('info', `Email sent successfully`);
+      fetchEmpanelCompany();
       closeModal();
       navigate('/IntimationPanel');
     } catch (error) {
